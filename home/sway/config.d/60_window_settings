@@ -1,0 +1,20 @@
+for_window [app_id="blueman-applet" title="Connected"] kill
+for_window [app_id="blueman-applet" title="Verbunden"] kill
+for_window [class="(?i)firefox"] move container to workspace 1
+for_window [app_id="devdocs-desktop"] move container to workspace ""; fullscreen enable
+for_window [class="(?i)chromium"] move container to workspace 1
+for_window [class="(?i)scrcpy"] floating enable
+for_window [title="Screen Layout Editor"] floating enable
+for_window [title="(?i)wlay"] floating enable
+for_window [title="(?i)yad"] floating enable
+for_window [title="(?i)Event Tester"] floating enable
+for_window [title="(?i)Switch session"] floating enable
+for_window [title="(?i)Xephyr"] move container to workspace 4
+for_window [title="(?i)Quick(LOAD|TARGET)"] move to workspace 6
+for_window [title="File Operation Progress"] floating enable
+# xwayland version
+for_window [class="Firefox"] inhibit_idle fullscreen
+for_window [app_id="firefox"] inhibit_idle fullscreen
+
+assign [class="^Vlc$"] 5
+exec_always "systemctl --user import-environment; systemctl --user start graphical-session.target"
