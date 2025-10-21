@@ -9,8 +9,12 @@
   services.openssh.enable = true;
 
   environment.systemPackages = with pkgs; [
-    vim git wget curl htop
+    vim
+    git
+    wget
+    curl
+    htop
+    bash
   ];
-
-  programs.zsh.enable = true;
+  nix.settings.download-buffer-size = 524288000;
 }

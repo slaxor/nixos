@@ -1,0 +1,3 @@
+{
+  imports = [ ./hosts/kea.nix ];
+}

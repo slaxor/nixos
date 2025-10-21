@@ -4,7 +4,6 @@
   home.homeDirectory = "/home/slash";
   home.stateVersion = "25.05";
 
-  programs.zsh.enable = true;
   programs.git = {
     enable = true;
     userName = "Sascha Teske";
@@ -38,8 +37,9 @@
   ];
 
   
-  xdg.configFile."sway/config".source = ./sway/config;
-  xdg.configFile."sway/config.d".source = ./sway/config.d;
+  #xdg.configFile."sway/config".source = ./sway/config;
+  #xdg.configFile."sway/config.d".source = ./sway/config.d;
+  xdg.configFile."sway".source = ./sway;
   # xdg.configFile."waybar/config.jsonc".source = ./sway/waybar/config.jsonc;
   # xdg.configFile."waybar/style.css".source = ./sway/waybar/style.css;
   # xdg.configFile."mako/config".source = ./sway/mako/config;

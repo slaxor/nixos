@@ -60,11 +60,16 @@
     variant = "altgr-intl";
   };
 
+  users.groups.slash = {
+    gid = 10000;
+  };
+
   users.users.slash = {
     isNormalUser = true;
     extraGroups = [ "wheel" "dialout" "video" "audio" "input" ];
-    shell = pkgs.zsh;
+    shell = pkgs.bash;
     uid = 10000;
+    group = "slash";
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHgoR0SjvlG9RSXJYEKH6noGzXwA0vO5Jt8icqLf/wWk slash@turtle"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC1eYgW2UdnsTCk2zppw4yghgpHOhOllN3el1DuAk6Wc slash@taz"
@@ -74,10 +79,8 @@
     ];
   };
 
-  # Enable automatic login for the user.
   services.getty.autologinUser = "slash";
 
-  # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
   # List packages installed in system profile. To search, run:
@@ -110,9 +113,6 @@
   #   enableSSHSupport = true;
   # };
 
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
   security.polkit.extraConfig = ''
     polkit.addRule(function(action, subject) {
       if (
@@ -143,6 +143,144 @@
   ];
 
 
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true; # if not already enabled
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    jack.enable = true;
+    # (my prompt includes an urgency hint, so I want no sounds).
+    extraConfig = {
+      pipewire."99-silent-bell.conf" = {
+        "context.properties" = {
+          "module.x11.bell" = false;
+        };
+      };
+    };
+  };
+  # services.pipewire.wireplumber.extraConfig."10-bluez" = {
+  #   "monitor.bluez.properties" = {
+  #     "bluez5.enable-sbc-xq" = true;
+  #     "bluez5.enable-msbc" = true;
+  #     "bluez5.enable-hw-volume" = true;
+  #     "bluez5.roles" = [
+  #       "hsp_hs"
+  #       "hsp_ag"
+  #       "hfp_hf"
+  #       "hfp_ag"
+  #     ];
+  #   };
+  # };
+  services.pipewire.wireplumber.configPackages = [
+    (pkgs.writeTextDir "share/wireplumber/wireplumber.conf.d/10-bluez.conf" ''
+      monitor.bluez.properties = {
+        bluez5.enable-sbc-xq = true
+        bluez5.enable-msbc = true
+        bluez5.enable-hw-volume = true
+        bluez5.roles = [hsp_hs hsp_ag hfp_hf hfp_ag]
+      }
+    '')
+    (pkgs.writeTextDir "share/wireplumber/main.lua.d/99-alsa-lowlatency.lua" ''
+      alsa_monitor.rules = {
+        {
+          matches = {{{ "node.name", "matches", "alsa_output.*" }}};
+          apply_properties = {
+            ["audio.format"] = "S32LE",
+            ["audio.rate"] = "96000", -- for USB soundcards it should be twice your desired rate
+            ["api.alsa.period-size"] = 2, -- defaults to 1024, tweak by trial-and-error
+            -- ["api.alsa.disable-batch"] = true, -- generally, USB soundcards use the batch mode
+          },
+        },
+      }
+    '')
+  ];
+  # avahi required for service discovery
+  services.avahi.enable = true;
+
+  services.pipewire = {
+    # opens UDP ports 6001-6002
+    raopOpenFirewall = true;
+  
+    extraConfig.pipewire = {
+      "10-airplay" = {
+        "context.modules" = [
+          {
+            name = "libpipewire-module-raop-discover";
+  
+            # increase the buffer size if you get dropouts/glitches
+            # args = {
+            #   "raop.latency.ms" = 500;
+            # };
+          }
+        ];
+      };
+    };
+  };
+  services.pipewire.extraConfig.pipewire."91-null-sinks" = {
+    "context.objects" = [
+      {
+        # A default dummy driver. This handles nodes marked with the "node.always-driver"
+        # properyty when no other driver is currently active. JACK clients need this.
+        factory = "spa-node-factory";
+        args = {
+          "factory.name" = "support.node.driver";
+          "node.name" = "Dummy-Driver";
+          "priority.driver" = 8000;
+        };
+      }
+      {
+        factory = "adapter";
+        args = {
+          "factory.name" = "support.null-audio-sink";
+          "node.name" = "Microphone-Proxy";
+          "node.description" = "Microphone";
+          "media.class" = "Audio/Source/Virtual";
+          "audio.position" = "MONO";
+        };
+      }
+      {
+        factory = "adapter";
+        args = {
+          "factory.name" = "support.null-audio-sink";
+          "node.name" = "Main-Output-Proxy";
+          "node.description" = "Main Output";
+          "media.class" = "Audio/Sink";
+          "audio.position" = "FL,FR";
+        };
+      }
+    ];
+  };
+
+  services.pipewire.extraConfig.pipewire."92-low-latency" = {
+    "context.properties" = {
+      "default.clock.rate" = 48000;
+      "default.clock.quantum" = 32;
+      "default.clock.min-quantum" = 32;
+      "default.clock.max-quantum" = 32;
+    };
+  };
+  services.pipewire.extraConfig.pipewire-pulse."92-low-latency" = {
+    "context.properties" = [
+      {
+        name = "libpipewire-module-protocol-pulse";
+        args = { };
+      }
+    ];
+    "pulse.properties" = {
+      "pulse.min.req" = "32/48000";
+      "pulse.default.req" = "32/48000";
+      "pulse.max.req" = "32/48000";
+      "pulse.min.quantum" = "32/48000";
+      "pulse.max.quantum" = "32/48000";
+    };
+    "stream.properties" = {
+      "node.latency" = "32/48000";
+      "resample.quality" = 1;
+    };
+  };
   systemd = {
     user.services.polkit-gnome-authentication-agent-1 = {
       description = "polkit-gnome-authentication-agent-1";
@@ -158,6 +296,7 @@
         };
     };
   };
+  
   # Optional, hint Electron apps to use Wayland:
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 

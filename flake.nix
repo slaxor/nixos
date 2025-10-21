@@ -18,9 +18,20 @@
           ./hosts/kea.nix
           home-manager.nixosModules.home-manager
           {
-            home-manager.useGlobalPkgs = true;
-            home-manager.users.slash = import ./home/slash.nix;
-          }
+            # home-manager.useGlobalPkgs = true;
+            # home-manager.users.slash = import ./home/slash.nix;
+	    home-manager = {
+		    useUserPackages = true;
+		    useGlobalPkgs = true;
+		    backupFileExtension = "backup";
+
+		    users.slash = {
+		      home.username = "slash";
+		      home.homeDirectory = "/home/slash";
+		      imports = [ ./home/slash.nix ];
+		    };
+		  };
+		}
         ];
       };
     };
