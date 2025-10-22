@@ -1,12 +1,12 @@
 { pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
-    neovim
-    git
-    wget
     curl
+    git
     htop
+    neovim
     nixfmt-rfc-style
+    wget
   ];
 
   environment.systemPackages = [ pkgs.nixfmt-rfc-style ];

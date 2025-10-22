@@ -101,6 +101,7 @@
     plocate
     ripgrep
     socat
+    sops
     tree
     wget
   ];
