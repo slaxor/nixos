@@ -3,7 +3,7 @@
   boot.loader.systemd-boot.enable = false;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.networkmanager.enable = false;
+  networking.networkmanager.enable = true;
   services.resolved.enable = true;
 
   services.openssh.enable = true;

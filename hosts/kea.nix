@@ -22,7 +22,6 @@
 
   # boot.initrd.luks.devices."luks-7c83c597-dc9d-452a-a573-18a221a24163".device = "/dev/disk/by-uuid/7c83c597-dc9d-452a-a573-18a221a24163";
   networking.hostName = "kea";
-  networking.wireless.enable = true; 
   networking.networkmanager.enable = true;
   time.timeZone = "Europe/Berlin";
   i18n.defaultLocale = "de_DE.UTF-8";
