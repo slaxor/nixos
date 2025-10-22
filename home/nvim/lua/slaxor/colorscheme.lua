@@ -1,3 +1,0 @@
--- set background=dark
--- colorscheme molokai
--- hi Visual ctermbg=221 ctermfg=0

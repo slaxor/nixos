@@ -18,26 +18,14 @@
         modules = [
           ./hosts/kea.nix
           sops-nix.nixosModules.sops
-          home-manager.nixosModules.home-manager
-          {
-            # home-manager.useGlobalPkgs = true;
-            # home-manager.users.slash = import ./home/slash.nix;
-	    home-manager = {
-		    useUserPackages = true;
-		    useGlobalPkgs = true;
-		    backupFileExtension = "backup";
-  		    
-		    users.slash = {
-		      home.username = "slash";
-		      home.homeDirectory = "/home/slash";
-		      imports = [ 
-		        sops-nix.homeManagerModules.sops
-			./home/slash.nix 
-		      ];
-		    };
-		  };
-		}
         ];
+      };
+      nixosConfigurations.taz = nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [
+          ./hosts/taz.nix
+          sops-nix.nixosModules.sops
+        ]; 
       };
     };
 }

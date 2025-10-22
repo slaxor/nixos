@@ -1,17 +1,12 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
+      ./kea-hardware-configuration.nix
       ../modules/base.nix
     ];
 
-  # Bootloader.
   boot.loader.systemd-boot.enable = false;
   boot.loader.grub = {
     enable = true;
@@ -25,23 +20,12 @@
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  boot.initrd.luks.devices."luks-7c83c597-dc9d-452a-a573-18a221a24163".device = "/dev/disk/by-uuid/7c83c597-dc9d-452a-a573-18a221a24163";
-  networking.hostName = "kea"; # Define your hostname.
-  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
-  # networking.networkmanager.enable = true;
-
-  # Set your time zone.
+  # boot.initrd.luks.devices."luks-7c83c597-dc9d-452a-a573-18a221a24163".device = "/dev/disk/by-uuid/7c83c597-dc9d-452a-a573-18a221a24163";
+  networking.hostName = "kea";
+  networking.wireless.enable = true; 
+  networking.networkmanager.enable = true;
   time.timeZone = "Europe/Berlin";
-
-  # Select internationalisation properties.
   i18n.defaultLocale = "de_DE.UTF-8";
-
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "de_DE.UTF-8";
     LC_IDENTIFICATION = "de_DE.UTF-8";
@@ -54,10 +38,10 @@
     LC_TIME = "de_DE.UTF-8";
   };
 
-  # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
     variant = "altgr-intl";
+    options = "eurosign:e";
   };
 
   users.groups.slash = {
@@ -91,18 +75,29 @@
     curl
     docker
     fd
+    foot
     fzf
     git
+    gparted
+    home-manager
+    htop
+    hyprpolkitagent
+    iotop
     lf
+    librewolf
     mc
     mtr
     neovim
     netcat
     plocate
+    polkit
     ripgrep
     socat
     sops
+    sway
+    tmux
     tree
+    wayland
     wget
   ];
 

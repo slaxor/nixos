@@ -1,1 +1,0 @@
-bindsym --no-repeat XF86Display exec "wlay"
