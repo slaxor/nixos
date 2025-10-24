@@ -4,6 +4,7 @@
   services.xserver.displayManager.sddm.enable = false;
   services.xserver.desktopManager.gnome.enable = false;
   services.xserver.desktopManager.sway.enable = true;
+  services.xserver.displayManager.sessionCommands = "xhost +local:"
 
   programs.sway.enable = true;
   programs.sway.wrapperFeatures.gtk = true;
