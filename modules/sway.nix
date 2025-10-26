@@ -1,5 +1,9 @@
 { pkgs, ... }:
 {
+  environment.systemPackages = with pkgs; [
+    adwaita-icon-theme
+    xdg-desktop-portal-wl
+  ];
   services.xserver.enable = true;
   services.xserver.displayManager.sddm.enable = false;
   services.xserver.desktopManager.gnome.enable = false;

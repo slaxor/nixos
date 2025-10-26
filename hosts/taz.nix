@@ -1,28 +1,39 @@
 { config, pkgs, ... }:
 {
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  imports =
-    [ # Include the results of the hardware scan.
-      ./taz-hardware-configuration.nix
-      ../modules/system.nix
-      ../modules/users/slash.nix
-    ];
+  imports = [
+    ./taz-hardware-configuration.nix
+    ../modules/system.nix
+    ../modules/libvirt.nix
+    ../modules/users/slash.nix
+  ];
 
-  boot.loader.systemd-boot.enable = false;
-  boot.loader.grub = {
-    enable = true;
-    efiSupport = true;
-    enableCryptodisk = true;
-    device = "nodev";
+  boot = {
+    loader = {
+      systemd-boot.enable = false;
+      grub = {
+        enable = true;
+        efiSupport = true;
+        enableCryptodisk = true;
+        device = "nodev";
+      };
+      efi.canTouchEfiVariables = true;
+    };
+    # Use latest kernel.
+    kernelPackages = pkgs.linuxPackages_latest;
   };
 
-  boot.loader.efi.canTouchEfiVariables = true;
 
-  # Use latest kernel.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  networking = {
+    networkmanager.enable = true;
+    hostName = "taz";
+    firewall = {
+      allowedTCPPorts = [ 22 ];
+      # allowedUDPPorts = [ ... ];
+      # enable = false;
+    };
+  };
 
-  networking.networkmanager.enable = true;
-  networking.hostName = "taz"; # Define your hostname.
   i18n.defaultLocale = "de_DE.UTF-8";
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "de_DE.UTF-8";
@@ -36,99 +47,83 @@
     LC_TIME = "de_DE.UTF-8";
   };
 
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "altgr-intl";
-    options = "eurosign:e";
-  };
-
-
-  nixpkgs.config.allowUnfree = true;
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    age
-    ctags
-    curl
-    docker
-    fd
-    foot
-    fzf
-    git
-    gparted
-    home-manager
-    htop
-    hyprpolkitagent
-    iotop
-    lf
-    librewolf
-    mc
-    mtr
-    neovim
-    netcat
-    plocate
-    polkit
-    ripgrep
-    socat
-    sops
-    sway
-    tmux
-    tree
-    wayland
-    wget
-  ];
   security.polkit.enable = true;
   console = {
     font = "Lat2-Terminus16";
     keyMap = "us";
   };
-  services.gnome.gnome-keyring.enable = true;
-  # services.xserver.desktopManager.sway.enable = true;
-
-  programs.sway = {
-    enable = true;
-    wrapperFeatures.gtk = true; # so that gtk works properly
-    extraPackages = with pkgs; [
-      swaylock
-      swayidle
-      wl-clipboard
-      wf-recorder
-      mako # notification daemon
-      grim
-     #kanshi
-      slurp
-      alacritty # Alacritty is the default terminal in the config
-      wofi
-    ];
-    extraSessionCommands = ''
-      export SDL_VIDEODRIVER=wayland
-      export QT_QPA_PLATFORM=wayland
-      export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
-      export _JAVA_AWT_WM_NONREPARENTING=1
-      export MOZ_ENABLE_WAYLAND=1
-
-    '';
-  };
 
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
-  programs.waybar.enable = true;
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
+  programs = {
+    mtr.enable = true;
+    neovim = {
+      enable = true;
+      defaultEditor = true;
+    };
+    sway = {
+      enable = true;
+      wrapperFeatures.gtk = true; # so that gtk works properly
+      extraPackages = with pkgs; [
+        swaylock
+        swayidle
+        wl-clipboard
+        wf-recorder
+        mako # notification daemon
+        grim
+        kanshi
+        slurp
+        alacritty # Alacritty is the default terminal in the config
+        wofi
+      ];
+      extraSessionCommands = ''
+        export SDL_VIDEODRIVER=wayland
+        export QT_QPA_PLATFORM=wayland
+        export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+        export _JAVA_AWT_WM_NONREPARENTING=1
+        export MOZ_ENABLE_WAYLAND=1
+
+      '';
+    };
   };
 
-  # Graphics settings
-  #services.xserver.videoDrivers = [ "nvidia" ];
-  services.xserver.videoDrivers = [ "nouveau" ];
+  services = {
+    # gnome.gnome-keyring.enable = true;
+    openssh.enable = true;
+    printing.enable = true;
+    greetd = {
+      enable = true;
+      settings = rec {
+        initial_session = {
+          command = "${pkgs.sway}/bin/sway";
+          user = "slash";
+        };
+        default_session = initial_session;
+      };
+    };
+
+    locate = {
+      enable = true;
+      package = pkgs.plocate;
+    };
+
+    xserver = {
+#       desktopManager.sway.enable = true;
+      #videoDrivers = [ "nvidia" ];
+      videoDrivers = [ "nouveau" ];
+      xkb = {
+        layout = "us";
+        variant = "altgr-intl";
+        options = "eurosign:e";
+      };
+
+      libinput.enable = true; # Enable touchpad support (enabled default in most desktopManager).
+    };
+  };
 
   hardware.graphics.enable32Bit = true;
 
-  services.printing.enable = true;
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -137,28 +132,31 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
-  security.polkit.extraConfig = ''
-    polkit.addRule(function(action, subject) {
-      if (
-        subject.isInGroup("users")
-          && (
-            action.id == "org.freedesktop.login1.reboot" ||
-            action.id == "org.freedesktop.login1.reboot-multiple-sessions" ||
-            action.id == "org.freedesktop.login1.power-off" ||
-            action.id == "org.freedesktop.login1.power-off-multiple-sessions"
+  security.polkit = {
+    extraConfig = ''
+      polkit.addRule(function(action, subject) {
+        if (
+          subject.isInGroup("users")
+            && (
+              action.id == "org.freedesktop.login1.reboot" ||
+              action.id == "org.freedesktop.login1.reboot-multiple-sessions" ||
+              action.id == "org.freedesktop.login1.power-off" ||
+              action.id == "org.freedesktop.login1.power-off-multiple-sessions"
+            )
           )
-        )
-      {
-        return polkit.Result.YES;
-      }
-    });
-    polkit.addRule(function(action, subject) {
-        if (action.id == "org.gnome.gparted" &&
-            subject.isInGroup("wheel")) {
-            return polkit.Result.YES;
+        {
+          return polkit.Result.YES;
         }
-    });
-  '';
+      });
+      polkit.addRule(function(action, subject) {
+          if (action.id == "org.gnome.gparted" &&
+              subject.isInGroup("wheel")) {
+              return polkit.Result.YES;
+          }
+      });
+    '';
+  };
+
   systemd = {
     user.services.hyprpolkitagent = {
       description = "polkit-gnome-authentication-agent-1";
@@ -174,29 +172,6 @@
         };
     };
   };
-  
-  services.locate.enable = true;
-  services.locate.package = pkgs.plocate;
-  programs.mtr.enable = true;
-  services.greetd = {
-    enable = true;
-    settings = rec {
-      initial_session = {
-        command = "${pkgs.sway}/bin/sway";
-        user = "slash";
-      };
-      default_session = initial_session;
-    };
-  };
-
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 22 ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

@@ -8,7 +8,7 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
+  boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "usbhid" "rtsx_pci_sdmmc" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
@@ -26,6 +26,13 @@
       fsType = "vfat";
       options = [ "fmask=0077" "dmask=0077" ];
     };
+
+  fileSystems."/home" =
+    { device = "/dev/disk/by-uuid/30468a56-5d3b-4af3-8589-d3def8087511";
+      fsType = "btrfs";
+    };
+
+  boot.initrd.luks.devices."TAZHOME".device = "/dev/disk/by-uuid/d9873944-a3aa-4051-801f-1f494ed51619";
 
   swapDevices = [ ];
 

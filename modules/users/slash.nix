@@ -6,7 +6,16 @@
 
   users.users.slash = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "dialout" "video" "audio" "input" ];
+    extraGroups = [
+      "audio"
+      "dialout"
+      "docker"
+      "input"
+      "libvirtd"
+      "networkmanager"
+      "video"
+      "wheel"
+    ];
     shell = pkgs.bash;
     uid = 10000;
     group = "slash";
