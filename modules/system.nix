@@ -3,14 +3,20 @@
   ...
 }:
 {
-  boot.loader.systemd-boot.enable = false;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot = {
+    loader = {
+      systemd-boot.enable = false;
+      efi.canTouchEfiVariables = true;
+    };
+    tmp.cleanOnBoot = true;
+  };
 
   networking.networkmanager.enable = true;
   services = {
     resolved.enable = true;
     openssh.enable = true;
     blueman.enable = true;
+    udisks2.enable = true;
   };
 
   hardware.bluetooth.enable = true;
@@ -19,6 +25,7 @@
   environment.systemPackages = with pkgs; [
     age
     bash
+    bridge-utils
     ctags
     curl
     docker
@@ -36,11 +43,14 @@
     iotop
     kubectl
     lf
+    lshw
     mc
     mtr
     neovim
+    neovim-remote
     netcat
     nixfmt-rfc-style
+    pciutils
     plocate
     polkit
     ripgrep
@@ -88,7 +98,9 @@
     unstable.yaziPlugins.yatline-githead
     unstable.yaziPlugins.relative-motions
     unstable.yaziPlugins.yatline-catppuccin
-    unstable.vimPlugins.yazi-nvim
+    usbutils
+    vimPlugins.yazi-nvim
+    vimPlugins.lazy-nvim
     wayland
     wget
   ];
@@ -108,7 +120,14 @@
     "unix-user:slash"
     "unix-group:wheel"
   ];
-
+  environment.shellAliases = {
+    hms =''
+      home-manager switch --flake  \$\{HOME}/.config/home-manager#\$\{USER}
+    '';
+    nors = ''
+      sudo nixos-rebuild switch --flake /etc/nixos#\$\{HOSTNAME}
+    '';
+  };
   # formatter.x86_64-linux = pkgs.nixfmt-rfc-style;
   system.stateVersion = "25.05";
 }

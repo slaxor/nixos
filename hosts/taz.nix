@@ -49,7 +49,7 @@
 
   security.polkit.enable = true;
   console = {
-    font = "Lat2-Terminus16";
+    font = "solar24x32";
     keyMap = "us";
   };
 
@@ -116,9 +116,8 @@
         variant = "altgr-intl";
         options = "eurosign:e";
       };
-
-      libinput.enable = true; # Enable touchpad support (enabled default in most desktopManager).
     };
+    libinput.enable = true; # Enable touchpad support (enabled default in most desktopManager)
   };
 
   hardware.graphics.enable32Bit = true;

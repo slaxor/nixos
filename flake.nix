@@ -23,6 +23,11 @@
         system = "x86_64-linux";
         modules = [
           { nixpkgs.overlays = [ self.overlays.unstable ]; }
+          ({ config, pkgs, ... }: {
+            environment.systemPackages = with pkgs; [
+              slaxor-editor.packages.${pkgs.system}.default
+            ];
+          })
           ./hosts/kea.nix
         ];
       };
@@ -33,12 +38,8 @@
         modules = [
           { nixpkgs.overlays = [ self.overlays.unstable ]; }
           ({ config, pkgs, ... }: {
-            # B. Add the package to systemPackages
             environment.systemPackages = with pkgs; [
-              # Access the package via the input name (slaxor-editor)
-              slaxor-editor.packages.${pkgs.system}.default # Assuming it exposes a default package
-              # OR if the package is named 'editor':
-              # slaxor-editor.packages.${pkgs.system}.editor
+              slaxor-editor.packages.${pkgs.system}.default
             ];
           })
           ./hosts/taz.nix

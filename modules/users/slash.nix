@@ -11,8 +11,11 @@
       "dialout"
       "docker"
       "input"
+      "kvm"
       "libvirtd"
       "networkmanager"
+      "qemu-libvirt"
+      "storage"
       "video"
       "wheel"
     ];
