@@ -14,6 +14,7 @@
       "kvm"
       "libvirtd"
       "networkmanager"
+      "plugdev"
       "qemu-libvirt"
       "storage"
       "video"

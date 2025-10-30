@@ -14,12 +14,18 @@
   networking.networkmanager.enable = true;
   services = {
     resolved.enable = true;
-    openssh.enable = true;
+    openssh = {
+      enable = true;
+      settings.KbdInteractiveAuthentication = false;
+    };
     blueman.enable = true;
     udisks2.enable = true;
   };
 
-  hardware.bluetooth.enable = true;
+  hardware = {
+    bluetooth.enable = true;
+    rtl-sdr.enable = true;
+  };
 
   nix.settings.download-buffer-size = 524288000;
   environment.systemPackages = with pkgs; [
@@ -30,7 +36,10 @@
     curl
     docker
     fd
+    fdupes
     file
+    firmware-manager
+    firmware-updater
     foot
     fzf
     git
@@ -46,6 +55,7 @@
     lshw
     mc
     mtr
+    ncdu
     neovim
     neovim-remote
     netcat
@@ -116,10 +126,19 @@
     proggyfonts
   ];
 
+  programs = {
+    nix-ld.enable = true;
+    ssh = {
+      startAgent = true;
+      enableAskPassword = true;
+    };
+  };
+
   security.polkit.adminIdentities = [
     "unix-user:slash"
     "unix-group:wheel"
   ];
+
   environment.shellAliases = {
     hms =''
       home-manager switch --flake  \$\{HOME}/.config/home-manager#\$\{USER}
@@ -128,6 +147,19 @@
       sudo nixos-rebuild switch --flake /etc/nixos#\$\{HOSTNAME}
     '';
   };
+
+  # environment.etc = {
+    # "polkit-1/rules.d/90-org-firmware-manager.rules" = {
+      # source = pkgs.writeText "firmware-manager-polkit-rule" ''
+        # polkit.addRule(function(action, subject) {
+            # if (action.id.indexOf("org.freedesktop.fwupd.") === 0 && subject.isInGroup("wheel")) {
+                # return polkit.Result.YES;
+            # }
+        # });
+      # '';
+    # };
+  # };
+
   # formatter.x86_64-linux = pkgs.nixfmt-rfc-style;
   system.stateVersion = "25.05";
 }
