@@ -23,6 +23,7 @@
     kernelPackages = pkgs.linuxPackages_latest;
   };
 
+  time.timeZone = "Europe/Berlin";
 
   networking = {
     networkmanager.enable = true;

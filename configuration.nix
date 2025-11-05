@@ -5,7 +5,6 @@
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
   outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, ... }@inputs: {
-
     overlays.unstable = final: prev: {
       unstable = import nixpkgs-unstable {
         system = prev.system;

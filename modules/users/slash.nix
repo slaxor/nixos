@@ -32,5 +32,5 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOtjkbH0TGABWHHuV5Rrzt0UIKJBkPIo8tHXHoyC9kBT slash@kea"
     ];
   };
-  services.getty.autologinUser = "slash";
+  # services.getty.autologinUser = "slash";
 }

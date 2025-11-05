@@ -6,6 +6,7 @@
     ../modules/system.nix
     ../modules/libvirt.nix
     ../modules/users/slash.nix
+    ../modules/users/stackit.nix
   ];
 
   boot = {
@@ -24,6 +25,7 @@
     initrd.kernelModules = [ "amdgpu" ];
   };
 
+  time.timeZone = "Europe/Berlin";
 
   networking = {
     networkmanager.enable = true;
