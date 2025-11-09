@@ -1,0 +1,47 @@
+{ pkgs, ... }:
+{
+  environment.systemPackages = with pkgs; [
+    unstable.yazi
+    unstable.yaziPlugins.bypass
+    unstable.yaziPlugins.chmod
+    unstable.yaziPlugins.diff
+    unstable.yaziPlugins.duckdb
+    unstable.yaziPlugins.dupes
+    unstable.yaziPlugins.full-border
+    unstable.yaziPlugins.git
+    unstable.yaziPlugins.gitui
+    unstable.yaziPlugins.glow
+    unstable.yaziPlugins.jump-to-char
+    unstable.yaziPlugins.lazygit
+    unstable.yaziPlugins.lsar
+    unstable.yaziPlugins.mediainfo
+    unstable.yaziPlugins.miller
+    unstable.yaziPlugins.mime-ext
+    unstable.yaziPlugins.mount
+    unstable.yaziPlugins.no-status
+    unstable.yaziPlugins.nord
+    unstable.yaziPlugins.ouch
+    unstable.yaziPlugins.piper
+    unstable.yaziPlugins.projects
+    unstable.yaziPlugins.recycle-bin
+    unstable.yaziPlugins.relative-motions
+    unstable.yaziPlugins.restore
+    unstable.yaziPlugins.rich-preview
+    unstable.yaziPlugins.rsync
+    unstable.yaziPlugins.smart-enter
+    unstable.yaziPlugins.smart-filter
+    unstable.yaziPlugins.smart-paste
+    unstable.yaziPlugins.starship
+    unstable.yaziPlugins.sudo
+    unstable.yaziPlugins.time-travel
+    unstable.yaziPlugins.toggle-pane
+    unstable.yaziPlugins.vcs-files
+    unstable.yaziPlugins.wl-clipboard
+    unstable.yaziPlugins.yatline
+    unstable.yaziPlugins.yatline-catppuccin
+    unstable.yaziPlugins.yatline-githead
+    ripgrep
+    fd
+  ];
+}
+

@@ -1,17 +1,21 @@
 {
-  description = "Slash's NixOS with Sway";
+  description = "Slaxors's NixOS with Sway";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     slaxor-editor = {
       url = "git+https://codeberg.org/slaxor/editor";
-      # Optional: Make it use your system's nixpkgs version to save space
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+    slaxor-replace-src = {
+      url = "git+https://codeberg.org/slaxor/replace";
+      # inputs.nixpkgs.follows = "nixpkgs";
+      flake = false;
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, slaxor-editor, ... }@inputs: {
+  outputs = { self, nixpkgs, nixpkgs-unstable, ... }@inputs: {
     overlays.unstable = final: prev: {
       unstable = import nixpkgs-unstable {
         system = prev.system;
@@ -21,14 +25,22 @@
     nixosConfigurations = {
       kea = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
+        specialArgs = { inherit inputs; };
         modules = [
           { nixpkgs.overlays = [ self.overlays.unstable ]; }
-          ({ config, pkgs, ... }: {
-            environment.systemPackages = with pkgs; [
-              slaxor-editor.packages.${pkgs.system}.default
-            ];
-          })
+          ./modules/common-desktop.nix
+          ./modules/users/stackit.nix
           ./hosts/kea.nix
+          # ({ config, pkgs, ... }: {
+            # environment.systemPackages = with pkgs; [
+              # slaxor-editor.packages.${pkgs.system}.default
+            # ];
+          # })
+          # ({ config, pkgs, ... }: {
+            # environment.systemPackages = with pkgs; [
+              # slaxor-replace.packages.${pkgs.system}.default
+            # ];
+          # })
         ];
       };
 
@@ -37,12 +49,38 @@
         specialArgs = { inherit inputs; };
         modules = [
           { nixpkgs.overlays = [ self.overlays.unstable ]; }
-          ({ config, pkgs, ... }: {
-            environment.systemPackages = with pkgs; [
-              slaxor-editor.packages.${pkgs.system}.default
-            ];
-          })
+          ./modules/common-desktop.nix
           ./hosts/taz.nix
+          # ({ config, pkgs, ... }: {
+            # environment.systemPackages = with pkgs; [
+              # slaxor-editor.packages.${pkgs.system}.default
+            # ];
+          # })
+          # ({ config, pkgs, ... }: {
+            # environment.systemPackages = with pkgs; [
+              # slaxor-replace.packages.${pkgs.system}.default
+            # ];
+          # })
+        ];
+      };
+
+      crocodile = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit inputs; };
+        modules = [
+          { nixpkgs.overlays = [ self.overlays.unstable ]; }
+          ./modules/common-server.nix
+          ./hosts/crocodile.nix
+          # ({ config, pkgs, ... }: {
+            # environment.systemPackages = with pkgs; [
+              # slaxor-editor.packages.${pkgs.system}.default
+            # ];
+          # })
+          # ({ config, pkgs, ... }: {
+            # environment.systemPackages = with pkgs; [
+              # slaxor-replace.packages.${pkgs.system}.default
+            # ];
+          # })
         ];
       };
     };
