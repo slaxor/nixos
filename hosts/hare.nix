@@ -2,15 +2,15 @@
 {
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   imports = [
-    ./crocodile-hardware-configuration.nix
+    ./hare-hardware-configuration.nix
   ];
 
   boot.initrd.kernelModules = [ "amdgpu" ];
 
   time.timeZone = "Europe/Berlin";
-  networking.hostName = "crocodile";
+  networking.hostName = "hare";
 
-  services.tmate-ssh-server.host = "crocodile.slaxor.de";
+  services.tmate-ssh-server.host = "hare.slaxor.de";
 
 
   # This value determines the NixOS release from which the default

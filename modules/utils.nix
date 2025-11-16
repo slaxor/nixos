@@ -14,15 +14,10 @@
     fd
     fdupes
     file
-    firmware-manager
-    firmware-updater
     fzf
     gitui
     gnupg
     hyprpolkitagent
-    kubectl
-    kubebuilder
-    kubernetes-kcp
     libguestfs
     lshw
     mtr

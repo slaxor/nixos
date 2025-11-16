@@ -1,11 +1,16 @@
-{ ... }:
+{ pkgs, ... }:
 {
+  environment.systemPackages = with pkgs; [
+    wireguard-tools
+    wg-netmanager
+  ];
+
   networking = {
     networkmanager.enable = true;
     firewall = {
-      allowedTCPPorts = [ 22 ];
+      # allowedTCPPorts = [ 22 ];
       # allowedUDPPorts = [ ... ];
-      # enable = false;
+      enable = false;
     };
   };
 

@@ -64,13 +64,13 @@
         ];
       };
 
-      crocodile = nixpkgs.lib.nixosSystem {
+      hare = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
         modules = [
           { nixpkgs.overlays = [ self.overlays.unstable ]; }
           ./modules/common-server.nix
-          ./hosts/crocodile.nix
+          ./hosts/hare.nix
           # ({ config, pkgs, ... }: {
             # environment.systemPackages = with pkgs; [
               # slaxor-editor.packages.${pkgs.system}.default

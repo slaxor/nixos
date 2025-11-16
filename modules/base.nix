@@ -2,7 +2,10 @@
 {
   environment.systemPackages = with pkgs; [
     bash
+    binutils
     curl
+    dialog
+    gcc
     git
     gptfdisk
     htop
@@ -13,6 +16,7 @@
     lvm2
     gnumake
     mc
+    psmisc
     ripgrep
     socat
     tmux
@@ -30,7 +34,6 @@
 
   virtualisation.docker.enable = true;
 
-
   nix.settings.download-buffer-size = 524288000;
   boot = {
     loader = {
@@ -44,6 +47,11 @@
       efi.canTouchEfiVariables = true;
     };
     kernelPackages = pkgs.linuxPackages_latest;
+    blacklistedKernelModules = [
+      "dvb_usb_rtl28xxu"
+      "dvb_usb_v2"
+      "dvb_core"
+    ];
     tmp.cleanOnBoot = true;
   };
   i18n.defaultLocale = "de_DE.UTF-8";
