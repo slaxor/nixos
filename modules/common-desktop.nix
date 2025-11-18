@@ -4,6 +4,7 @@
     ./base.nix
     ./network.nix
     ./polkit.nix
+    ./udev.nix
 
     # GUI
     ./greetd.nix

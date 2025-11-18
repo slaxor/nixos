@@ -7,6 +7,7 @@
     dialog
     gcc
     git
+    git-filter-repo
     gptfdisk
     htop
     iotop
@@ -54,7 +55,7 @@
     ];
     tmp.cleanOnBoot = true;
   };
-  i18n.defaultLocale = "de_DE.UTF-8";
+  i18n.defaultLocale = "C.UTF-8";
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "de_DE.UTF-8";
     LC_IDENTIFICATION = "de_DE.UTF-8";
