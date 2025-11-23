@@ -20,6 +20,7 @@
     psmisc
     ripgrep
     socat
+    terminus_font
     tmux
     tree
     wget
@@ -93,6 +94,7 @@
 
 
   services = {
+    dbus.enable = true;
     blueman.enable = true;
     locate = {
       enable = true;
@@ -105,7 +107,9 @@
   security.polkit.enable = true;
 
   console = {
-    font = "solar24x23";
+    earlySetup = true;
+    font = "${pkgs.terminus_font}/share/consolefonts/ter-132n.psf.gz";
+    packages = with pkgs; [ terminus_font ];
     keyMap = "us";
   };
 }

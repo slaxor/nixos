@@ -1,4 +1,15 @@
 { pkgs, ... }:
+# Interessanter link:
+# https://www.monotux.tech/posts/2024/02/nixos-system-config/
+# { config, lib, ... }:
+# let
+  # secretsFile = "/var/lib/dnsmasq/secrets.conf";
+  # gen = builtins.fromJSON (builtins.readFile ../interfaces.json);
+  # interfaces = lib.catAttrs "name" gen.interfaces;
+  # dhcp-ranges = lib.catAttrs "dhcp-range" gen.interfaces;
+  # domains = lib.catAttrs "domain" gen.interfaces;
+  # domain_maps = builtins.map ({domain, subnet, ...}: "domain=${domain},${subnet}") gen.interfaces;
+# in
 {
   environment.systemPackages = with pkgs; [
     wireguard-tools
@@ -12,6 +23,11 @@
 
   networking = {
     networkmanager.enable = true;
+    nameservers = [ "1.1.1.1" "8.8.8.8" ];
+    extraHosts = ''
+      172.18.0.5 api.mgmt.sdc.runs.onstackit.local
+      172.18.0.4 idp.mgmt.sdc.runs.onstackit.local
+    '';
     firewall = {
       # allowedTCPPorts = [ 22 ];
       # allowedUDPPorts = [ ... ];
@@ -30,39 +46,31 @@
     resolved.enable = true;
     dnsmasq = {
       enable = true;
+      resolveLocalQueries = false;
       settings = {
-        dhcpAuthoritative = true;
-        # dhcp-leasefile = "/var/lib/dnsmasq/dnsmasq.leases";
-        # conf-file = optional cfg.resolveLocalQueries "/etc/dnsmasq-conf.conf";
-        # resolv-file = optional cfg.resolveLocalQueries "/etc/dnsmasq-resolv.conf";
-        # bind-interfaces = true;
-        dnsUpdate = true;
-        dnsUpdateInterval = "60";
-        listenAddress = "127.0.0.1";
+        dhcp-authoritative = true;
+        bind-interfaces = true;
+        domain-needed = true;
+        expand-hosts = true;
+        bogus-priv = true;
+        no-resolv = false;
+        no-hosts = false;
+        log-dhcp = true;
+        no-poll = true;
+        listen-address = "127.0.0.1";
+        servers = [
+          "8.8.8.8"
+          "8.8.4.4"
+          "/mgmt.sdc.runs.onstackit.local/127.0.0.1"
+        ];
+        address = [
+          "/example/127.0.0.1"
+          "/idp.mgmt.sdc.runs.onstackit.local/172.18.0.4"
+          "/api.mgmt.sdc.runs.onstackit.local/172.18.0.5"
+          "/application.mgmt.sdc.runs.onstackit.local/172.18.0.6"
+        ];
       };
     };
-        # dhcp-range = [ "192.168.0.2,192.168.0.254" ];
-        # 172.18.0.4 idp.mgmt.sdc.runs.onstackit.local
-        # 172.18.0.5 api.mgmt.sdc.runs.onstackit.local
-        # Optionally, configure a key for DNS update authentication (TSIG)
-        # Uncomment these lines if you're using TSIG authentication
-        # updateKeyName = "foo.mymachine.local";
-        # updateKeyValue = "YOUR-BASE64-ENCODED-KEY-HERE";
-      # settings = ''
-        # Enable DNS updates
-        # dhcp-authoritative
-        # dns-update
-        # dns-update-interval=60
-        # listen-address=127.0.0.1
-
-        # Optional: Configure the key for DNS update authentication (if needed)
-        # update-key-name=foo.mymachine.local
-        # update-key-value=YOUR-BASE64-ENCODED-KEY-HERE
-
-        # Optionally configure static IP address mappings for specific hosts
-        # address=/foo.mymachine.local/127.0.0.1
-      # '';
-      # };
     openssh = {
       enable = true;
       settings.KbdInteractiveAuthentication = false;
