@@ -1,17 +1,34 @@
 { config, pkgs, ... }:
 {
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
   imports = [
     ./hare-hardware-configuration.nix
   ];
 
-  boot.initrd.kernelModules = [ "amdgpu" ];
+  boot.kernelParams = [ "ip=dhcp" ];
+  boot.initrd = {
+    availableKernelModules = [ "r8169" ];
+    network = {
+      enable = true;
+      ssh = {
+        enable = true;
+        port = 22;
+        authorizedKeys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOtjkbH0TGABWHHuV5Rrzt0UIKJBkPIo8tHXHoyC9kBT slash@kea"
+        ];
+        hostKeys = [ "/etc/secrets/initrd/ssh_host_rsa_key" ];
+        shell = "/bin/cryptsetup-askpass";
+      };
+    };
+  };
 
   time.timeZone = "Europe/Berlin";
   networking.hostName = "hare";
 
   services.tmate-ssh-server.host = "hare.slaxor.de";
-
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
