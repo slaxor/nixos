@@ -17,6 +17,7 @@
 
     # Packages & Utils
     ./utils.nix
+    ./wireshark.nix
     ./yazi.nix
     ./slaxors-custom.nix
 
