@@ -9,21 +9,33 @@
     ./modules/docker
   ];
 
-  boot.kernelParams = [ "ip=dhcp" ];
-  boot.initrd = {
-    availableKernelModules = [ "r8169" ];
-    network = {
+  boot = {
+    loader = {
+      systemd-boot.enable = false;
+      efi.canTouchEfiVariables = false;
+      grub = {
+        enable = true;
+        devices = [ "/dev/nvme0n1" ];
+      };
+    };
+    initrd.network = {
       enable = true;
       ssh = {
         enable = true;
-        port = 22;
+        port = 2222;
         authorizedKeys = [
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOtjkbH0TGABWHHuV5Rrzt0UIKJBkPIo8tHXHoyC9kBT slash@kea"
         ];
         hostKeys = [ "/etc/ssh/ssh_host_ed25519_key" ];
-        shell = "/bin/cryptsetup-askpass";
       };
     };
+
+    initrd.availableKernelModules = [
+      "nvme"
+      "e1000e"
+      "r8169"
+    ];
+    kernelParams = [ "ip=dhcp" ];
   };
 
   time.timeZone = "Europe/Berlin";

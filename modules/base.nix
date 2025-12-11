@@ -9,6 +9,7 @@
     git
     git-filter-repo
     gptfdisk
+    home-manager
     htop
     iotop
     lf
@@ -35,19 +36,8 @@
   };
 
   virtualisation.docker.enable = true;
-
   nix.settings.download-buffer-size = 524288000;
   boot = {
-    loader = {
-      systemd-boot.enable = false;
-      grub = {
-        enable = true;
-        efiSupport = true;
-        enableCryptodisk = true;
-        device = "nodev";
-      };
-      efi.canTouchEfiVariables = true;
-    };
     kernelPackages = pkgs.linuxPackages_latest;
     blacklistedKernelModules = [
       "dvb_usb_rtl28xxu"
