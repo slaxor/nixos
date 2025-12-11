@@ -22,6 +22,7 @@
     ];
     shell = pkgs.bash;
     uid = 10000;
+    initialHashedPassword = "";
     group = "slash";
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHgoR0SjvlG9RSXJYEKH6noGzXwA0vO5Jt8icqLf/wWk slash@turtle"

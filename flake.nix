@@ -8,11 +8,11 @@
       url = "git+https://codeberg.org/slaxor/editor";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    slaxor-replace-src = {
-      url = "git+https://codeberg.org/slaxor/replace";
-      # inputs.nixpkgs.follows = "nixpkgs";
-      flake = false;
-    };
+    # slaxor-replace-src = {
+    # url = "git+https://codeberg.org/slaxor/replace";
+    # inputs.nixpkgs.follows = "nixpkgs";
+    # flake = false;
+    # };
   };
 
   outputs =
@@ -20,6 +20,7 @@
       self,
       nixpkgs,
       nixpkgs-unstable,
+      slaxor-editor,
       ...
     }@inputs:
     {
@@ -38,16 +39,15 @@
             ./modules/common-desktop.nix
             ./modules/users/stackit.nix
             ./hosts/kea.nix
-            # ({ config, pkgs, ... }: {
-            # environment.systemPackages = with pkgs; [
-            # slaxor-editor.packages.${pkgs.system}.default
-            # ];
-            # })
-            # ({ config, pkgs, ... }: {
-            # environment.systemPackages = with pkgs; [
-            # slaxor-replace.packages.${pkgs.system}.default
-            # ];
-            # })
+            (
+              { pkgs, ... }:
+              {
+                environment.systemPackages = [
+                  slaxor-editor.packages.${pkgs.system}.default
+                  # slaxor-replace.packages.${pkgs.system}.default
+                ];
+              }
+            )
           ];
         };
 
@@ -76,8 +76,8 @@
           specialArgs = { inherit inputs; };
           modules = [
             { nixpkgs.overlays = [ self.overlays.unstable ]; }
-            ./modules/common-server.nix
-            ./hosts/hare_disko.nix
+            ./modules/common-desktop.nix
+            ./modules/users/stackit.nix
             ./hosts/hare.nix
             # ({ config, pkgs, ... }: {
             # environment.systemPackages = with pkgs; [

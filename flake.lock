@@ -36,8 +36,7 @@
       "inputs": {
         "nixpkgs": "nixpkgs",
         "nixpkgs-unstable": "nixpkgs-unstable",
-        "slaxor-editor": "slaxor-editor",
-        "slaxor-replace-src": "slaxor-replace-src"
+        "slaxor-editor": "slaxor-editor"
       }
     },
     "slaxor-editor": {
@@ -58,22 +57,6 @@
       "original": {
         "type": "git",
         "url": "https://codeberg.org/slaxor/editor"
-      }
-    },
-    "slaxor-replace-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1734401158,
-        "narHash": "sha256-6RZikkkuEKS8zrZdXbfjZ66jaOSmNTuwGZDqkQY2byw=",
-        "ref": "refs/heads/master",
-        "rev": "8f7c4442c7fe57b64f91fa7bbda2489f3b170e8a",
-        "revCount": 15,
-        "type": "git",
-        "url": "https://codeberg.org/slaxor/replace"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://codeberg.org/slaxor/replace"
       }
     }
   },

@@ -69,16 +69,17 @@
     LC_TIME = "de_DE.UTF-8";
   };
 
-  swapDevices = [{
-    device = "/var/lib/swapfile";
-    size = 16*1024; # 16 GB
-  }];
+  swapDevices = [
+    {
+      device = "/var/lib/swapfile";
+      size = 16 * 1024; # 16 GB
+    }
+  ];
 
   hardware = {
     bluetooth.enable = true;
     # rtl-sdr.enable = true;
   };
-
 
   programs = {
     nix-ld.enable = true;
@@ -92,8 +93,8 @@
     };
   };
 
-
   services = {
+    envfs.enable = true;
     dbus.enable = true;
     blueman.enable = true;
     locate = {
