@@ -1,4 +1,4 @@
-{ config, ... }:
+{ ... }:
 {
   nix.settings.experimental-features = [
     "nix-command"
@@ -6,6 +6,7 @@
   ];
   imports = [
     ./hare-hardware-configuration.nix
+    ./modules/docker
   ];
 
   boot.kernelParams = [ "ip=dhcp" ];
@@ -27,9 +28,7 @@
 
   time.timeZone = "Europe/Berlin";
   networking.hostName = "hare";
-
-  services.tmate-ssh-server.host = "hare.slaxor.de";
-
+  services.tmate-ssh-server.host = "hare.t5l.de";
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
