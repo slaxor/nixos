@@ -6,7 +6,7 @@
   ];
   imports = [
     ./hare-hardware-configuration.nix
-    ./modules/docker
+    ../modules/docker
   ];
 
   boot = {

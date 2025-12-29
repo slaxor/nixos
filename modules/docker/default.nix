@@ -16,17 +16,15 @@
     '';
   };
 
-  services.docker.enable = true;
-
   virtualisation.oci-containers.containers.wg-hub = {
     image = "lscr.io/linuxserver/wireguard:latest";
-    ports = [ "51820:51820/udp" ];
-    capAdd = [ "NET_ADMIN" ];
-    sysctls = {
-      "net.ipv4.conf.all.src_valid_mark" = "1";
-    };
 
+    ports = [ "51820:51820/udp" ];
+
+    # Add NET_ADMIN & required WireGuard kernel sysctl
     extraOptions = [
+      "--cap-add=NET_ADMIN"
+      "--sysctl=net.ipv4.conf.all.src_valid_mark=1"
       "--network=wgnet"
     ];
 
@@ -34,7 +32,8 @@
       PUID = "1000";
       PGID = "1000";
       TZ = "UTC";
-      SERVERURL = "wg.t5l.de";
+      ALLOWEDIPS = "0.0.0.0/0";
+      SERVERURL = "auto";
       SERVERPORT = "51820";
     };
 
