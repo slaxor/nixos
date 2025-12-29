@@ -19,6 +19,7 @@
     djbdns
     dnsdiag
     dnsperf
+    tcping-go
   ];
 
   networking = {

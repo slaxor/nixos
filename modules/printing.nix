@@ -1,42 +1,36 @@
 { pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
-    cups
     brlaser
   ];
 
-  services = {
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true; # Allows resolving .local addresses
+    openFirewall = true; # Opens the UDP port 5353 for discovery
+  };
 
-    avahi = {
-      enable = true;
-      nssmdns4 = true;
-      openFirewall = false;
-      publish = {
-        enable = false;
-        userServices = false;
-      };
-    };
-    printing = {
-      listenAddresses = [ "127.0.0.1:631" ];
-      allowFrom = [ "none" ];
-      browsing = true;
-      defaultShared = false;
-      openFirewall = false;
-    };
+  networking.firewall.allowedTCPPorts = [ 9100 ];
 
-    hardware.printers = {
-      ensurePrinters = [
-        {
-          name = "Brother_HL-5450";
-          location = "Home";
-          deviceUri = "http://192.168.178.49:631/printers/Brother_HL-5450";
-          model = "drv:///sample.drv/generic.ppd";
-          ppdOptions = {
-            PageSize = "A4";
-          };
-        }
-      ];
-      ensureDefaultPrinter = "Brother_HL-5450";
-    };
+  services.printing = {
+    enable = true;
+    drivers = [ pkgs.brlaser ];
+    browsing = true;
+    defaultShared = true;
+  };
+
+  hardware.printers = {
+    ensurePrinters = [
+      {
+        name = "Brother_HL-5450DN";
+        location = "Home";
+        deviceUri = "socket://192.168.178.49:9100";
+        model = "drv:///brlaser.drv/br5450d.ppd";
+        ppdOptions = {
+          PageSize = "A4";
+        };
+      }
+    ];
+    ensureDefaultPrinter = "Brother_HL-5450DN";
   };
 }

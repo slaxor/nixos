@@ -14,6 +14,7 @@
     # Services
     ./libvirt.nix
     ./tmate-server.nix
+    ./printing.nix
 
     # Packages & Utils
     ./utils.nix

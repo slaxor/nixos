@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
-    greetd.greetd
+    greetd
   ];
 
   # services.getty.autologinUser = "slash";

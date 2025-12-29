@@ -2,7 +2,7 @@
   description = "Slaxors's NixOS with Sway";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     slaxor-editor = {
       url = "git+https://codeberg.org/slaxor/editor";
@@ -32,7 +32,7 @@
       };
       nixosConfigurations = {
         kea = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          system  = "x86_64-linux";
           specialArgs = { inherit inputs; };
           modules = [
             { nixpkgs.overlays = [ self.overlays.unstable ]; }

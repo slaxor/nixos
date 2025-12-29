@@ -27,6 +27,7 @@
     wget
     neovim
     neovim-remote
+    unixtools.xxd
   ];
 
   nix.gc = {
@@ -91,7 +92,6 @@
       enable = true;
       package = pkgs.plocate;
     };
-    printing.enable = true;
     udisks2.enable = true;
   };
 
