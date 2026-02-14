@@ -4,19 +4,19 @@
     brlaser
   ];
 
-  services.avahi = {
-    enable = true;
-    nssmdns4 = true; # Allows resolving .local addresses
-    openFirewall = true; # Opens the UDP port 5353 for discovery
-  };
+  # services.avahi = {
+  # enable = true;
+  # nssmdns4 = true; # Allows resolving .local addresses
+  # openFirewall = true; # Opens the UDP port 5353 for discovery
+  # };
 
-  networking.firewall.allowedTCPPorts = [ 9100 ];
+  # networking.firewall.allowedTCPPorts = [ 9100 ];
 
   services.printing = {
     enable = true;
     drivers = [ pkgs.brlaser ];
-    browsing = true;
-    defaultShared = true;
+    browsing = false;
+    defaultShared = false;
   };
 
   hardware.printers = {

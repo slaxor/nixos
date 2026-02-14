@@ -23,11 +23,15 @@
   ];
 
   networking = {
-    networkmanager.enable = true;
-    nameservers = [
-      "1.1.1.1"
-      "8.8.8.8"
-    ];
+    networkmanager = {
+			enable = true;
+			dns = "dnsmasq";
+		};
+
+    # nameservers = [
+      # "1.1.1.1"
+      # "8.8.8.8"
+    # ];
     extraHosts = ''
       172.18.0.5 api.mgmt.sdc.runs.onstackit.local
       172.18.0.4 idp.mgmt.sdc.runs.onstackit.local
@@ -47,7 +51,7 @@
   };
 
   services = {
-    resolved.enable = true;
+    # resolved.enable = true;
     dnsmasq = {
       enable = true;
       resolveLocalQueries = false;
@@ -64,18 +68,33 @@
         listen-address = "127.0.0.1";
         domain = "slaxor.local";
         server = [
-          "8.8.8.8"
           "8.8.4.4"
-          "/mgmt.sdc.runs.onstackit.local/127.0.0.1"
+          "1.1.1.1"
         ];
         address = [
-          "/example/127.0.0.1"
+          "/loc/127.0.0.1"
+          "/mgmt.sdc.runs.onstackit.local/127.0.0.1"
           "/idp.mgmt.sdc.runs.onstackit.local/172.18.0.4"
           "/api.mgmt.sdc.runs.onstackit.local/172.18.0.5"
           "/application.mgmt.sdc.runs.onstackit.local/172.18.0.6"
+					"/developers.stackit.schwarz/127.0.0.1"
         ];
       };
     };
+
+		nginx = {
+			enable = true;
+			virtualHosts."developers.stackit.schwarz" = {
+				# forceSSL = true;
+				# sslCertificate = "/var/lib/local-pki/cert.pem";
+				# sslCertificateKey = "/var/lib/local-pki/key.pem";
+				locations."/" = {
+					proxyPass = "http://127.0.0.1:3000";
+					proxyWebsockets = true;
+				};
+			};
+		};
+
     openssh = {
       enable = true;
       settings.KbdInteractiveAuthentication = false;

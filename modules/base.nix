@@ -3,6 +3,8 @@
   environment.systemPackages = with pkgs; [
     bash
     binutils
+    borgbackup
+    borgmatic
     curl
     dialog
     gcc

@@ -4,15 +4,17 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+
     slaxor-editor = {
       url = "git+https://codeberg.org/slaxor/editor";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # slaxor-replace-src = {
-    # url = "git+https://codeberg.org/slaxor/replace";
-    # inputs.nixpkgs.follows = "nixpkgs";
-    # flake = false;
-    # };
+
+		# slaxor-replace = {
+			# url = "git+https://codeberg.org/slaxor/replace";
+			# inputs.nixpkgs.follows = "nixpkgs";
+			# flake = false;
+		# };
   };
 
   outputs =
@@ -21,6 +23,7 @@
       nixpkgs,
       nixpkgs-unstable,
       slaxor-editor,
+      # slaxor-replace,
       ...
     }@inputs:
     {
@@ -39,15 +42,12 @@
             ./modules/common-desktop.nix
             ./modules/users/stackit.nix
             ./hosts/kea.nix
-            (
-              { pkgs, ... }:
-              {
-                environment.systemPackages = [
-                  slaxor-editor.packages.${pkgs.system}.default
-                  # slaxor-replace.packages.${pkgs.system}.default
-                ];
-              }
-            )
+            ({ pkgs, ... }: {
+							environment.systemPackages = [
+								slaxor-editor.packages.${pkgs.system}.default
+								# slaxor-replace.packages.${pkgs.system}.default
+							];
+						})
           ];
         };
 
@@ -58,16 +58,12 @@
             { nixpkgs.overlays = [ self.overlays.unstable ]; }
             ./modules/common-desktop.nix
             ./hosts/taz.nix
-            # ({ config, pkgs, ... }: {
-            # environment.systemPackages = with pkgs; [
-            # slaxor-editor.packages.${pkgs.system}.default
-            # ];
-            # })
-            # ({ config, pkgs, ... }: {
-            # environment.systemPackages = with pkgs; [
-            # slaxor-replace.packages.${pkgs.system}.default
-            # ];
-            # })
+						({ config, pkgs, ... }: {
+							environment.systemPackages = with pkgs; [
+								slaxor-editor.packages.${pkgs.system}.default
+								# slaxor-replace.packages.${pkgs.system}.default
+							];
+						})
           ];
         };
 

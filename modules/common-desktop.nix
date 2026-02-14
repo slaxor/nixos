@@ -5,6 +5,8 @@
     ./network.nix
     ./polkit.nix
     ./udev.nix
+    ./local-pki.nix
+    ./nix.nix
 
     # GUI
     ./greetd.nix
@@ -20,7 +22,6 @@
     ./utils.nix
     ./wireshark.nix
     ./yazi.nix
-    ./slaxors-custom.nix
 
     # Common Users
     ./users/slash.nix

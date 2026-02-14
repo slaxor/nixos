@@ -14,11 +14,16 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/9a83ccd0-30f7-44c1-8a4f-c1b764c6b6bc";
+    { device = "/dev/mapper/KEAROOT";
       fsType = "ext4";
     };
 
-  boot.initrd.luks.devices."luks-24837784-a0eb-402c-a42e-ed5d6b4747c4".device = "/dev/disk/by-uuid/24837784-a0eb-402c-a42e-ed5d6b4747c4";
+  boot.initrd.luks.devices."KEAROOT".device = "/dev/disk/by-uuid/24837784-a0eb-402c-a42e-ed5d6b4747c4";
+
+  # fileSystems."/nix/store" =
+    # { device = "/dev/mapper/luks-24837784-a0eb-402c-a42e-ed5d6b4747c4";
+      # fsType = "ext4";
+    # };
 
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/B18A-93F2";
@@ -26,21 +31,45 @@
       options = [ "fmask=0077" "dmask=0077" ];
     };
 
+  fileSystems."/bin" =
+    { device = "/usr/bin";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
   fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/f0c7de60-2549-42a4-b54e-490dcca3e803";
+    { device = "/dev/mapper/KEAHOME";
       fsType = "btrfs";
     };
 
-  boot.initrd.luks.devices."HOME".device = "/dev/disk/by-uuid/69528798-19e8-48d5-95b2-140459b4a571";
+  boot.initrd.luks.devices."KEAHOME".device = "/dev/disk/by-uuid/69528798-19e8-48d5-95b2-140459b4a571";
+
+  fileSystems."/data" =
+    { device = "/dev/mapper/KEADATA";
+      fsType = "btrfs";
+    };
+
+  boot.initrd.luks.devices."KEADATA".device = "/dev/disk/by-uuid/e11888f4-c632-43b1-bb40-2bfa7e43c952";
+
+  fileSystems."/var/lib/libvirt" =
+    { device = "/dev/mapper/KEADATA";
+      fsType = "btrfs";
+      options = [ "subvol=var/lib/libvirt" ];
+    };
+
+  fileSystems."/var/lib/docker" =
+    { device = "/dev/mapper/KEADATA";
+      fsType = "btrfs";
+      options = [ "subvol=var/lib/docker" ];
+    };
+
+  fileSystems."/nix/store" =
+    { device = "/dev/mapper/KEADATA";
+      fsType = "btrfs";
+      options = [ "subvol=nix/store" ];
+    };
 
   swapDevices = [ ];
-
-  # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
-  # (the default) this is the recommended approach. When using systemd-networkd it's
-  # still possible to use this option, but it's recommended to use it in conjunction
-  # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
-  networking.useDHCP = lib.mkDefault true;
-  # networking.interfaces.wlp4s0.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
