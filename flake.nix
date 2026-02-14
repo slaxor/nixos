@@ -72,8 +72,7 @@
           specialArgs = { inherit inputs; };
           modules = [
             { nixpkgs.overlays = [ self.overlays.unstable ]; }
-            ./modules/common-desktop.nix
-            ./modules/users/stackit.nix
+            ./modules/common-server.nix
             ./hosts/hare.nix
             # ({ config, pkgs, ... }: {
             # environment.systemPackages = with pkgs; [

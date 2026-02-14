@@ -53,5 +53,9 @@
         "wireguard-config:/config"
       ];
     };
+
+    volumes = [
+      "wireguard-config:/config"
+    ];
   };
 }
