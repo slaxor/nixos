@@ -11,7 +11,11 @@
     KERNEL=="uinput", MODE="0660", GROUP="input"
   '';
   # services.udev.extraRules = ''
-    # Match Logitech Unifying Receiver (Solaar)
-    # SUBSYSTEM=="usb", ATTR{idVendor}=="046d", ATTR{idProduct}=="c548", MODE="0660", GROUP="plugdev"
+  # Match Logitech Unifying Receiver (Solaar)
+  # SUBSYSTEM=="usb", ATTR{idVendor}=="046d", ATTR{idProduct}=="c548", MODE="0660", GROUP="plugdev"
   # '';
+  services.udev.packages = [
+    pkgs.probe-rs-tools
+  ];
+  # users.users.slash.extraGroups = [ "dialout" ];
 }

@@ -35,7 +35,6 @@
       export MOZ_ENABLE_WAYLAND=1
     '';
   };
-
   services.xserver = {
     enable = true;
     # displayManager.sddm.enable = false;
@@ -44,6 +43,7 @@
     # displayManager.sessionCommands = "xhost +local:";
   };
 
+  services.gvfs.enable = true;
   systemd.services = {
     dconf = {
       enable = true;

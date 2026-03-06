@@ -4,6 +4,7 @@
     age
     bc
     bcachefs-tools
+    bluetuith
     bridge-utils
     coreutils
     ctags
@@ -34,4 +35,3 @@
     usbutils
   ];
 }
-
