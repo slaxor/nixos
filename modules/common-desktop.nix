@@ -22,8 +22,5 @@
     ./utils.nix
     ./wireshark.nix
     ./yazi.nix
-
-    # Common Users
-    ./users/slash.nix
   ];
 }

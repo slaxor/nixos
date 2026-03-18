@@ -58,8 +58,10 @@
             { nixpkgs.overlays = [ self.overlays.unstable ]; }
             ./modules/common-desktop.nix
             ./hosts/taz.nix
-						({ config, pkgs, ... }: {
-							environment.systemPackages = with pkgs; [
+            ./hosts/users/slash.nix
+
+            ({ pkgs, ... }: {
+							environment.systemPackages = [
 								slaxor-editor.packages.${pkgs.system}.default
 								# slaxor-replace.packages.${pkgs.system}.default
 							];
