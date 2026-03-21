@@ -13,7 +13,7 @@
       "input"
       "kvm"
       "libvirtd"
-			"lp"
+      "lp"
       "networkmanager"
       "plugdev"
       "qemu-libvirt"

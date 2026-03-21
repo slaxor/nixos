@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
     bash
@@ -7,9 +7,11 @@
     borgmatic
     curl
     dialog
+    efibootmgr
     gcc
     git
     git-filter-repo
+    gnumake
     gptfdisk
     home-manager
     htop
@@ -18,18 +20,17 @@
     lsb-release
     lsof
     lvm2
-    gnumake
     mc
+    neovim
+    neovim-remote
     psmisc
     ripgrep
     socat
     terminus_font
     tmux
     tree
-    wget
-    neovim
-    neovim-remote
     unixtools.xxd
+    wget
   ];
 
   nix.gc = {
