@@ -44,5 +44,5 @@
   time.timeZone = "Europe/Berlin";
   networking.hostName = "hare";
   services.tmate-ssh-server.host = "hare.t5l.de";
-  system.stateVersion = "25.05";
+  system.stateVersion = "25.11";
 }

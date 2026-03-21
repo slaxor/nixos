@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ ... }:
 {
   nix.settings.experimental-features = [
     "nix-command"
@@ -14,14 +14,10 @@
   boot = {
     loader = {
       systemd-boot = {
-	enable = true;
-	configurationLimit = 10;
+        enable = true;
+        configurationLimit = 10;
       };
       efi.canTouchEfiVariables = true;
-      # grub = {
-      # enable = true;
-      # devices = [ "nodev" ];
-      # };
     };
 
     initrd.availableKernelModules = [
