@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ ... }:
 {
   nix.settings.experimental-features = [
     "nix-command"
@@ -27,7 +27,5 @@
     ];
   };
 
-  services.tmate-ssh-server.host = "taz.slaxor.de";
-
-  system.stateVersion = "25.05";
+  system.stateVersion = "25.11";
 }
