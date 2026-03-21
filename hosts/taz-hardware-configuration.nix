@@ -23,31 +23,25 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
-  boot.initrd.luks.devices."TAZROOT_crypted".device =
-    "/dev/disk/by-uuid/debede49-4b97-4b5c-814f-2cdcf9424465";
+  fileSystems."/" =
+    { device = "/dev/mapper/TAZROOT";
+      fsType = "btrfs";
+    };
 
-  fileSystems."/home" = {
-    device = "/dev/mapper/TAZHOME_crypted";
-    fsType = "btrfs";
-  };
+  boot.initrd.luks.devices."TAZROOT".device = "/dev/disk/by-uuid/67d81285-aa77-4d76-8e5d-509d41ae3e4b";
 
-  boot.initrd.luks.devices."TAZHOME_crypted".device =
-    "/dev/disk/by-uuid/d9873944-a3aa-4051-801f-1f494ed51619";
+  fileSystems."/home" =
+    { device = "/dev/mapper/TAZHOME";
+      fsType = "btrfs";
+    };
 
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/2A89-8CE7";
-    fsType = "vfat";
-    options = [
-      "fmask=0077"
-      "dmask=0077"
-    ];
-  };
+  boot.initrd.luks.devices."TAZHOME".device = "/dev/disk/by-uuid/d9873944-a3aa-4051-801f-1f494ed51619";
 
-  fileSystems."/" = {
-    device = "/dev/mapper/TAZROOT_crypted";
-    fsType = "btrfs";
-    options = [ "subvol=@" ];
-  };
+  fileSystems."/boot" =
+    { device = "/dev/disk/by-uuid/9186-8187";
+      fsType = "vfat";
+      options = [ "fmask=0022" "dmask=0022" ];
+    };
 
   swapDevices = [ ];
 

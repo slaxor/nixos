@@ -12,8 +12,5 @@
     ./utils.nix
     ./yazi.nix
     # ./slaxors-custom.nix
-
-    # Common Users
-    ./users/slash.nix
   ];
 }

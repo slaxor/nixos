@@ -20,6 +20,11 @@
     dnsdiag
     dnsperf
     tcping-go
+    nmap
+    socat
+    netcat-gnu
+    dbd
+    snicat
   ];
 
   networking = {
