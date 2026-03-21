@@ -9,7 +9,6 @@
     coreutils
     ctags
     dconf
-    docker
     exfat
     f2fs-tools
     fd

@@ -6,10 +6,11 @@
   ];
   imports = [
     ./hare-hardware-configuration.nix
-    ../modules/docker
-    # Common Users
-    ./users/slash.nix
-    ./users/thorsten.nix
+    ./networking.nix
+    ../../modules/podman
+    ../../modules/kubernetes
+    ../users/slash.nix
+    ../users/thorsten.nix
   ];
 
   boot = {
@@ -28,6 +29,7 @@
         port = 2222;
         authorizedKeys = [
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOtjkbH0TGABWHHuV5Rrzt0UIKJBkPIo8tHXHoyC9kBT slash@kea"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMofo4uP8iGMw2R1LFzBQu7TuiSqwS28ILf1L1Mx/xGx slash@taz"
         ];
         hostKeys = [ "/etc/ssh/ssh_host_ed25519_key" ];
       };
@@ -41,8 +43,36 @@
     kernelParams = [ "ip=dhcp" ];
   };
 
+  boot.kernelModules = [
+    "br_netfilter"
+    "overlay"
+    "iptable_nat"
+    "iptable_filter"
+  ];
+
+  boot.kernel.sysctl = {
+    "net.ipv4.ip_forward" = 1;
+    "net.bridge.bridge-nf-call-iptables" = 1;
+  };
+
   time.timeZone = "Europe/Berlin";
+
+  # environment.etc."update-motd.d/10-custom".text = ''
+  # '';
+  programs.bash.loginShellInit = ''
+    #!/usr/bin/env bash
+    fastfetch
+    kubefetch
+  '';
+  # security.pam.services.sshd.text = ''
+  # session optional pam_motd.so motd=/etc/motd
+  # '';
+  # environment.etc."motd".text = ''
+  # Welcome to hare.t5l.de
+
+  # '';
+
   networking.hostName = "hare";
   services.tmate-ssh-server.host = "hare.t5l.de";
-  system.stateVersion = "25.05";
+  system.stateVersion = "25.11";
 }

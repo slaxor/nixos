@@ -27,26 +27,21 @@
     snicat
   ];
 
-  networking = {
-    networkmanager = {
-			enable = true;
-			dns = "dnsmasq";
-		};
+  # networking = {
+  # networkmanager = {
+  # enable = false;
+  # dns = "dnsmasq";
+  # };
 
-    # nameservers = [
-      # "1.1.1.1"
-      # "8.8.8.8"
-    # ];
-    extraHosts = ''
-      172.18.0.5 api.mgmt.sdc.runs.onstackit.local
-      172.18.0.4 idp.mgmt.sdc.runs.onstackit.local
-    '';
-    firewall = {
-      # allowedTCPPorts = [ 22 ];
-      # allowedUDPPorts = [ ... ];
-      enable = false;
-    };
-  };
+  # nameservers = [
+  # "1.1.1.1"
+  # "8.8.8.8"
+  # ];
+  # extraHosts = ''
+  # 172.18.0.5 api.mgmt.sdc.runs.onstackit.local
+  # 172.18.0.4 idp.mgmt.sdc.runs.onstackit.local
+  # '';
+  # };
 
   programs = {
     ssh = {
@@ -56,6 +51,10 @@
   };
 
   services = {
+    openssh = {
+      enable = true;
+      settings.KbdInteractiveAuthentication = false;
+    };
     # resolved.enable = true;
     dnsmasq = {
       enable = true;
@@ -82,27 +81,22 @@
           "/idp.mgmt.sdc.runs.onstackit.local/172.18.0.4"
           "/api.mgmt.sdc.runs.onstackit.local/172.18.0.5"
           "/application.mgmt.sdc.runs.onstackit.local/172.18.0.6"
-					"/developers.stackit.schwarz/127.0.0.1"
+          "/developers.stackit.schwarz/127.0.0.1"
         ];
       };
     };
 
-		nginx = {
-			enable = true;
-			virtualHosts."developers.stackit.schwarz" = {
-				# forceSSL = true;
-				# sslCertificate = "/var/lib/local-pki/cert.pem";
-				# sslCertificateKey = "/var/lib/local-pki/key.pem";
-				locations."/" = {
-					proxyPass = "http://127.0.0.1:3000";
-					proxyWebsockets = true;
-				};
-			};
-		};
-
-    openssh = {
-      enable = true;
-      settings.KbdInteractiveAuthentication = false;
-    };
+    # nginx = {
+    # enable = true;
+    # virtualHosts."developers.stackit.schwarz" = {
+    # forceSSL = true;
+    # sslCertificate = "/var/lib/local-pki/cert.pem";
+    # sslCertificateKey = "/var/lib/local-pki/key.pem";
+    # locations."/" = {
+    # proxyPass = "http://127.0.0.1:3000";
+    # proxyWebsockets = true;
+    # };
+    # };
+    # };
   };
 }

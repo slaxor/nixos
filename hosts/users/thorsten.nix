@@ -13,8 +13,9 @@
       "input"
       "kvm"
       "libvirtd"
-			"lp"
+      "lp"
       "networkmanager"
+      "podman"
       "plugdev"
       "qemu-libvirt"
       "storage"
@@ -30,4 +31,3 @@
     ];
   };
 }
-

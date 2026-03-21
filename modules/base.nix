@@ -10,6 +10,7 @@
     gcc
     git
     git-filter-repo
+    gnumake
     gptfdisk
     home-manager
     htop
@@ -18,18 +19,18 @@
     lsb-release
     lsof
     lvm2
-    gnumake
     mc
+    neovim
+    neovim-remote
+    net-tools
     psmisc
     ripgrep
     socat
     terminus_font
     tmux
     tree
-    wget
-    neovim
-    neovim-remote
     unixtools.xxd
+    wget
   ];
 
   nix.gc = {
@@ -38,7 +39,6 @@
     options = "--delete-older-than 30d";
   };
 
-  virtualisation.docker.enable = true;
   nix.settings.download-buffer-size = 524288000;
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;

@@ -5,8 +5,9 @@
     ./network.nix
 
     # Services
-    ./libvirt.nix
+    # ./libvirt.nix
     ./tmate-server.nix
+    ./kubernetes
 
     # Packages & Utils
     ./utils.nix

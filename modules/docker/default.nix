@@ -26,26 +26,26 @@
         ];
       };
 
-      oci-containers.containers.wg-hub = {
-        image = "lscr.io/linuxserver/wireguard:latest";
-        ports = [ "51820:51820/udp" ];
-        capAdd = [ "NET_ADMIN" ];
-        sysctls = {
-          "net.ipv4.conf.all.src_valid_mark" = "1";
-        };
+      # oci-containers.containers.wg-hub = {
+      # image = "lscr.io/linuxserver/wireguard:latest";
+      # ports = [ "51820:51820/udp" ];
+      # capAdd = [ "NET_ADMIN" ];
+      # sysctls = {
+      # "net.ipv4.conf.all.src_valid_mark" = "1";
+      # };
 
-        extraOptions = [
-          "--network=wgnet"
-        ];
+      # extraOptions = [
+      # "--network=wgnet"
+      # ];
 
-        environment = {
-          PUID = "1000";
-          PGID = "1000";
-          TZ = "UTC";
-          SERVERURL = "wg.t5l.de";
-          SERVERPORT = "51820";
-        };
-      };
+      # environment = {
+      # PUID = "1000";
+      # PGID = "1000";
+      # TZ = "UTC";
+      # SERVERURL = "wg.t5l.de";
+      # SERVERPORT = "51820";
+      # };
+      # };
     };
   };
 }
