@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ ... }:
 {
   nix.settings.experimental-features = [
     "nix-command"
@@ -6,6 +6,8 @@
   ];
   imports = [
     ./taz-hardware-configuration.nix
+    ./users/slash.nix
+    ./users/stackit.nix
   ];
 
   time.timeZone = "Europe/Berlin";
@@ -14,23 +16,20 @@
   boot = {
     loader = {
       systemd-boot = {
-	enable = true;
-	configurationLimit = 10;
+        consoleMode = "1";
+        enable = true;
+        configurationLimit = 10;
       };
       efi.canTouchEfiVariables = true;
-      # grub = {
-      # enable = true;
-      # devices = [ "nodev" ];
-      # };
     };
 
-    initrd.availableKernelModules = [
-      "nvme"
-      "nouveau"
-    ];
+    initrd = {
+      availableKernelModules = [
+        "nvme"
+        "nouveau"
+      ];
+    };
   };
-
-  services.tmate-ssh-server.host = "taz.slaxor.de";
 
   system.stateVersion = "25.11";
 }

@@ -32,18 +32,45 @@
         "type": "github"
       }
     },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1773821835,
+        "narHash": "sha256-TJ3lSQtW0E2JrznGVm8hOQGVpXjJyXY2guAxku2O9A4=",
+        "rev": "b40629efe5d6ec48dd1efba650c797ddbd39ace0",
+        "revCount": 964859,
+        "type": "tarball",
+        "url": "https://api.flakehub.com/f/pinned/NixOS/nixpkgs/0.1.964859%2Brev-b40629efe5d6ec48dd1efba650c797ddbd39ace0/019d03e9-2959-7276-adaa-d074e96422de/source.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://flakehub.com/f/NixOS/nixpkgs/0.1"
+      }
+    },
+    "nixpkgs_3": {
+      "locked": {
+        "lastModified": 1773821835,
+        "narHash": "sha256-TJ3lSQtW0E2JrznGVm8hOQGVpXjJyXY2guAxku2O9A4=",
+        "rev": "b40629efe5d6ec48dd1efba650c797ddbd39ace0",
+        "revCount": 964859,
+        "type": "tarball",
+        "url": "https://api.flakehub.com/f/pinned/NixOS/nixpkgs/0.1.964859%2Brev-b40629efe5d6ec48dd1efba650c797ddbd39ace0/019d03e9-2959-7276-adaa-d074e96422de/source.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://flakehub.com/f/NixOS/nixpkgs/0.1"
+      }
+    },
     "root": {
       "inputs": {
         "nixpkgs": "nixpkgs",
         "nixpkgs-unstable": "nixpkgs-unstable",
-        "slaxor-editor": "slaxor-editor"
+        "slaxor-editor": "slaxor-editor",
+        "slaxor-replace": "slaxor-replace"
       }
     },
     "slaxor-editor": {
       "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
+        "nixpkgs": "nixpkgs_2"
       },
       "locked": {
         "lastModified": 1761275552,
@@ -57,6 +84,24 @@
       "original": {
         "type": "git",
         "url": "https://codeberg.org/slaxor/editor"
+      }
+    },
+    "slaxor-replace": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_3"
+      },
+      "locked": {
+        "lastModified": 1774132910,
+        "narHash": "sha256-rPhkscCYlhYNW4RYR/++wwTACuRm3vxfu9tehh+zEyk=",
+        "ref": "refs/heads/master",
+        "rev": "8bc1d2ac073b9c68b47f6f9433ee5575d1eb1ba0",
+        "revCount": 19,
+        "type": "git",
+        "url": "https://codeberg.org/slaxor/replace"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://codeberg.org/slaxor/replace"
       }
     }
   },

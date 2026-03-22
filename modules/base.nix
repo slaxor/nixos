@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
     bash
@@ -7,6 +7,7 @@
     borgmatic
     curl
     dialog
+    efibootmgr
     gcc
     git
     git-filter-repo
