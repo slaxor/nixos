@@ -78,11 +78,26 @@
       privateKeyFile = "/etc/wireguard/privatekey";
 
       peers = [
+        # slash@kea
         {
           presharedKeyFile = "/etc/wireguard/slash@kea.psk";
           publicKey = "Ah8uUMZI5pbrHmn2D2l74G2IW3hcjtEWXtRFXebMLDg=";
-          allowedIPs = [ "10.13.0.2/32" ];
+          allowedIPs = [ "10.13.0.16/28" ];
         }
+        # thorsten
+        {
+          presharedKeyFile = "/etc/wireguard/thorsten@kail.psk";
+          publicKey = "GSRGgehbiBvDTcm5R9ryXr78Mz3JSOqsYHSsuCgnjB4=";
+          allowedIPs = [ "10.13.0.32/28" ];
+        }
+
+        # ming
+        {
+          presharedKeyFile = "/etc/wireguard/ming@home.psk";
+          publicKey = "X4Jy7bzRMz64xEL1bAqdlv9Lc//NKxJZ+sbW7W+Spg4=";
+          allowedIPs = [ "10.13.0.48/28" ];
+        }
+
       ];
     };
 

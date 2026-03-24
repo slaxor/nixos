@@ -7,10 +7,6 @@
   imports = [
     ./hare-hardware-configuration.nix
     ./networking.nix
-    ../../modules/podman
-    ../../modules/kubernetes
-    ../users/slash.nix
-    ../users/thorsten.nix
   ];
 
   boot = {
@@ -73,6 +69,22 @@
   # '';
 
   networking.hostName = "hare";
-  services.tmate-ssh-server.host = "hare.t5l.de";
+  services = {
+    openssh = {
+      enable = true;
+      listenAddresses = [
+        {
+          addr = "144.76.195.142";
+          port = 22;
+        }
+        {
+          addr = "2a01:4f8:200:7181::1";
+          port = 22;
+        }
+      ];
+    };
+    tmate-ssh-server.host = "hare.t5l.de";
+  };
+
   system.stateVersion = "25.11";
 }

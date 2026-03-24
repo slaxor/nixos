@@ -37,8 +37,9 @@
             { nixpkgs.hostPlatform.system = "x86_64-linux"; }
             { nixpkgs.overlays = [ self.overlays.unstable ]; }
             ./modules/common-desktop.nix
-            ./modules/users/stackit.nix
             ./hosts/kea
+            ./users/slash.nix
+            ./users/stackit.nix
             (
               { pkgs, ... }:
               {
@@ -55,9 +56,10 @@
           specialArgs = { inherit inputs; };
           modules = [
             { nixpkgs.overlays = [ self.overlays.unstable ]; }
-            ./modules/common-desktop.nix
             ./hosts/taz
-            ./hosts/users/slash.nix
+            ./users/slash.nix
+            ./users/stackit.nix
+            ./modules/common-desktop.nix
             (
               { pkgs, ... }:
               {
@@ -74,10 +76,12 @@
           specialArgs = { inherit inputs; };
           modules = [
             { nixpkgs.overlays = [ self.overlays.unstable ]; }
+            ./hosts/hare
+            ./users/slash.nix
+            ./users/thorsten.nix
             ./modules/common-server.nix
-            ./hosts/taz
-            ./hosts/users/slash.nix
-            ./hosts/users/thorsten.nix
+            ./modules/podman
+            ./modules/kubernetes
             (
               { pkgs, ... }:
               {
