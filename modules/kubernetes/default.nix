@@ -58,6 +58,7 @@
                   - port: 12000
                     targetPort: 8081
     ''}"
+
     "L+ /var/lib/rancher/k3s/server/manifests/traefik-custom.yaml - - - - ${pkgs.writeText "traefik-helmchart.yaml" ''
       apiVersion: helm.cattle.io/v1
       kind: HelmChart
@@ -75,6 +76,7 @@
             replicas: 1
           service:
             type: LoadBalancer
+            externalTrafficPolicy: Local
             spec:
               externalIPs:
                 - "144.76.195.142"
@@ -82,7 +84,11 @@
                 - "2a01:4f8:200:7181::1"
           ports:
             web:
-              port: 80
+              http:
+                redirections:
+                  entryPoint:
+                    to: websecure
+                    scheme: https
               exposedPort: 80
             websecure:
               port: 443
@@ -108,6 +114,7 @@
                   sourceRange:
                     - "10.13.0.0/24"
     ''}"
+
     "L+ /var/lib/rancher/k3s/server/manifests/cert-manager.yaml - - - - ${pkgs.writeText "cert-manager-helmchart.yaml" ''
       apiVersion: helm.cattle.io/v1
       kind: HelmChart
@@ -124,6 +131,7 @@
           crds:
             enabled: true
     ''}"
+
     "L+ /var/lib/rancher/k3s/server/manifests/cert-manager-issuer.yaml - - - - ${pkgs.writeText "cert-manager-issuer.yaml" ''
       apiVersion: cert-manager.io/v1
       kind: ClusterIssuer
@@ -132,14 +140,51 @@
       spec:
         acme:
           server: https://acme-v02.api.letsencrypt.org/directory
-          email: "sascha.teske@microrprojects.de"
+          email: "sascha.teske@microprojects.de"
           privateKeySecretRef:
             name: letsencrypt-prod
           solvers:
-            - http01:
-                ingress:
-                  ingressClassName: traefik
+            - dns01:
+                webhook:
+                  groupName: acme.hetzner.com
+                  solverName: hetzner
+                  config:
+                    tokenSecretKeyRef:
+                      name: hetzner-dns-token
+                      key: token
+              selector:
+                dnsZones:
+                  - "m11s.de"
+                  - "slaxor.de"
+                  - "slaxor.com"
     ''}"
+
+    "L+ /var/lib/rancher/k3s/server/manifests/cert-manager-issuer-internal.yaml - - - - ${pkgs.writeText "cert-manager-issuer-internal.yaml" ''
+      kind: ClusterIssuer
+      metadata:
+        name: letsencrypt-internal
+      spec:
+        acme:
+          server: https://acme-v02.api.letsencrypt.org/directory
+          email: "sascha.teske@microprojects.de"
+          privateKeySecretRef:
+            name: letsencrypt-internal
+          solvers:
+            - dns01:
+                webhook:
+                  groupName: acme.hetzner.com
+                  solverName: hetzner
+                  config:
+                    tokenSecretKeyRef:
+                      name: hetzner-dns-token
+                      key: token
+              selector:
+                dnsZones:
+                  - "int.m11s.de"
+                  - "int.slaxor.de"
+                  - "int.slaxor.com"
+    ''}"
+
     "L+ /var/lib/rancher/k3s/server/manifests/cert-manager-webhook-hetzner.yaml - - - - ${pkgs.writeText "cert-manager-webhook-hetzner.yaml" ''
       apiVersion: helm.cattle.io/v1
       kind: HelmChart
@@ -153,6 +198,7 @@
         valuesContent: |-
           groupName: acme.hetzner.com
     ''}"
+
     "L+ /var/lib/rancher/k3s/server/manifests/cert-manager-webhook-hetzner-rbac.yaml - - - - ${pkgs.writeText "cert-manager-webhook-hetzner-rbac.yaml" ''
       apiVersion: rbac.authorization.k8s.io/v1
       kind: ClusterRole
@@ -205,27 +251,7 @@
           name: cert-manager-webhook-hetzner
           namespace: cert-manager
     ''}"
-    "L+ /var/lib/rancher/k3s/server/manifests/cert-manager-issuer-internal.yaml - - - - ${pkgs.writeText "cert-manager-issuer-internal.yaml" ''
-      apiVersion: cert-manager.io/v1
-      kind: ClusterIssuer
-      metadata:
-        name: letsencrypt-internal
-      spec:
-        acme:
-          server: https://acme-v02.api.letsencrypt.org/directory
-          email: "sascha.teske@microprojects.de"
-          privateKeySecretRef:
-            name: letsencrypt-internal
-          solvers:
-            - dns01:
-                webhook:
-                  groupName: acme.hetzner.com
-                  solverName: hetzner
-                  config:
-                    tokenSecretKeyRef:
-                      name: hetzner-dns-token
-                      key: token
-    ''}"
+
     "L+ /var/lib/rancher/k3s/server/manifests/gitea.yaml - - - - ${pkgs.writeText "gitea-helmchart.yaml" ''
       apiVersion: helm.cattle.io/v1
       kind: HelmChart
