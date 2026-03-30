@@ -50,35 +50,35 @@
     ];
     tmp.cleanOnBoot = true;
   };
-  i18n.defaultLocale = "C.UTF-8";
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "de_DE.UTF-8";
-    LC_IDENTIFICATION = "de_DE.UTF-8";
-    LC_MEASUREMENT = "de_DE.UTF-8";
-    LC_MONETARY = "de_DE.UTF-8";
-    LC_NAME = "de_DE.UTF-8";
-    LC_NUMERIC = "de_DE.UTF-8";
-    LC_PAPER = "de_DE.UTF-8";
-    LC_TELEPHONE = "de_DE.UTF-8";
-    LC_TIME = "de_DE.UTF-8";
+
+  i18n = {
+    defaultLocale = "C.UTF-8";
+    extraLocaleSettings = {
+      LC_ADDRESS = "de_DE.UTF-8";
+      LC_IDENTIFICATION = "de_DE.UTF-8";
+      LC_MEASUREMENT = "de_DE.UTF-8";
+      LC_MONETARY = "de_DE.UTF-8";
+      LC_NAME = "de_DE.UTF-8";
+      LC_NUMERIC = "de_DE.UTF-8";
+      LC_PAPER = "de_DE.UTF-8";
+      LC_TELEPHONE = "de_DE.UTF-8";
+      LC_TIME = "de_DE.UTF-8";
+    };
   };
 
   swapDevices = [
     {
       device = "/var/lib/swapfile";
-      size = 16 * 1024; # 16 GB
+      size = 16 * 1024;
     }
   ];
 
   hardware = {
     bluetooth.enable = true;
-    # rtl-sdr.enable = true;
   };
 
   programs = {
     nix-ld.enable = true;
-    # lxqt.polkit.enable = true;
-    # mtr.enable = true;
     neovim = {
       enable = true;
       defaultEditor = true;
@@ -98,7 +98,12 @@
     udisks2.enable = true;
   };
 
-  security.polkit.enable = true;
+  security = {
+    polkit.enable = true;
+    sudo.extraConfig = ''
+      Defaults timestamp_timeout=480
+    '';
+  };
 
   console = {
     earlySetup = true;
