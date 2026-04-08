@@ -25,23 +25,8 @@
     netcat-gnu
     dbd
     snicat
+    whois
   ];
-
-  # networking = {
-  # networkmanager = {
-  # enable = false;
-  # dns = "dnsmasq";
-  # };
-
-  # nameservers = [
-  # "1.1.1.1"
-  # "8.8.8.8"
-  # ];
-  # extraHosts = ''
-  # 172.18.0.5 api.mgmt.sdc.runs.onstackit.local
-  # 172.18.0.4 idp.mgmt.sdc.runs.onstackit.local
-  # '';
-  # };
 
   programs = {
     ssh = {

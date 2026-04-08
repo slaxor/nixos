@@ -14,8 +14,8 @@
     ./fonts.nix
 
     # Services
+    ./docker
     ./libvirt.nix
-    ./tmate-server.nix
     ./printing.nix
 
     # Packages & Utils

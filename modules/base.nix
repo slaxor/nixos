@@ -41,15 +41,6 @@
   };
 
   nix.settings.download-buffer-size = 524288000;
-  boot = {
-    kernelPackages = pkgs.linuxPackages_latest;
-    blacklistedKernelModules = [
-      "dvb_usb_rtl28xxu"
-      "dvb_usb_v2"
-      "dvb_core"
-    ];
-    tmp.cleanOnBoot = true;
-  };
 
   i18n = {
     defaultLocale = "C.UTF-8";
@@ -66,17 +57,6 @@
     };
   };
 
-  swapDevices = [
-    {
-      device = "/var/lib/swapfile";
-      size = 16 * 1024;
-    }
-  ];
-
-  hardware = {
-    bluetooth.enable = true;
-  };
-
   programs = {
     nix-ld.enable = true;
     neovim = {
@@ -90,12 +70,10 @@
   services = {
     envfs.enable = true;
     dbus.enable = true;
-    blueman.enable = true;
     locate = {
       enable = true;
       package = pkgs.plocate;
     };
-    udisks2.enable = true;
   };
 
   security = {
