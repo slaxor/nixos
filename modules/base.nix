@@ -91,4 +91,5 @@
     packages = with pkgs; [ terminus_font ];
     keyMap = "us";
   };
+  system.stateVersion = "25.11";
 }

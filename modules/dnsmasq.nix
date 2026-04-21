@@ -71,9 +71,10 @@ in
       resolveLocalQueries = false;
       settings = {
         server = [
-          "1.1.1.1"
-          "9.9.9.9"
           "8.8.4.4"
+          "8.8.8.8"
+          # "1.1.1.1"
+          # "9.9.9.9"
         ];
         domain-needed = true;
         bogus-priv = true;
