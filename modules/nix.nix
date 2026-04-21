@@ -1,10 +1,12 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 {
-  # environment.systemPackages = with pkgs; [
-  # ];
+  environment.systemPackages = with pkgs; [
+    niv
+  ];
+
   nix = {
     settings = {
-      # json-log-path = "/tmp/nixbtm.sock";
+      download-buffer-size = 524288000;
     };
 
     gc = {

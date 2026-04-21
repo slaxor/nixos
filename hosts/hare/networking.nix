@@ -33,26 +33,6 @@
         }
       '';
     };
-    firewall = {
-      enable = false;
-      # backend = "nftables"; # use nftables instead of iptables
-      # extraCommands = lib.mkForce "";
-      allowedTCPPorts = [
-        22
-        80
-        443
-        2222
-      ];
-      allowedUDPPorts = [ 53 ]; # DNS
-      trustedInterfaces = [
-        "cilium_host"
-        "cilium_net"
-        "cilium_vxlan"
-        "lxc+"
-        "wg0"
-      ];
-      checkReversePath = false;
-    };
     networkmanager.enable = false;
     useDHCP = false;
     interfaces = {
@@ -90,7 +70,6 @@
           publicKey = "GSRGgehbiBvDTcm5R9ryXr78Mz3JSOqsYHSsuCgnjB4=";
           allowedIPs = [ "10.13.0.32/28" ];
         }
-
         # ming
         {
           presharedKeyFile = "/etc/wireguard/ming@home.psk";

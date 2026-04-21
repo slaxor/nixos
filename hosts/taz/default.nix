@@ -12,15 +12,6 @@
   time.timeZone = "Europe/Berlin";
 
   boot = {
-    loader = {
-      systemd-boot = {
-        consoleMode = "1";
-        enable = true;
-        configurationLimit = 10;
-      };
-      efi.canTouchEfiVariables = true;
-    };
-
     initrd = {
       availableKernelModules = [
         "nvme"
@@ -29,17 +20,36 @@
     };
 
     kernelPackages = pkgs.linuxPackages_latest;
-
     blacklistedKernelModules = [
       "dvb_usb_rtl28xxu"
       "dvb_usb_v2"
       "dvb_core"
     ];
     tmp.cleanOnBoot = true;
-    kernelParams = [ "pcie_aspm=off" ];
+    kernelParams = [
+      # "pcie_aspm=off"
+    ];
+    loader = {
+      systemd-boot.enable = false;
+      efi.canTouchEfiVariables = true;
+      grub = {
+        enable = true;
+        devices = [ "nodev" ];
+      };
+    };
   };
 
-  hardware.enableRedistributableFirmware = true;
+  hardware = {
+    enableRedistributableFirmware = true;
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+      extraPackages = with pkgs; [
+        libva-utils
+        rocmPackages.clr
+      ];
+    };
+  };
 
   swapDevices = [
     {
@@ -62,36 +72,9 @@
 
   networking = {
     hostName = "taz";
-    # nftables = {
-    # enable = true;
-    # ruleset = ''
-    # table inet filter {
-    # chain input {
-    # type filter hook input priority 0; policy drop;
-    # iif lo accept
-    # iifname "wghare" accept
-    # ct state established,related accept
-    # ip protocol icmp accept
-    # ip6 nexthdr icmpv6 accept
-    # tcp dport 22 accept
-    # udp dport 53 accept
-    # tcp dport 53 accept
-    # udp dport 68 accept
-    # tcp dport 68 accept
-    # }
-
-    # chain forward {
-    # type filter hook forward priority 0; policy accept;
-    # }
-
-    # chain output {
-    # type filter hook output priority 0; policy accept;
-    # }
-    # }
-    # '';
+    usePredictableInterfaceNames = false;
     firewall = {
       enable = true;
-      # backend = "nftables";
       allowedTCPPorts = [
         22
         80
@@ -119,10 +102,5 @@
       "1.1.1.1"
       "8.8.8.8"
     ];
-    # extraHosts = ''
-    # 172.18.0.6 api.mgmt.sdc.runs.onstackit.local
-    # 172.18.0.5 idp.mgmt.sdc.runs.onstackit.local
-    # '';
   };
-  system.stateVersion = "25.11";
 }

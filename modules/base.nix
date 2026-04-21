@@ -34,13 +34,9 @@
     wget
   ];
 
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 30d";
+  hardware = {
+    firmware = [ pkgs.linux-firmware ];
   };
-
-  nix.settings.download-buffer-size = 524288000;
 
   i18n = {
     defaultLocale = "C.UTF-8";
@@ -74,6 +70,12 @@
       enable = true;
       package = pkgs.plocate;
     };
+    fwupd.enable = true;
+    journald.extraConfig = ''
+      SystemMaxUse=500M
+      SystemMaxFileSize=50M
+      MaxFileSec=1week
+    '';
   };
 
   security = {

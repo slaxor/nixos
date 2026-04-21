@@ -3,6 +3,8 @@
     # Core
     ./base.nix
     ./network.nix
+    ./dnsmasq.nix
+    ./ipblackhole.nix
     ./polkit.nix
     ./udev.nix
     ./local-pki.nix
