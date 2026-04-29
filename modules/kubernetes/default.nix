@@ -43,20 +43,10 @@
             mode: kubernetes
           operator:
             replicas: 1
-          hubble:
+          envoyConfig:
             enabled: true
-            relay:
-              enabled: true
-              listenHost: "0.0.0.0"
-            ui:
-              enabled: true
-              service:
-                type: ClusterIP
-                externalIPs:
-                  - "10.13.0.1"
-                ports:
-                  - port: 12000
-                    targetPort: 8081
+          bpf:
+            masquerade: true
     ''}"
 
     "L+ /var/lib/rancher/k3s/server/manifests/traefik-custom.yaml - - - - ${pkgs.writeText "traefik-helmchart.yaml" ''
@@ -102,7 +92,9 @@
             kubernetesCRD:
               enabled: true
           additionalArguments:
-            []
+            - "--entryPoints.websecure.transport.respondingTimeouts.readTimeout=300"
+            - "--entryPoints.websecure.transport.respondingTimeouts.writeTimeout=300"
+            - "--entryPoints.websecure.transport.respondingTimeouts.idleTimeout=300"
           extraObjects:
             - apiVersion: traefik.io/v1alpha1
               kind: Middleware
@@ -113,6 +105,8 @@
                 ipAllowList:
                   sourceRange:
                     - "10.13.0.0/24"
+                    - "127.0.0.0/8"
+                    - "10.42.0.0/16"
     ''}"
 
     "L+ /var/lib/rancher/k3s/server/manifests/cert-manager.yaml - - - - ${pkgs.writeText "cert-manager-helmchart.yaml" ''
@@ -160,6 +154,7 @@
     ''}"
 
     "L+ /var/lib/rancher/k3s/server/manifests/cert-manager-issuer-internal.yaml - - - - ${pkgs.writeText "cert-manager-issuer-internal.yaml" ''
+      apiVersion: cert-manager.io/v1
       kind: ClusterIssuer
       metadata:
         name: letsencrypt-internal
@@ -269,14 +264,14 @@
             enabled: true
             ingressClassName: traefik
             hosts:
-              - host: gitea.int.m11s.de
+              - host: git.int.m11s.de
                 paths:
                   - path: /
                     pathType: Prefix
             tls:
               - secretName: gitea-tls
                 hosts:
-                  - gitea.int.m11s.de
+                  - git.int.m11s.de
             annotations:
               cert-manager.io/cluster-issuer: "letsencrypt-internal"
               traefik.ingress.kubernetes.io/router.middlewares: traefik-wireguard-only@kubernetescrd
@@ -285,11 +280,13 @@
               existingSecret: gitea-admin
             config:
               server:
-                DOMAIN: gitea.int.m11s.de
-                ROOT_URL: https://gitea.int.m11s.de
-                SSH_DOMAIN: gitea.int.m11s.de
+                DOMAIN: git.int.m11s.de
+                ROOT_URL: https://git.int.m11s.de
+                SSH_DOMAIN: git.int.m11s.de
                 SSH_PORT: 22
                 START_SSH_SERVER: true
+              repository:
+                DEFAULT_BRANCH: master
               database:
                 DB_TYPE: sqlite3
               session:
@@ -316,20 +313,40 @@
     ''}"
   ];
 
-  services.k3s = {
-    enable = true;
-    role = "server";
-    extraFlags = toString [
-      "--advertise-address=10.13.0.1"
-      "--bind-address=10.13.0.1"
-      "--disable-kube-proxy"
-      "--disable-network-policy"
-      "--disable=servicelb"
-      "--disable=traefik"
-      "--flannel-backend=none"
-      "--node-ip=10.13.0.1"
-      "--tls-san=10.13.0.1"
-    ];
+  services = {
+    k3s = {
+      enable = true;
+      role = "server";
+      extraFlags = toString [
+        "--advertise-address=10.13.0.1"
+        "--bind-address=10.13.0.1"
+        "--disable-kube-proxy"
+        "--disable-network-policy"
+        "--disable=servicelb"
+        "--disable=traefik"
+        "--flannel-backend=none"
+        "--node-ip=10.13.0.1"
+        "--tls-san=10.13.0.1"
+      ];
+    };
+    dnsmasq = {
+      enable = true;
+      settings = {
+        server = [
+          "1.1.1.1"
+          "8.8.8.8"
+        ];
+        cache-size = 10000;
+        min-cache-ttl = 300;
+        neg-ttl = 60;
+        # your existing *.int.m11s.de entries stay here
+        listen-address = [
+          "127.0.0.1"
+          "10.13.0.1"
+        ];
+        bind-interfaces = true; # wichtig: sonst ignoriert dnsmasq listen-address teilweise
+      };
+    };
   };
 
   virtualisation.containerd = {

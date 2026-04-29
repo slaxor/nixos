@@ -32,5 +32,6 @@
     sops
     udftools
     usbutils
+    minio-client
   ];
 }

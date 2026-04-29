@@ -1,14 +1,16 @@
 {
   networking = {
+    firewall.enable = false; # disable the iptables-based firewall
     nftables = {
       enable = true;
       ruleset = ''
         table inet filter {
           chain input {
             type filter hook input priority 0; policy drop;
-            iif lo accept
             ct state established,related accept
-            ip protocol icmp accept
+            iifname "lo" accept
+            iifname "wg0" accept
+            iifname "cilium_*" accept
             ip6 nexthdr icmpv6 accept
             udp dport 51820 accept
             tcp dport 22 accept
@@ -19,8 +21,8 @@
             ip saddr 10.42.0.0/16 accept
             ip saddr 10.43.0.0/16 accept
             tcp dport { 6443, 12000 } drop
-            udp dport 53 accept
-            tcp dport 53 accept
+            icmp type echo-request accept
+            ip protocol icmp accept
           }
 
           chain forward {
@@ -51,6 +53,8 @@
         ];
       };
     };
+
+    nameservers = [ "127.0.0.1" ];
 
     wireguard.interfaces.wg0 = {
       ips = [ "10.13.0.1/24" ];
