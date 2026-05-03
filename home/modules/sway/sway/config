@@ -1,0 +1,9 @@
+set $cmd Mod4
+set $alt Mod1
+workspace_layout tabbed
+set $font "pango:Iosevka Nerd Font Propo Medium 12"
+font $font
+set $term foot
+set $menu wofi --dmenu --allow-images --allow-markup --insensitive
+include ${HOME}/.config/sway/config.d/*
+include /etc/sway/config.d/*

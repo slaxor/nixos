@@ -33,4 +33,8 @@
     udftools
     usbutils
   ];
+
+  services = {
+    upower.enable = true;
+  };
 }

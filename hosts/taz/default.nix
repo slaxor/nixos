@@ -9,6 +9,12 @@
     ./hardware-configuration.nix
   ];
 
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    users.slash = import ./home.nix;
+  };
+
   time.timeZone = "Europe/Berlin";
 
   boot = {

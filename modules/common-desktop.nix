@@ -1,3 +1,4 @@
+{ lib, ... }:
 {
   imports = [
     # Core
@@ -16,7 +17,8 @@
     ./fonts.nix
 
     # Services
-    ./docker
+    # ./docker
+    ./podman
     ./libvirt.nix
     ./printing.nix
 
@@ -25,4 +27,12 @@
     ./wireshark.nix
     ./yazi.nix
   ];
+
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    builtins.elem (lib.getName pkg) [
+      "claude-code"
+      "discord"
+      "unrar"
+    ];
 }

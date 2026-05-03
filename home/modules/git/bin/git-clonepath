@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# set -ex
+GIT_REPOS="${GIT_REPOS-${HOME}/git}"
+repo_to_dir() {
+  for p in $(echo "$1" | sed -e 's#https\?://##; s#.*@##; s#:v3/#/#; s#/_git/#/#g; s#:#/#g; s#.git$##g; s#[:/@]\+# #g'); do
+    printf '/%q' "$p"
+  done
+}
+
+target="${GIT_REPOS}$(repo_to_dir "$1")"
+[ "$#" = 0 ] || git clone "$1" "$target"
+echo "cd \"$target\""
+

@@ -1,0 +1,20 @@
+{
+  "name": "slaxors-snippets",
+  "engines": { "vscode": "^1.11.0"},
+  "contributes": {
+    "snippets": [
+      {
+        "language": [
+          "go"
+        ],
+        "path": "./snippets/go.json"
+      },
+      {
+        "language": [
+          "sh"
+        ],
+        "path": "./snippets/sh.json"
+      }
+    ]
+  }
+}

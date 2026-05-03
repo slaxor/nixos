@@ -2,23 +2,25 @@
 let
   # --- shell scripts ---
   dnsup = pkgs.writeShellScriptBin "dnsup" ''
-    set -euo pipefail
-    [[ $# -ne 2 ]] && { echo "usage: dnsup <hostname> <ip>"; exit 1; }
-    echo "$2  $1" >> /var/lib/dnsmasq/local.hosts
-    pkill -HUP dnsmasq
-    echo "$1 -> $2"
-  '';
+    add() {
+      set -euo pipefail
+      [[ $# -ne 2 ]] && { echo "usage: dnsup <hostname> <ip>"; exit 1; }
+      echo "$2  $1" >> /var/lib/dnsmasq/local.hosts
+    }
 
-  dns-rm = pkgs.writeShellScriptBin "dns-rm" ''
-    set -euo pipefail
-    [[ $# -ne 1 ]] && { echo "usage: dns-rm <hostname>"; exit 1; }
-    sed -i "/ $1$/d" /var/lib/dnsmasq/local.hosts
-    pkill -HUP dnsmasq
-    echo "removed $1"
-  '';
+    del() {
+      echo "$1 -> $2"
+      [[ $# -ne 1 ]] && { echo "usage: dns-rm <hostname>"; exit 1; }
+      sed -i "/ $1$/d" /var/lib/dnsmasq/local.hosts
+      pkill -HUP dnsmasq
+      echo "removed $1"
+    }
 
-  dns-ls = pkgs.writeShellScriptBin "dns-ls" ''
-    cat /var/lib/dnsmasq/local.hosts
+    list() {
+      cat /var/lib/dnsmasq/local.hosts
+    }
+
+    "$@"
   '';
 
   # --- adblock list sources ---
@@ -53,8 +55,6 @@ in
 {
   environment.systemPackages = with pkgs; [
     dnsup
-    dns-rm
-    dns-ls
     updateAdblock
     dnsmasq
   ];
@@ -95,11 +95,6 @@ in
         domain = "slaxor.local";
         address = [
           "/loc/127.0.0.1"
-          "/mgmt.sdc.runs.onstackit.local/127.0.0.1"
-          "/idp.mgmt.sdc.runs.onstackit.local/172.18.0.4"
-          "/api.mgmt.sdc.runs.onstackit.local/172.18.0.5"
-          "/application.mgmt.sdc.runs.onstackit.local/172.18.0.6"
-          "/developers.stackit.schwarz/127.0.0.1"
         ];
       };
     };
@@ -115,8 +110,6 @@ in
           })
           [
             dnsup
-            dns-rm
-            dns-ls
             updateAdblock
           ];
       groups = [ "wheel" ];

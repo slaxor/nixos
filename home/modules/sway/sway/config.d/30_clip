@@ -1,0 +1,3 @@
+# exec wl-paste -p --watch cliphist store &
+# bindsym  $cmd+c exec cliphist list | $menu | cliphist decode | wl-copy -p
+

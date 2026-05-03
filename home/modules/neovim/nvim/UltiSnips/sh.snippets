@@ -1,0 +1,14 @@
+snippet #! "my standard is bash" b
+#!/usr/bin/env bash
+# shellcheck shell=bash
+set -euo pipefail
+endsnippet
+
+snippet trap "trap func for exit" b
+cleanup() {
+	echo "bye bye"
+}
+
+trap cleanup INT QUIT TERM EXIT
+
+endsnippet

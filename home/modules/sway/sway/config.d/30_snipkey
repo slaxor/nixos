@@ -1,0 +1,2 @@
+ bindsym $alt+s exec alacritty --class 'snipkey' --command bash -c 'fzsnip | xargs -r swaymsg -t command exec'
+ for_window [app_id="^snipkey$"] floating enable, border none, resize set width 80 ppt height 60 ppt, move position 0 px 0 px

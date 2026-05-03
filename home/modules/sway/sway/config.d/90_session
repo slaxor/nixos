@@ -1,0 +1,13 @@
+# exec --no-startup-id dex -av -e i3wm
+# exec --no-startup-id waybar
+exec --no-startup-id zeal
+# exec --no-startup-id syncthingtray
+# exec --no-startup-id syncthing-gtk
+# exec --no-startup-id blueman-applet
+# exec --no-startup-id nm-applet
+# exec --no-startup-id polkit-gnome/polkit-gnome-authentication-agent-1
+exec --no-startup-id unclutter -root -visible
+# exec --no-startup-id sh -c "[ -e ~/.xmodmap_local ] && xmodmap ~/.xmodmap_local"
+# exec --no-startup-id sh -c "[ -e ~/Xresources ] && xrdb -merge <~/.Xresources"
+# exec --no-startup-id xsettingsd
+# exec --no-startup-id udiskie

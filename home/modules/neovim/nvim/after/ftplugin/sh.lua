@@ -1,0 +1,17 @@
+-- local group = vim.api.nvim_create_augroup("ShfmtOnSave", { clear = true })
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+-- buffer = 0,
+-- group = group,
+-- callback = function()
+-- local view = vim.fn.winsaveview()
+-- local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+-- local input = table.concat(lines, "\n")
+-- local output = vim.fn.system("shfmt -i 2", input)
+-- if vim.v.shell_error == 0 then
+-- vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.split(output, "\n"))
+-- vim.fn.winrestview(view)
+-- else
+-- vim.notify("shfmt failed: " .. output, vim.log.levels.ERROR)
+-- end
+-- end,
+-- })
