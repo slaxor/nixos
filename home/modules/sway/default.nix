@@ -424,7 +424,7 @@ in
     mimeApps = {
       enable = true;
       defaultApplications = {
-        "application/pdf" = "okular.desktop";
+        "application/pdf" = "org.kde.okular.desktop";
         "inode/directory" = "thunar.desktop";
         # "text/html" = "librewolf.desktop";
         "video/mp4" = "vlc.desktop";
