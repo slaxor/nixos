@@ -1,4 +1,0 @@
-# set $launcher "wofi --show drun"
-# set $launcher "rofi -combi-modi drun,run,window,ssh -show combi"
-set $launcher fuzzel
-bindsym $cmd+space exec $launcher

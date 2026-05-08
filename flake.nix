@@ -40,8 +40,7 @@
       };
 
       hmBase = [
-        ./home/home.nix
-        ./home/modules/identity.nix
+        ./home
         identity
         ./home/modules/users/slash.nix
         ./home/modules/base
@@ -58,7 +57,10 @@
       mkHmUser =
         { role, host }:
         {
-          imports = hmBase ++ [ ./home/roles/${role}.nix ./home/hosts/${host}.nix ];
+          imports = hmBase ++ [
+            ./home/roles/${role}.nix
+            ./home/hosts/${host}.nix
+          ];
         };
 
       hmShared = {
@@ -92,7 +94,14 @@
             home-manager.nixosModules.home-manager
             { nixpkgs.hostPlatform.system = system; }
             { nixpkgs.overlays = [ self.overlays.unstable ]; }
-            { home-manager = hmShared // { users.slash = mkHmUser { role = "desktop"; host = "kea"; }; }; }
+            {
+              home-manager = hmShared // {
+                users.slash = mkHmUser {
+                  role = "desktop";
+                  host = "kea";
+                };
+              };
+            }
             ./modules/common-desktop.nix
             ./modules/laptop.nix
             ./hosts/kea
@@ -106,7 +115,14 @@
           modules = [
             home-manager.nixosModules.home-manager
             { nixpkgs.overlays = [ self.overlays.unstable ]; }
-            { home-manager = hmShared // { users.slash = mkHmUser { role = "desktop"; host = "taz"; }; }; }
+            {
+              home-manager = hmShared // {
+                users.slash = mkHmUser {
+                  role = "desktop";
+                  host = "taz";
+                };
+              };
+            }
             ./modules/common-desktop.nix
             ./modules/laptop.nix
             ./hosts/taz
@@ -120,7 +136,14 @@
           modules = [
             home-manager.nixosModules.home-manager
             { nixpkgs.overlays = [ self.overlays.unstable ]; }
-            { home-manager = hmShared // { users.slash = mkHmUser { role = "server"; host = "hare"; }; }; }
+            {
+              home-manager = hmShared // {
+                users.slash = mkHmUser {
+                  role = "server";
+                  host = "hare";
+                };
+              };
+            }
             ./hosts/hare
             ./users/slash.nix
             ./users/thorsten.nix
@@ -133,4 +156,3 @@
       };
     };
 }
-

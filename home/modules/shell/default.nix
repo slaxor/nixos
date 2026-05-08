@@ -147,6 +147,7 @@ in
       };
 
       initExtra = ''
+        [[ $- == *i* ]] || return
         set-title() {
           printf "\033]0;%s@%s\007" "$USER" "$(hostname -s)"
         }

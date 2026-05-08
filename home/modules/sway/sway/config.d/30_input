@@ -1,6 +1,0 @@
-# swaymsg -t get_inputs may help
-input type:keyboard {
-    xkb_layout us-german-umlaut
-}
-focus_follows_mouse no
-mouse_warping none

@@ -2,6 +2,7 @@
 {
   home.packages = with pkgs; [
     nixd
+    nix-diff
     nixdoc
     nixfmt-rfc-style
   ];

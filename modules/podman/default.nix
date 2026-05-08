@@ -15,11 +15,11 @@
   virtualisation = {
     cri-o.enable = false;
     containers = {
-      enable = false;
+      enable = true;
       registries.search = [ "docker.io" ];
     };
     podman = {
-      enable = false;
+      enable = true;
       dockerCompat = true;
       defaultNetwork.settings.dns_enabled = true;
     };

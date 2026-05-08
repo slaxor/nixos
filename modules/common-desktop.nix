@@ -15,6 +15,7 @@
     ./greetd.nix
     ./sway.nix
     ./fonts.nix
+    ./xkb.nix
 
     # Services
     # ./docker

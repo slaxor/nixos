@@ -9,7 +9,7 @@
     };
     focus = {
       followMouse = false;
-      mouseWarping = "none";
+      mouseWarping = false;
     };
   };
 }

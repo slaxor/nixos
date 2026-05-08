@@ -1,9 +1,10 @@
-{ ... }:
-
+{ config, ... }:
 {
+  xdg.configFile."sway/background.jpg".source = ./sway/pingu_oldschool_bg.jpg;
+
   wayland.windowManager.sway.config.output = {
     "*" = {
-      bg = "~/.config/sway/background.jpg fit";
+      bg = "${config.xdg.configHome}/sway/background.jpg fit";
     };
     "eDP-1" = {
       mode = "2560x1600@165Hz";
@@ -25,6 +26,8 @@
       transform = "normal";
     };
   };
+
+  wayland.windowManager.sway.config.bars = [ ];
 
   # seat is not exposed as a structured option in home-manager sway
   wayland.windowManager.sway.extraConfig = ''

@@ -27,17 +27,44 @@
 
     window.commands = [
       # Kill blueman "connected" popups
-      { criteria = { app_id = "blueman-applet"; title = "Connected"; };  command = "kill"; }
-      { criteria = { app_id = "blueman-applet"; title = "Verbunden"; };  command = "kill"; }
+      {
+        criteria = {
+          app_id = "blueman-applet";
+          title = "Connected";
+        };
+        command = "kill";
+      }
+      {
+        criteria = {
+          app_id = "blueman-applet";
+          title = "Verbunden";
+        };
+        command = "kill";
+      }
 
       # devdocs on its own workspace, fullscreened
-      { criteria = { app_id = "devdocs-desktop"; };                      command = "move container to workspace \"\"; fullscreen enable"; }
+      {
+        criteria = {
+          app_id = "devdocs-desktop";
+        };
+        command = "move container to workspace \"\"; fullscreen enable";
+      }
 
       # Inhibit idle when any app is fullscreen
-      { criteria = { app_id = "^.*"; };                                  command = "inhibit_idle fullscreen"; }
+      {
+        criteria = {
+          app_id = "^.*";
+        };
+        command = "inhibit_idle fullscreen";
+      }
 
       # snipkey: floating, borderless, large centered popup
-      { criteria = { app_id = "^snipkey$"; };                            command = "floating enable, border none, resize set width 80 ppt height 60 ppt, move position 0 px 0 px"; }
+      {
+        criteria = {
+          app_id = "^snipkey$";
+        };
+        command = "floating enable, border none, resize set width 80 ppt height 60 ppt, move position 0 px 0 px";
+      }
 
       # Red title bar for root terminals — pango markup requires extraConfig, see below
     ];
