@@ -2,13 +2,16 @@
 {
   environment.systemPackages = with pkgs; [
     niv
+    nixd
+    nix-diff
+    nixdoc
+    nixfmt-rfc-style
   ];
 
   programs.nh = {
     enable = true;
     clean.enable = true;
     clean.extraArgs = "--keep-since 14d --keep 8";
-    flake = "/home/slash/git/codeberg.org/slaxor/nixos"; # sets NH_OS_FLAKE variable for you
   };
 
   nix = {

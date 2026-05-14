@@ -3,6 +3,7 @@
     # Core
     ./base.nix
     ./network
+    ./nix.nix
 
     # Services
     # ./libvirt.nix

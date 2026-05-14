@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 {
   nix.settings.experimental-features = [
     "nix-command"
@@ -18,6 +18,7 @@
   time.timeZone = "Europe/Berlin";
 
   boot = {
+    kernelPackages = pkgs.linuxPackages_latest;
     loader = {
       systemd-boot.enable = false;
       efi.canTouchEfiVariables = false;
@@ -58,8 +59,6 @@
     "net.ipv4.ip_forward" = 1;
     "net.bridge.bridge-nf-call-iptables" = 1;
   };
-
-  time.timeZone = "Europe/Berlin";
 
   # environment.etc."update-motd.d/10-custom".text = ''
   # '';

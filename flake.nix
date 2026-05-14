@@ -47,7 +47,6 @@
         ./home/modules/git
         ./home/modules/gpg.nix
         ./home/modules/neovim
-        ./home/modules/nix.nix
         ./home/modules/shell
         ./home/modules/ssh.nix
         ./home/modules/tmux

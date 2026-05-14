@@ -25,7 +25,7 @@
     ./cilium.nix
     ./traefik.nix
     ./gitea.nix
-    ./k3s-backup.nix
+    # ./k3s-backup.nix
   ];
 
   services = {

@@ -38,7 +38,6 @@ in
     asciinema-automation
     asciinema-scene
     asciiquarium-transparent
-    claude-code
     direnv
     d2
     nix-direnv

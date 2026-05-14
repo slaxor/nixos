@@ -60,6 +60,7 @@
       ips = [ "10.13.0.1/24" ];
       listenPort = 51820;
       privateKeyFile = "/etc/wireguard/privatekey";
+      postSetup = "ip link set wg0 txqueuelen 5000";
 
       peers = [
         # slash@kea

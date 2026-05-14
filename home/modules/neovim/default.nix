@@ -101,7 +101,6 @@ in
       })
       SudoEdit-vim
       barbar-nvim
-      # claudecode-nvim
       cmp-nvim-lsp
       efmls-configs-nvim
       fidget-nvim
@@ -286,6 +285,11 @@ in
             vim.keymap.set('n', 'mf', ':wqa<CR>', opts)
           end
         end
+      })
+
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        pattern = "*.nix",
+        callback = function() vim.lsp.buf.format() end,
       })
     '';
   };
