@@ -1,4 +1,14 @@
 { pkgs, ... }:
+let
+  wg-debug = pkgs.writeShellApplication {
+    name = "wg-debug";
+    runtimeInputs = [
+      pkgs.iproute2
+      pkgs.wireguard-tools
+    ];
+    text = builtins.readFile ./wg-debug.sh;
+  };
+in
 {
   # Interessanter link:
   # https://www.monotux.tech/posts/2024/02/nixos-system-config/
@@ -12,6 +22,7 @@
   # domain_maps = builtins.map ({domain, subnet, ...}: "domain=${domain},${subnet}") gen.interfaces;
   # in
   environment.systemPackages = with pkgs; [
+    wg-debug
     bcc
     bpftools
     bpftrace

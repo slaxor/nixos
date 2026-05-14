@@ -1,0 +1,130 @@
+# vim:ft=snippets:
+
+snippet init "an init() with log settings" b
+	type init() {
+		log.SetFlags(log.Lshortfile)
+	}
+endsnippet
+
+snippet initlgr "enable fancy logging" b
+	// import "codeberg.org/slaxor/lgr"
+	var logger *lgr.Logger
+	func initLog(level lgr.Loglevel) {
+		var err error
+		logger, err = lgr.New("stderr", lvl)
+		if err != nil {
+			panic(err)
+		}
+	}
+endsnippet
+
+snippet loadconfig "viper incantion" b
+	func initConfig(env string) error {
+					viper.SetConfigName(fmt.Sprintf("%s_%s.conf", APPNAME, env))
+					viper.SetConfigType("toml")
+					viper.AddConfigPath(".")
+					viper.SetEnvPrefix(APPNAME)
+					viper.AutomaticEnv()
+					viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+					viper.SetDefault("log.level", "info")
+					viper.SetDefault("log.output", "stderr")
+					viper.SetDefault("${1:key}", "${1:val}")
+					return viper.ReadInConfig()
+	}
+
+endsnippet
+
+snippet err "logger.Error() error handling" b
+	if err != nil {
+		logger.${1:Error}(err)
+	}
+endsnippet
+
+snippet testm "test main func" b
+	func TestMain(m *testing.M) {
+		code := m.Run()
+		os.Exit(code)
+	}
+endsnippet
+
+snippet suite "test suite for github.com/stretchr/testify/suite" b
+	func Test${1:suite}(t *testing.T) {
+		suite.Run(t, new($1TestSuite))
+	}
+
+	type $1TestSuite struct {
+		suite.Suite
+		$1 $1
+	}
+
+	func (suite *$1TestSuite) SetupTest() {
+		suite.$1 = $1{}
+	}
+
+	func (suite *$1TestSuite) Test${2:subject}() {
+		for _, tc := range []struct {
+			name string
+			in   $1
+			exp  []string
+		}{
+			{"zero", $1{}, []string{}},
+			{"one", $1{}, []string{""}},
+			{"two",$1{}, []string{"¿foo?"}},
+			{"four",$1{}, nil},
+			{"xmastree",$1{}, []string{"¿foo?", "¿bar?", "¿baz?", "¿gul?", "¿bit?", "¿lom?", "¿tir?", "¿lof?"}},
+		} {
+			suite.Run(tc.name, func() {
+				act := tc.in.$2()
+				suite.Equal(tc.exp, act)
+			})
+		}
+	}
+endsnippet
+
+snippet sfn "test suite func for github.com/stretchr/testify/suite" b
+	func (suite *${1:suite}TestSuite) Test${2:subject}() {
+		for _, tc := range []struct {
+			name string
+			in   $1
+			exp  []string
+		}{
+			{"zero", $1{}, []string{}},
+			{"one", $1{}, []string{""}},
+			{"two",$1{}, []string{"¿foo?"}},
+			{"four",$1{}, nil},
+			{"xmastree",$1{}, []string{"¿foo?", "¿bar?", "¿baz?", "¿gul?", "¿bit?", "¿lom?", "¿tir?", "¿lof?"}},
+		} {
+			suite.Run(tc.name, func() {
+				act := tc.in.$2()
+				suite.Equal(tc.exp, act)
+			})
+		}
+	}
+endsnippet
+
+snippet fn "A standard func" b
+	// ${1:name} takes ${2:params} and returns ${3:value}
+	func $1($2) ($3) {
+		return $3{}
+	}
+endsnippet
+
+snippet mfn "A meth func" b
+	// ${1:name} takes ${2:params} and returns ${3:value}
+	func ${1:name}  $1($2) ($3) {
+		return $3{}
+	}
+endsnippet
+
+snippet tfn "A standard test func" b
+	func Test${1:name}(t *testing.T) {
+		exp := ${3:expectation}
+		act,err := $1(${2:params})
+		if err != nil {
+			t.Fatal(err)
+		}
+		assert.Equal(t,exp, act)
+	}
+endsnippet
+
+

@@ -34,4 +34,8 @@
     usbutils
     minio-client
   ];
+
+  services = {
+    upower.enable = true;
+  };
 }

@@ -9,6 +9,14 @@
     ./networking.nix
   ];
 
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    users.slash = import ./home.nix;
+  };
+
+  time.timeZone = "Europe/Berlin";
+
   boot = {
     loader = {
       systemd-boot.enable = false;
@@ -85,6 +93,5 @@
     };
     tmate-ssh-server.host = "hare.t5l.de";
   };
-
   system.stateVersion = "25.11";
 }

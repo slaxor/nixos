@@ -1,0 +1,5 @@
+shell=bash
+enable=avoid-nullary-conditions,require-variable-braces,check-unassigned-uppercase
+disable=SC2119  # Use foo "$@" if function's $1 should mean script's $1.
+disable=SC2164  # Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+external-sources=true

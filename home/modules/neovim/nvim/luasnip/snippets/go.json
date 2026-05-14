@@ -1,0 +1,68 @@
+{
+	"init": {
+		"prefix": "init",
+		"description": "an init() with log settings",
+		"body": "type init() {\n\tlog.SetFlags(log.Lshortfile)\n}"
+	},
+	"initc": {
+		"prefix": "initc",
+		"description": "init vipercfg",
+		"body": "func initConfig(env string) error {\n\tviper.SetConfigName(fmt.Sprintf(\"%s_%s.conf\", APPNAME, env))\n\tviper.SetConfigType(\"toml\")\n\tviper.AddConfigPath(\".\")\n\tviper.SetEnvPrefix(APPNAME)\n\tviper.AutomaticEnv()\n\tviper.SetEnvKeyReplacer(strings.NewReplacer(\".\", \"_\"))\n\tviper.SetDefault(\"log.level\", \"info\")\n\tviper.SetDefault(\"log.output\", \"stderr\")\n\tviper.SetDefault(\"${1:key}\", \"${1:val}\")\n\treturn viper.ReadInConfig()\n}\n}"
+	},
+	"errl": {
+		"prefix": "errl",
+		"description": "error logging",
+		"body": "if err != nil {\n\tlogger.${1:Error}(err)\n}"
+	},
+	"errr": {
+		"prefix": "errr",
+		"description": "error return",
+		"body": "if err != nil {\n\treturn err\n}"
+	},
+	"errp": {
+		"prefix": "errp",
+		"description": "error return",
+		"body": "if err != nil {\n\tpanic(err)\n}"
+	},
+	"testm": {
+	  "prefix": "testm",
+	  "description": "test main func",
+	  "body": "func TestMain(m *testing.M) {\n\tcode := m.Run()\n\tos.Exit(code)\n}"
+	},
+	"suite": {
+	  "prefix": "suite",
+	  "description": "test suite for github.com/stretchr/testify/suite",
+	  "body": "func Test${1:suite}(t *testing.T) {\n\tsuite.Run(t, new($1TestSuite))\n}\n\ntype $1TestSuite struct {\n\tsuite.Suite\n\t$1 $1\n}\n\nfunc (suite *$1TestSuite) SetupTest() {\n\tsuite.$1 = $1{}\n}\n\nfunc (suite *$1TestSuite) Test${2:subject}() {\n\tfor _, tc := range []struct {\n\t\tname string\n\t\tin   $1\n\t\texp  []string\n\t}{\n\t\t{\"zero\", $1{}, []string{}},\n\t\t{\"one\", $1{}, []string{\"\"}},\n\t\t{\"two\",$1{}, []string{\"¿foo?\"}},\n\t\t{\"four\",$1{}, nil},\n\t\t{\"xmastree\",$1{}, []string{\"¿foo?\", \"¿bar?\", \"¿baz?\", \"¿gul?\", \"¿bit?\", \"¿lom?\", \"¿tir?\", \"¿lof?\"}},\n\t} {\n\t\tsuite.Run(tc.name, func() {\n\t\t\tact := tc.in.$2()\n\t\t\tsuite.Equal(tc.exp, act)\n\t\t})\n\t}\n}"
+	},
+	"sfn": {
+	  "prefix": "sfn",
+	  "description": "test suite func for github.com/stretchr/testify/suite",
+	  "body": "func (suite *${1:suite}TestSuite) Test${2:subject}() {\n\tfor _, tc := range []struct {\n\t\tname string\n\t\tin   $1\n\t\texp  []string\n\t}{\n\t\t{\"zero\", $1{}, []string{}},\n\t\t{\"one\", $1{}, []string{\"\"}},\n\t\t{\"two\",$1{}, []string{\"¿foo?\"}},\n\t\t{\"four\",$1{}, nil},\n\t\t{\"xmastree\",$1{}, []string{\"¿foo?\", \"¿bar?\", \"¿baz?\", \"¿gul?\", \"¿bit?\", \"¿lom?\", \"¿tir?\", \"¿lof?\"}},\n\t} {\n\t\tsuite.Run(tc.name, func() {\n\t\t\tact := tc.in.$2()\n\t\t\tsuite.Equal(tc.exp, act)\n\t\t})\n\t}\n}"
+	},
+	"fn": {
+	  "prefix": "fn",
+	  "description": "A standard func",
+	  "body": "// ${1:name} takes ${2:params} and returns ${3:value}\nfunc $1($2) ($3) {\n\treturn $3{}\n}"
+	},
+	"mfn": {
+	  "prefix": "mfn",
+	  "description": "A meth func",
+	  "body": "// ${1:name} takes ${2:params} and returns ${3:value}\nfunc ${1:name}  $1($2) ($3) {\n\treturn $3{}\n}"
+	},
+	"tfn": {
+	  "prefix": "tfn",
+	  "description": "A standard test func",
+	  "body": "func Test${1:name}(t *testing.T) {\n\texp := ${3:expectation}\n\tact,err := $1(${2:params})\n\tif err != nil {\n\t\tt.Fatal(err)\n\t}\n\tassert.Equal(t,exp, act)\n}"
+	},
+	"ttfn": {
+	  "prefix": "ttfn",
+	  "description": "table-driven test func for github.com/stretchr/testify/assert",
+	  "body": "func Test${2:subject}() {\n\tfor _, tc := range []struct {\n\t\tname string\n\t\tin   $1\n\t\texp  []string\n\t}{\n\t\t{\"zero\", $1{}, []string{}},\n\t\t{\"one\", $1{}, []string{\"\"}},\n\t\t{\"two\",$1{}, []string{\"¿foo?\"}},\n\t\t{\"four\",$1{}, nil},\n\t\t{\"xmastree\",$1{}, []string{\"¿foo?\", \"¿bar?\", \"¿baz?\", \"¿gul?\", \"¿bit?\", \"¿lom?\", \"¿tir?\", \"¿lof?\"}},\n\t} {\n\t\tt.Run(tc.name, func(t *testing.T) {\n\t\t\tact := tc.in.$2()\n\t\t\tassert.Equal(t, tc.exp, act)\n\t\t})\n\t}\n}"
+	},
+	"pr": {
+	  "prefix": "pr",
+	  "description": "panic recover",
+	  "body": "defer func() {\n\tswitch p := recover().(type) {\n\tcase nil, bailout:\n\t\t// normal return or early exit\n\tdefault:\n\t\t// re-panic\n\t\tpanic(p)\n\t}\n}()\n"
+	}
+}
+
