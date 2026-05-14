@@ -3,7 +3,7 @@
   imports = [
     # Core
     ./base.nix
-    ./network.nix
+    ./network
     ./dnsmasq.nix
     # ./ipblackhole.nix
     ./polkit.nix
@@ -22,6 +22,7 @@
     ./podman
     ./libvirt.nix
     ./printing.nix
+    ./postgresql.nix
 
     # Packages & Utils
     ./utils.nix

@@ -11,6 +11,10 @@ let
   };
 in
 {
+  imports = [
+    ./waybar
+  ];
+
   home.packages = with pkgs; [
     gvfs
     file-roller
@@ -228,10 +232,6 @@ in
       };
     };
 
-    waybar = {
-      enable = true;
-      systemd.enable = true;
-    };
   };
 
   services = {

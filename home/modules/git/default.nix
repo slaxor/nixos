@@ -104,6 +104,7 @@ in
       rerere.enabled = true;
       branch.sort = "-committerdate";
       gpg.format = "ssh";
+      submodule.recurse = true;
     };
   };
 

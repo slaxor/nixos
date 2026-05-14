@@ -2,7 +2,7 @@
   imports = [
     # Core
     ./base.nix
-    ./network.nix
+    ./network
 
     # Services
     # ./libvirt.nix
