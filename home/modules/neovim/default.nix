@@ -20,8 +20,18 @@ let
   };
 in
 {
-  home.packages = with pkgs; [
+  programs.neovim = {
+  };
+
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+    viAlias = true;
+    vimAlias = true;
+    vimdiffAlias = true;
+    extraPackages = with pkgs; [
     # diagnostic-languageserver
+      age
     asm-lsp
     awk-language-server
     bash-language-server
@@ -46,6 +56,7 @@ in
     postgres-language-server
     protols
     pyright
+      sops
     sqls
     starlark
     starpls
@@ -56,15 +67,6 @@ in
     write-good
     yaml-language-server
     yamllint
-  ];
-
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-    viAlias = true;
-    vimAlias = true;
-    vimdiffAlias = true;
-    extraPackages = with pkgs; [
       vimPlugins.nvim-dap-virtual-text
       tree-sitter
     ];

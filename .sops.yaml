@@ -1,0 +1,10 @@
+keys:
+  - &hare  age1g2nn6w0r5y09s20vzypna83wsl6q0r7w7fw2z72d85qljx5f4sjqax0wpc
+  - &admin age1n6fpv7v3xxhfhrul4lzeuvet5ugxufmx56rnsw48gcevppcu24ys8vvqzd
+
+creation_rules:
+  - path_regex: hosts/hare/secrets\.yaml$
+    key_groups:
+      - age:
+          - *hare
+          - *admin

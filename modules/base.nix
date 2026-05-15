@@ -24,6 +24,9 @@
     neovim
     neovim-remote
     net-tools
+    parted
+    unstable.partclone
+    unstable.partclone-utils
     psmisc
     ripgrep
     socat

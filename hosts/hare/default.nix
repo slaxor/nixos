@@ -60,6 +60,11 @@
     "net.bridge.bridge-nf-call-iptables" = 1;
   };
 
+  sops = {
+    defaultSopsFile = ./secrets.yaml;
+    age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+  };
+
   # environment.etc."update-motd.d/10-custom".text = ''
   # '';
   programs.bash.loginShellInit = ''

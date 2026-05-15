@@ -1,3 +1,4 @@
+{ config, ... }:
 {
   networking = {
     firewall.enable = false; # disable the iptables-based firewall
@@ -56,28 +57,35 @@
 
     nameservers = [ "127.0.0.1" ];
 
+    sops.secrets = {
+      "wg/key" = { };
+      "wg/ming-psk" = { };
+      "wg/slash-psk" = { };
+      "wg/thorsten-psk" = { };
+    };
+
     wireguard.interfaces.wg0 = {
       ips = [ "10.13.0.1/24" ];
       listenPort = 51820;
-      privateKeyFile = "/etc/wireguard/privatekey";
+      privateKeyFile = config.sops.secrets."wg/key".path;
       postSetup = "ip link set wg0 txqueuelen 5000";
 
       peers = [
         # slash@kea
         {
-          presharedKeyFile = "/etc/wireguard/slash@kea.psk";
+          presharedKeyFile = config.sops.secrets."wg/slash-psk".path;
           publicKey = "Ah8uUMZI5pbrHmn2D2l74G2IW3hcjtEWXtRFXebMLDg=";
           allowedIPs = [ "10.13.0.16/28" ];
         }
         # thorsten
         {
-          presharedKeyFile = "/etc/wireguard/thorsten@kail.psk";
+          presharedKeyFile = config.sops.secrets."wg/thorsten-psk".path;
           publicKey = "GSRGgehbiBvDTcm5R9ryXr78Mz3JSOqsYHSsuCgnjB4=";
           allowedIPs = [ "10.13.0.32/28" ];
         }
         # ming
         {
-          presharedKeyFile = "/etc/wireguard/ming@home.psk";
+          presharedKeyFile = config.sops.secrets."wg/ming-psk".path;
           publicKey = "X4Jy7bzRMz64xEL1bAqdlv9Lc//NKxJZ+sbW7W+Spg4=";
           allowedIPs = [ "10.13.0.48/28" ];
         }

@@ -8,6 +8,10 @@
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     slaxor-editor.url = "git+https://codeberg.org/slaxor/editor";
     slaxor-replace.url = "git+https://codeberg.org/slaxor/replace";
   };
@@ -149,6 +153,7 @@
             ./modules/common-server.nix
             ./modules/podman
             ./modules/kubernetes
+            inputs.sops-nix.nixosModules.sops
             slaxorPkgs
           ];
         };

@@ -1,5 +1,8 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 {
+
+  sops.secrets.borg-passphrase = { };
+
   services.borgbackup.jobs.storagebox = {
     paths = [
       "/var/lib/rancher/k3s/storage"
