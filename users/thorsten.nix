@@ -7,19 +7,12 @@
   users.users.thorsten = {
     isNormalUser = true;
     extraGroups = [
-      "audio"
-      "dialout"
       "docker"
-      "input"
       "kvm"
       "libvirtd"
-      "lp"
-      "networkmanager"
       "podman"
-      "plugdev"
       "qemu-libvirt"
       "storage"
-      "video"
       "wheel"
     ];
     shell = pkgs.bash;

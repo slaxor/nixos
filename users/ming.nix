@@ -1,33 +1,25 @@
 { pkgs, ... }:
 {
-  users.groups.thorsten = {
-    gid = 10001;
+  users.groups.ming = {
+    gid = 10002;
   };
 
-  users.users.thorsten = {
+  users.users.ming = {
     isNormalUser = true;
     extraGroups = [
-      "audio"
-      "dialout"
       "docker"
-      "input"
       "kvm"
       "libvirtd"
-      "lp"
-      "networkmanager"
       "podman"
-      "plugdev"
       "qemu-libvirt"
       "storage"
-      "video"
       "wheel"
     ];
     shell = pkgs.bash;
-    uid = 10001;
-    initialHashedPassword = "$6$FvifIJtfB7eMweBT$HV8OnjIXncKD4RVg5avD/bbos.umN2HODD6wKa3EfzZ2EfmRAaQ9n/Dp05MPa9CsAHY9j5REr.sRWh9axd.TF/";
-    group = "thorsten";
+    uid = 10002;
+    group = "ming";
     openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFMNFBte1GhrVSDvmCi+ICAQLEQVEuWFSFdFZyXe9m8h thorsten.eggert@gmail.com"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICuHVmWUFgeYTUFJ9Fn9V5VpeBQqbZGq0JtENTt0fHgD mingmu@MacBook-Pro.fritz.box"
     ];
   };
 }
