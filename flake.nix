@@ -148,6 +148,7 @@
               };
             }
             ./hosts/hare
+            ./users/ming.nix
             ./users/slash.nix
             ./users/thorsten.nix
             ./modules/common-server.nix
