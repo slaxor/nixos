@@ -1,5 +1,26 @@
-{ config, ... }:
+{ pkgs, config, ... }:
 {
+  environment.systemPackages = [
+    (pkgs.writeShellApplication {
+      name = "wg-peers";
+      runtimeInputs = [
+        pkgs.wireguard-tools
+        pkgs.iproute2
+        pkgs.python3
+        pkgs.qrencode
+      ];
+      text = builtins.readFile ./wg-peers.sh;
+    })
+    # keep wg-debug the same way
+  ];
+
+  systemd.tmpfiles.rules = [
+    "d /etc/wireguard/peers 0700 root root -"
+  ];
+
+  # sops: keep wg/key, drop the per-user psk secrets after migration
+  sops.secrets."wg/key" = { };
+
   networking = {
     firewall.enable = false; # disable the iptables-based firewall
     nftables = {
@@ -57,40 +78,18 @@
 
     nameservers = [ "127.0.0.1" ];
 
-    sops.secrets = {
-      "wg/key" = { };
-      "wg/ming-psk" = { };
-      "wg/slash-psk" = { };
-      "wg/thorsten-psk" = { };
-    };
-
     wireguard.interfaces.wg0 = {
       ips = [ "10.13.0.1/24" ];
       listenPort = 51820;
       privateKeyFile = config.sops.secrets."wg/key".path;
-      postSetup = "ip link set wg0 txqueuelen 5000";
-
-      peers = [
-        # slash@kea
-        {
-          presharedKeyFile = config.sops.secrets."wg/slash-psk".path;
-          publicKey = "Ah8uUMZI5pbrHmn2D2l74G2IW3hcjtEWXtRFXebMLDg=";
-          allowedIPs = [ "10.13.0.16/28" ];
-        }
-        # thorsten
-        {
-          presharedKeyFile = config.sops.secrets."wg/thorsten-psk".path;
-          publicKey = "GSRGgehbiBvDTcm5R9ryXr78Mz3JSOqsYHSsuCgnjB4=";
-          allowedIPs = [ "10.13.0.32/28" ];
-        }
-        # ming
-        {
-          presharedKeyFile = config.sops.secrets."wg/ming-psk".path;
-          publicKey = "X4Jy7bzRMz64xEL1bAqdlv9Lc//NKxJZ+sbW7W+Spg4=";
-          allowedIPs = [ "10.13.0.48/28" ];
-        }
-
-      ];
+      postSetup = ''
+        ip link set wg0 txqueuelen 5000
+        tmp=$(mktemp)
+        find /etc/wireguard/peers -name '*.conf' -exec cat {} \; > "$tmp"
+        [ -s "$tmp" ] && wg addconf wg0 "$tmp"
+        rm -f "$tmp"
+      '';
+      peers = [ ]; # all peers now managed via wg-peers
     };
 
     defaultGateway = {

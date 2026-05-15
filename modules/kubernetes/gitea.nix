@@ -1,4 +1,7 @@
 { pkgs, ... }:
+let
+  fqdn = "git.int.m11s.de";
+in
 {
   systemd.tmpfiles.rules = [
     "L+ /var/lib/rancher/k3s/server/manifests/gitea.yaml - - - - ${pkgs.writeText "gitea-helmchart.yaml" ''
@@ -18,14 +21,14 @@
             enabled: true
             ingressClassName: traefik
             hosts:
-              - host: gitea.int.m11s.de
+              - host: ${fqdn}
                 paths:
                   - path: /
                     pathType: Prefix
             tls:
               - secretName: gitea-tls
                 hosts:
-                  - gitea.int.m11s.de
+                  - ${fqdn}
             annotations:
               cert-manager.io/cluster-issuer: "letsencrypt-internal"
               traefik.ingress.kubernetes.io/router.middlewares: traefik-wireguard-only@kubernetescrd
@@ -34,9 +37,9 @@
               existingSecret: gitea-admin
             config:
               server:
-                DOMAIN: gitea.int.m11s.de
-                ROOT_URL: https://gitea.int.m11s.de
-                SSH_DOMAIN: gitea.int.m11s.de
+                DOMAIN: ${fqdn}
+                ROOT_URL: https://${fqdn}
+                SSH_DOMAIN: ${fqdn}
                 SSH_PORT: 22
                 START_SSH_SERVER: true
               database:
@@ -47,6 +50,10 @@
                 ADAPTER: memory
               queue:
                 TYPE: level
+              repository:
+                DEFAULT_PRIVATE: false
+              packages:
+                DEFAULT_PRIVATE: false
           service:
             ssh:
               type: LoadBalancer

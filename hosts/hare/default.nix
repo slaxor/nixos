@@ -7,6 +7,7 @@
   imports = [
     ./hare-hardware-configuration.nix
     ./networking.nix
+    ./backup.nix
   ];
 
   home-manager = {

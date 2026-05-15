@@ -1,20 +1,16 @@
 { pkgs, ... }:
+let
+  storage-box = "u591925";
+in
 {
-
   sops.secrets.borg-passphrase = { };
 
+  systemd.tmpfiles.rules = [
+    "d /var/lib/borg-sqlite-dumps 0700 root root -"
+  ];
+
   services.borgbackup.jobs.storagebox = {
-    paths = [
-      "/var/lib/rancher/k3s/storage"
-      "/var/lib/rancher/k3s/server/db" # k3s sqlite state
-      "/etc/rancher/k3s" # k3s certs + token
-    ];
-
-    exclude = [
-      "/var/lib/rancher/k3s/storage/pvc-*/.trash*"
-    ];
-
-    repo = "ssh://u123456@u123456.your-storagebox.de:23/./borg/hare";
+    repo = "ssh://${storage-box}@${storage-box}.your-storagebox.de:23/./borg/hare";
 
     encryption = {
       mode = "repokey-blake2";
@@ -35,21 +31,38 @@
       monthly = 6;
     };
 
+    paths = [
+      "/var/lib/rancher/k3s/storage"
+      "/var/lib/rancher/k3s/server/db"
+      "/etc/rancher/k3s"
+      "/var/lib/borg-sqlite-dumps"
+    ];
+
+    exclude = [
+      "sh:/var/lib/rancher/k3s/storage/**/*.db-shm"
+      "sh:/var/lib/rancher/k3s/storage/**/*.db-wal"
+    ];
+
+    readWritePaths = [ "/var/lib/borg-sqlite-dumps" ];
     preHook = ''
-      # Dump any SQLite databases before borg reads the files
-      find /var/lib/rancher/k3s/storage -name '*.db' -o -name '*.sqlite' \
+      mkdir -p /var/lib/borg-sqlite-dumps
+      rm -f /var/lib/borg-sqlite-dumps/*
+
+      find /var/lib/rancher/k3s/storage \
+        \( -name '*.db' -o -name '*.sqlite' -o -name '*.sqlite3' \) \
         | while read -r db; do
-            ${pkgs.sqlite}/bin/sqlite3 "$db" ".backup ''${db}.borgbackup"
+            dest=$(echo "$db" | sed 's|/var/lib/rancher/k3s/storage/||;s|/|__|g')
+            ${pkgs.sqlite}/bin/sqlite3 "$db" ".backup /var/lib/borg-sqlite-dumps/$dest" \
+              && echo "sqlite ok: $db" \
+              || echo "sqlite warn: $db (locked, using live file)"
           done
-      # k3s state db
+
       ${pkgs.sqlite}/bin/sqlite3 \
         /var/lib/rancher/k3s/server/db/state.db \
-        ".backup /var/lib/rancher/k3s/server/db/state.db.borgbackup"
+        ".backup /var/lib/borg-sqlite-dumps/k3s-state.db" \
+        || echo "sqlite warn: k3s state.db locked"
     '';
 
-    postHook = ''
-      find /var/lib/rancher/k3s/storage -name '*.borgbackup' -delete
-      rm -f /var/lib/rancher/k3s/server/db/state.db.borgbackup
-    '';
+    postHook = "";
   };
 }
