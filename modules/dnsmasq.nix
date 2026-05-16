@@ -47,7 +47,7 @@ let
       | sort -u \
       > /var/lib/dnsmasq/adblock.hosts
 
-    pkill -HUP dnsmasq
+    ${pkgs.procps}/bin/pkill -HUP dnsmasq
     echo "adblock: $(wc -l < /var/lib/dnsmasq/adblock.hosts) entries"
   '';
 

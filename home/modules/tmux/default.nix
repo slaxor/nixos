@@ -1,4 +1,7 @@
 { pkgs, ... }:
+# let
+# fdCmd = "${pkgs.fd}/bin/fd --search-path git.int.m11s.de/slaxor --search-path git.int.m11s.de/microprojects --search-path codeberg.org/slaxor --type d --changed-within 52w --follow --max-depth 1";
+# in
 {
   home.packages = with pkgs; [
     tmate
@@ -108,9 +111,9 @@
         blacklist = [ "scratch" ];
         dir_length = 2;
         sort_order = [
-          "tmux"
           "config"
-          "zoxide"
+          "tmux"
+          # "zoxide"
         ];
         default_session = {
           # preview_command = "ls -ogAht --group-directories-first {}";
@@ -121,40 +124,19 @@
         };
         session = [
           {
-            name = "work";
-            path = "~/work/stackit/git/azure.com/schwarzit-chicago/schwarzit.distributed-cloud";
-            startup_command = "cd $(fd . --type directory --max-depth 1|fzf) ; tmux rename-session $(basename $PWD)";
-          }
-          {
             name = "Downloads 📥";
             path = "~/Downloads";
             startup_command = "yazi";
           }
           {
-            name = "home-manager";
-            path = "~/.config/home-manager";
-            preview_command = "bat --color=always flake.nix";
-            windows = [ "git" ];
-          }
-          {
             name = "nixos";
             path = "~/git/codeberg.org/slaxor/nixos";
-            preview_command = "bat --color=always flake.nix";
-            windows = [ "git" ];
-          }
-        ];
-        window = [
-          {
-            name = "editor";
-            startup_command = "nvim";
-          }
-          {
-            name = "server";
-            startup_command = "npm run dev";
-          }
-          {
-            name = "git";
-            startup_command = "git pull";
+            preview_command = "bat --no-paging -n --line-range 2:27 flake.nix";
+            windows = [
+              "edit"
+              "switch"
+              "sh"
+            ];
           }
         ];
       };
