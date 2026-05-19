@@ -9,6 +9,10 @@
     ./hardware-configuration.nix
   ];
 
+  environment.systemPackages = with pkgs; [
+    dracut
+  ];
+
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -18,23 +22,15 @@
   time.timeZone = "Europe/Berlin";
 
   boot = {
-    initrd = {
-      availableKernelModules = [
-        "nvme"
-        "nouveau"
-      ];
-    };
-
     kernelPackages = pkgs.linuxPackages_latest;
     blacklistedKernelModules = [
       "dvb_usb_rtl28xxu"
       "dvb_usb_v2"
       "dvb_core"
+      "nvidia"
     ];
+
     tmp.cleanOnBoot = true;
-    kernelParams = [
-      # "pcie_aspm=off"
-    ];
     loader = {
       systemd-boot.enable = false;
       efi.canTouchEfiVariables = true;
@@ -53,6 +49,9 @@
       extraPackages = with pkgs; [
         libva-utils
         rocmPackages.clr
+        intel-media-driver
+        libvdpau-va-gl
+
       ];
     };
   };

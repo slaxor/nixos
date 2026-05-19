@@ -8,21 +8,17 @@
     nixfmt-rfc-style
   ];
 
-  programs.nh = {
-    enable = true;
-    clean.enable = true;
-    clean.extraArgs = "--keep-since 14d --keep 8";
+  programs = {
+    nh = {
+      enable = true;
+      clean.enable = true;
+      clean.extraArgs = "--keep-since 14d --keep 8";
+    };
   };
 
   nix = {
     settings = {
       download-buffer-size = 524288000;
     };
-
-    # gc = {
-    # automatic = true;
-    # dates = "weekly";
-    # options = "--delete-older-than 30d";
-    # };
   };
 }

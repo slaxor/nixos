@@ -3,13 +3,13 @@
   imports = [
     # Core
     ./base.nix
+    ./nix.nix
     ./network
-    ./dnsmasq.nix
+    ./dnsmasq
     # ./ipblackhole.nix
     ./polkit.nix
     ./udev.nix
     ./local-pki.nix
-    ./nix.nix
 
     # GUI
     ./greetd.nix

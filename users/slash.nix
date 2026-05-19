@@ -31,5 +31,20 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOtjkbH0TGABWHHuV5Rrzt0UIKJBkPIo8tHXHoyC9kBT slash@kea"
     ];
   };
-  # services.getty.autologinUser = "slash";
+
+  security.sudo.extraRules = [
+    {
+      users = [ "slash" ];
+      commands = [
+        {
+          command = "/nix/store/*/bin/switch-to-configuration";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/nix-env";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ]; # services.getty.autologinUser = "slash";
 }

@@ -1,6 +1,10 @@
 { pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
+    netop
+    atop
+    btop
+    ctop
     age
     bc
     bcachefs-tools

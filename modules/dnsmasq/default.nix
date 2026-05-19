@@ -1,62 +1,38 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 let
-  # --- shell scripts ---
-  dnsup = pkgs.writeShellScriptBin "dnsup" ''
-    add() {
-      set -euo pipefail
-      [[ $# -ne 2 ]] && { echo "usage: dnsup <hostname> <ip>"; exit 1; }
-      echo "$2  $1" >> /var/lib/dnsmasq/local.hosts
-    }
+  dnsup = pkgs.writeShellApplication {
+    name = "dnsup";
+    runtimeInputs = [
+    ];
+    text = builtins.readFile ./dnsup.sh;
+  };
 
-    del() {
-      echo "$1 -> $2"
-      [[ $# -ne 1 ]] && { echo "usage: dns-rm <hostname>"; exit 1; }
-      sed -i "/ $1$/d" /var/lib/dnsmasq/local.hosts
-      pkill -HUP dnsmasq
-      echo "removed $1"
-    }
+  updateAdblock = pkgs.writeShellApplication {
+    name = "update-adblock";
+    runtimeInputs = [
+      pkgs.curl
+    ];
+    text = builtins.readFile ./update-adblock.sh;
+  };
 
-    list() {
-      cat /var/lib/dnsmasq/local.hosts
-    }
-
-    "$@"
-  '';
-
-  # --- adblock list sources ---
-  adblockSources = [
-    "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
-    "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt"
-  ];
-
-  updateAdblock = pkgs.writeShellScriptBin "dns-update-adblock" ''
-    set -euo pipefail
-    tmp=$(mktemp)
-    trap "rm -f $tmp" EXIT
-
-    ${lib.concatMapStringsSep "\n" (url: ''
-      echo "fetching ${url}..."
-      ${pkgs.curl}/bin/curl -sSfL "${url}" >> "$tmp" || echo "failed: ${url}"
-    '') adblockSources}
-
-    # normalise: strip comments, blank lines, localhost entries, convert to hosts format
-    grep -E '^(0\.0\.0\.0|127\.0\.0\.1) ' "$tmp" \
-      | grep -v '0\.0\.0\.0 0\.0\.0\.0' \
-      | grep -v '127\.0\.0\.1 localhost' \
-      | sed 's/^127\.0\.0\.1/0.0.0.0/' \
-      | sort -u \
-      > /var/lib/dnsmasq/adblock.hosts
-
-    ${pkgs.procps}/bin/pkill -HUP dnsmasq
-    echo "adblock: $(wc -l < /var/lib/dnsmasq/adblock.hosts) entries"
-  '';
-
+  devnet = pkgs.writeShellApplication {
+    name = "devnet";
+    runtimeInputs = [
+      pkgs.dnsmasq
+      pkgs.iproute2
+      # pkgs.sudo
+    ];
+    text = builtins.readFile ./devnet.sh;
+  };
 in
 {
   environment.systemPackages = with pkgs; [
     dnsup
     updateAdblock
     dnsmasq
+    devnet
+    atftp
+    tftp-hpa
   ];
 
   networking.nameservers = [ "127.0.0.1" ];
@@ -84,7 +60,8 @@ in
           "/var/lib/dnsmasq/local.hosts"
           "/var/lib/dnsmasq/adblock.hosts"
         ];
-        dhcp-authoritative = true;
+        no-dhcp-interface = "*";
+        dhcp-authoritative = false;
         bind-interfaces = true;
         expand-hosts = true;
         no-resolv = false;
