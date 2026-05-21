@@ -47,7 +47,6 @@ subnet_range() {
 }
 
 subnets_overlap() {
-  local r1 r2
   read -r s1_start s1_end <<<"$(subnet_range "${1}")"
   read -r s2_start s2_end <<<"$(subnet_range "${2}")"
   ((s1_start <= s2_end && s2_start <= s1_end))

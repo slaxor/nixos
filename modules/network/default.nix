@@ -1,12 +1,23 @@
 { pkgs, ... }:
 let
-  wg-debug = pkgs.writeShellApplication {
+  wgDebug = pkgs.writeShellApplication {
     name = "wg-debug";
     runtimeInputs = [
       pkgs.iproute2
       pkgs.wireguard-tools
     ];
     text = builtins.readFile ./wg-debug.sh;
+  };
+
+  wgPeers = pkgs.writeShellApplication {
+    name = "wg-peers";
+    runtimeInputs = [
+      pkgs.wireguard-tools
+      pkgs.iproute2
+      pkgs.python3
+      pkgs.qrencode
+    ];
+    text = builtins.readFile ./wg-peers.sh;
   };
 in
 {
@@ -22,7 +33,8 @@ in
   # domain_maps = builtins.map ({domain, subnet, ...}: "domain=${domain},${subnet}") gen.interfaces;
   # in
   environment.systemPackages = with pkgs; [
-    wg-debug
+    wgDebug
+    wgPeers
     bcc
     bpftools
     bpftrace
