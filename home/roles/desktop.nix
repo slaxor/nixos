@@ -5,6 +5,7 @@
     ../modules/dev-db.nix
     ../modules/dev-go.nix
     ../modules/dev-hardware.nix
+    ../modules/dev-hacking.nix
     ../modules/dev-python.nix
     ../modules/dev-rust.nix
     ../modules/docker.nix

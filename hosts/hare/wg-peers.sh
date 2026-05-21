@@ -3,6 +3,7 @@ set -euo pipefail
 
 peers_dir=/etc/wireguard/peers
 users_db=/etc/wireguard/users
+networks_db=/etc/wireguard/networks
 iface=wg0
 endpoint=wg.m11s.de:51820
 
@@ -33,6 +34,52 @@ ip_to_int() {
 
 int_to_ip() {
   echo "$(((${1} >> 24) & 255)).$(((${1} >> 16) & 255)).$(((${1} >> 8) & 255)).$((${1} & 255))"
+}
+
+subnet_range() {
+  # outputs: <start_int> <end_int>
+  local net prefix net_int mask
+  IFS='/' read -r net prefix <<<"${1}"
+  net_int=$(ip_to_int "${net}")
+  mask=$(((0xFFFFFFFF << (32 - prefix)) & 0xFFFFFFFF))
+  local start=$((net_int & mask))
+  echo "${start} $((start + (1 << (32 - prefix)) - 1))"
+}
+
+subnets_overlap() {
+  local r1 r2
+  read -r s1_start s1_end <<<"$(subnet_range "${1}")"
+  read -r s2_start s2_end <<<"$(subnet_range "${2}")"
+  ((s1_start <= s2_end && s2_start <= s1_end))
+}
+
+check_network_collisions() {
+  local subnet=${1}
+  local skip_subnet=${2:-}
+
+  # check against existing networks
+  [[ -f "${networks_db}" ]] && while read -r existing label; do
+    [[ "${existing}" == "#"* || -z "${existing}" ]] && continue
+    [[ "${existing}" == "${skip_subnet}" ]] && continue
+    subnets_overlap "${subnet}" "${existing}" &&
+      die "collision: ${subnet} overlaps with ${existing} (${label})"
+  done <"${networks_db}"
+
+  # check against user peer subnets
+  while read -r user user_subnet; do
+    [[ "${user}" == "#"* || -z "${user}" ]] && continue
+    subnets_overlap "${subnet}" "${user_subnet}" &&
+      die "collision: ${subnet} overlaps with WG peer subnet ${user_subnet} (user: ${user})"
+  done <"${users_db}"
+}
+
+client_allowed_ips() {
+  local allowed="10.13.0.0/24"
+  [[ -f "${networks_db}" ]] && while read -r subnet _; do
+    [[ "${subnet}" == "#"* || -z "${subnet}" ]] && continue
+    allowed="${allowed}, ${subnet}"
+  done <"${networks_db}"
+  echo "${allowed}"
 }
 
 next_ip() {
@@ -71,8 +118,8 @@ add_routes() {
   gw=$(peer_wg_ip "${1}")
   [[ -n "${gw}" ]] || return 0
   while IFS= read -r subnet; do
-    ip route replace "${subnet}" via "${gw}" dev "${iface}"
-    echo "route: ${subnet} via ${gw}"
+    ip route replace "${subnet}" via "${gw}" dev "${iface}" metric 1000
+    echo "route: ${subnet} via ${gw} metric 1000"
   done < <(peer_extra_subnets "${1}")
 }
 
@@ -132,6 +179,9 @@ CONF
   wg addconf "${iface}" "${conf}"
   add_routes "${conf}"
 
+  local client_allowed
+  client_allowed=$(client_allowed_ips)
+
   local client_conf
   client_conf=$(
     cat <<CCNF
@@ -145,7 +195,7 @@ PrivateKey = ${privkey}
 [Peer]
 PublicKey = $(server_pubkey)
 PresharedKey = ${psk}
-AllowedIPs = 10.13.0.0/24
+AllowedIPs = ${client_allowed}
 Endpoint = ${endpoint}
 PersistentKeepalive = 25
 CCNF
@@ -190,9 +240,39 @@ cmd_useradd() {
   local user=${1:?usage: wg-peers useradd <user> <subnet>}
   local subnet=${2:?usage: wg-peers useradd <user> <subnet>}
   grep -q "^${user} " "${users_db}" && die "user already exists: ${user}"
+  check_network_collisions "${subnet}"
   echo "${user} ${subnet}" >>"${users_db}"
   mkdir -p "${peers_dir}/${user}"
   echo "added user ${user} → ${subnet}"
+}
+
+cmd_netadd() {
+  local subnet=${1:?usage: wg-peers netadd <subnet> <label>}
+  local label=${2:?usage: wg-peers netadd <subnet> <label>}
+  check_network_collisions "${subnet}"
+  touch "${networks_db}"
+  echo "${subnet} ${label}" >>"${networks_db}"
+  echo "added network ${subnet} (${label})"
+}
+
+cmd_netdel() {
+  local subnet=${1:?usage: wg-peers netdel <subnet>}
+  [[ -f "${networks_db}" ]] || die "no networks defined"
+  grep -q "^${subnet} " "${networks_db}" || die "network not found: ${subnet}"
+  grep -v "^${subnet} " "${networks_db}" >"${networks_db}.tmp"
+  mv "${networks_db}.tmp" "${networks_db}"
+  echo "removed network ${subnet}"
+}
+
+cmd_netlist() {
+  [[ -f "${networks_db}" ]] || {
+    echo "no networks defined"
+    return 0
+  }
+  while read -r subnet label; do
+    [[ "${subnet}" == "#"* || -z "${subnet}" ]] && continue
+    printf "%-20s %s\n" "${subnet}" "${label}"
+  done <"${networks_db}"
 }
 
 case "${1:-}" in
@@ -201,8 +281,21 @@ add) cmd_add "${@:2}" ;;
 del) cmd_del "${@:2}" ;;
 list) cmd_list "${@:2}" ;;
 useradd) cmd_useradd "${@:2}" ;;
+netadd) cmd_netadd "${@:2}" ;;
+netdel) cmd_netdel "${@:2}" ;;
+netlist) cmd_netlist ;;
 *)
-  echo "usage: wg-peers <load|add|del|list|useradd> [args]" >&2
+  cat >&2 <<'USAGE'
+usage: wg-peers <command> [args]
+  add     <user> <device> [subnet ...]   add peer, generate client config
+  del     <user> <device>                remove peer
+  list    [user]                         list peers
+  useradd <user> <subnet>                add user with WG subnet
+  netadd  <subnet> <label>               register LAN network
+  netdel  <subnet>                       remove LAN network
+  netlist                                list LAN networks
+  load                                   load all peers + routes (postSetup)
+USAGE
   exit 1
   ;;
 esac
