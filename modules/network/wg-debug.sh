@@ -55,7 +55,7 @@ for iface in ${interfaces}; do
   '
   echo ""
 
-  sudo wg show "${iface}" dump | tail -n +2 | while IFS=$'\t' read -r pubkey _preshared endpoint allowed_ips last_handshake rx tx persistent_keepalive; do
+  sudo wg show "${iface}" dump | tail -n +2 | sort --key=4 | while IFS=$'\t' read -r pubkey _preshared endpoint allowed_ips last_handshake rx tx persistent_keepalive; do
     label="${pubkey:0:8}…"
 
     if [[ "${last_handshake}" == "0" ]]; then
