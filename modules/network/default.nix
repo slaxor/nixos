@@ -23,6 +23,9 @@ in
     dnsperf
     dnsmon-go
     tcping-go
+    tcpdump
+    tcptraceroute
+    tcpcrypt
     nmap
     socat
     netcat-gnu

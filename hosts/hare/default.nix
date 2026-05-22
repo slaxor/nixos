@@ -71,7 +71,7 @@
   programs.bash.loginShellInit = ''
     #!/usr/bin/env bash
     fastfetch
-    kubefetch
+    # kubefetch
   '';
   # security.pam.services.sshd.text = ''
   # session optional pam_motd.so motd=/etc/motd
