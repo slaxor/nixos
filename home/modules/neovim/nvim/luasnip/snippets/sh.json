@@ -1,13 +1,15 @@
 {
-    "#!": {
-        "prefix": "#!",
-        "body": "#!/usr/bin/env bash\n# shellcheck shell=bash\nset -euo pipefail",
-        "description": "my standard shebang for bash"
-    },
-    "trap": {
-        "prefix": "trap",
-        "body": "${1:cleanup}() {\n ${2:echo \"Cya in a while crocodile\"}\n}\ntrap ${2} INT QUIT TERM EXIT\n",
-				"description": "create an exit hook"
-    }
+  "#!": {
+    "prefix": "#!",
+    "body": "#!/usr/bin/env bash\n# shellcheck shell=bash\nset -uo pipefail\n\nif [[ "${BASH_SOURCE[
+        0
+      ]
+    }" == "$0" ]]; then\n  set -e\n\n  # your action\nfi",
+    "description": "my standard shebang for bash"
+  },
+  "trap": {
+    "prefix": "trap",
+    "body": "${1:cleanup}() {\n ${2:echo \"Cya in a while crocodile\"}\n}\ntrap ${2} INT QUIT TERM EXIT\n",
+    "description": "create an exit hook"
+  }
 }
-

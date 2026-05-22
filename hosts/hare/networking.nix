@@ -1,17 +1,19 @@
 { pkgs, config, ... }:
+let
+  wgPeers = pkgs.writeShellApplication {
+    name = "wg-peers";
+    runtimeInputs = [
+      pkgs.wireguard-tools
+      pkgs.iproute2
+      pkgs.python3
+      pkgs.qrencode
+    ];
+    text = builtins.readFile ./wg-peers.sh;
+  };
+in
 {
   environment.systemPackages = [
-    (pkgs.writeShellApplication {
-      name = "wg-peers";
-      runtimeInputs = [
-        pkgs.wireguard-tools
-        pkgs.iproute2
-        pkgs.python3
-        pkgs.qrencode
-      ];
-      text = builtins.readFile ./wg-peers.sh;
-    })
-    # keep wg-debug the same way
+    wgPeers
   ];
 
   systemd.tmpfiles.rules = [
@@ -84,10 +86,7 @@
       privateKeyFile = config.sops.secrets."wg/key".path;
       postSetup = ''
         ip link set wg0 txqueuelen 5000
-        tmp=$(mktemp)
-        find /etc/wireguard/peers -name '*.conf' -exec cat {} \; > "$tmp"
-        [ -s "$tmp" ] && wg addconf wg0 "$tmp"
-        rm -f "$tmp"
+        ${wgPeers}/bin/wg-peers load
       '';
       peers = [ ]; # all peers now managed via wg-peers
     };

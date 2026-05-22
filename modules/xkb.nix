@@ -65,20 +65,19 @@
         include "us(altgr-intl)"
         include "level3(caps_switch)"
         name[Group1] = "English (US, international with German umlaut)";
-        key <AD03> { [ e, E, EuroSign, cent ] };
-        key <AD07> { [ u, U, udiaeresis, Udiaeresis ] };
-        key <AD09> { [ o, O, odiaeresis, Odiaeresis ] };
+        key <AB07> { [ m, M, Greek_mu, Greek_MU ] };
         key <AC01> { [ a, A, adiaeresis, Adiaeresis ] };
         key <AC02> { [ s, S, ssharp ] };
+        key <AC03> { [ d, D, Greek_delta, Greek_DELTA ] };
         key <AC04> { [ f, F, Greek_phi, Greek_PHI ] };
         key <AC05> { [ g, G, Greek_gamma, Greek_GAMMA ] };
-        key <AC03> { [ d, D, Greek_delta, Greek_DELTA ] };
-        key <AD10> { [ p, P, Greek_pi, Greek_PI ] };
-        key <AD05> { [ t, T, Greek_theta, Greek_THETA ] };
-        key <AB07> { [ m, M, Greek_mu, Greek_MU ] };
         key <AD02> { [ w, W, Greek_omega, Greek_OMEGA ] };
-        key <AE05> { [ 5, percent, section, degree ] };
-        key <AE10> { [ 0, percent, section, degree ] };
+        key <AD03> { [ e, E, EuroSign, cent ] };
+        key <AD05> { [ t, T, Greek_theta, Greek_THETA ] };
+        key <AD07> { [ u, U, udiaeresis, Udiaeresis ] };
+        key <AD09> { [ o, O, odiaeresis, Odiaeresis ] };
+        key <AD10> { [ p, P, Greek_pi, Greek_PI ] };
+        key <AE05> { [ 5, percent, EuroSign, Greek_epsilon ] };
       };
     '';
   };

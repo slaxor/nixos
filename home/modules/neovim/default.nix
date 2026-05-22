@@ -30,43 +30,43 @@ in
     vimAlias = true;
     vimdiffAlias = true;
     extraPackages = with pkgs; [
-    # diagnostic-languageserver
+      # diagnostic-languageserver
       age
-    asm-lsp
-    awk-language-server
-    bash-language-server
-    ccls
-    cmake-language-server
-    docker-language-server
-    dts-lsp
-    efm-langserver
-    gopls
-    helm-ls
-    javascript-typescript-langserver
-    jq-lsp
-    just-lsp
-    # kcl-language-server
-    lemminx
-    lua
-    lua-language-server
-    marksman
-    mpls
-    nginx-language-server
-    nil
-    postgres-language-server
-    protols
-    pyright
+      asm-lsp
+      awk-language-server
+      bash-language-server
+      ccls
+      cmake-language-server
+      docker-language-server
+      dts-lsp
+      efm-langserver
+      gopls
+      helm-ls
+      javascript-typescript-langserver
+      jq-lsp
+      just-lsp
+      # kcl-language-server
+      lemminx
+      lua
+      lua-language-server
+      marksman
+      mpls
+      nginx-language-server
+      nil
+      postgres-language-server
+      protols
+      pyright
       sops
-    sqls
-    starlark
-    starpls
-    systemd-language-server
-    ty
-    vim-language-server
-    vscode-langservers-extracted
-    write-good
-    yaml-language-server
-    yamllint
+      sqls
+      starlark
+      starpls
+      systemd-language-server
+      ty
+      vim-language-server
+      vscode-langservers-extracted
+      write-good
+      yaml-language-server
+      yamllint
       vimPlugins.nvim-dap-virtual-text
       tree-sitter
     ];
@@ -107,11 +107,11 @@ in
       efmls-configs-nvim
       fidget-nvim
       file-line
-      friendly-snippets
       fzf-lsp-nvim
       go-nvim
       lsp-format-nvim
-      luasnip
+      vim-vsnip
+      vim-vsnip-integ
       markdown-nvim
       markdown-preview-nvim
       nerdcommenter
@@ -239,24 +239,18 @@ in
         end,
       })
 
-      local luasnip = require("luasnip")
-      -- require("luasnip.loaders.from_vscode").lazy_load()
-      require("luasnip.loaders.from_vscode").lazy_load({
-        paths = {
-          "${pkgs.vimPlugins.friendly-snippets}",
-          "${config.xdg.configHome}/nvim/luasnip",
-        }
-      })
+      vim.g.vsnip_snippet_dir = vim.fn.stdpath('config') .. '/snippets'
+
       require("fidget").setup({})
       -- require("claudecode").setup({})
       -- vim.keymap.set('n', '<leader>cc', ':ClaudeCodeStart<CR>', { desc = 'Start ClaudeCode server' })
       -- vim.keymap.set('n', '<leader>cs', ':ClaudeCodeStop<CR>', { desc = 'Stop ClaudeCode server' })
       -- vim.keymap.set('n', '<leader>ca', ':ClaudeCodeAdd<CR>', { desc = 'Add file to ClaudeCode context' })
       -- vim.keymap.set('v', '<leader>ca', ':ClaudeCodeAdd<CR>', { desc = 'Add selection to ClaudeCode context' })
-      vim.api.nvim_set_keymap("i", "<Tab>", [[luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>']], {expr=true, silent=true})
-      vim.api.nvim_set_keymap("s", "<Tab>", [[<Cmd>lua require('luasnip').jump(1)<CR>]], {silent=true})
-      vim.api.nvim_set_keymap("i", "<S-Tab>", [[<Cmd>lua require('luasnip').jump(-1)<CR>]], {silent=true})
-      vim.api.nvim_set_keymap("s", "<S-Tab>", [[<Cmd>lua require('luasnip').jump(-1)<CR>]], {silent=true})
+      -- vim.api.nvim_set_keymap("i", "<Tab>", [[luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>']], {expr=true, silent=true})
+      -- vim.api.nvim_set_keymap("s", "<Tab>", [[<Cmd>lua require('luasnip').jump(1)<CR>]], {silent=true})
+      -- vim.api.nvim_set_keymap("i", "<S-Tab>", [[<Cmd>lua require('luasnip').jump(-1)<CR>]], {silent=true})
+      -- vim.api.nvim_set_keymap("s", "<S-Tab>", [[<Cmd>lua require('luasnip').jump(-1)<CR>]], {silent=true})
 
       vim.api.nvim_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { noremap = true, silent = true })
       vim.api.nvim_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { noremap = true, silent = true })
@@ -301,7 +295,7 @@ in
     "nvim/lua/slaxor".source = ./nvim/lua/slaxor;
     "nvim/ftplugin".source = ./nvim/ftplugin;
     "nvim/after".source = ./nvim/after;
-    "nvim/luasnip".source = ./nvim/luasnip;
+    # "nvim/luasnip".source = ./nvim/luasnip;
     # "nvim/UltiSnips".source = ./nvim/UltiSnips;
     "nvim/spell/de.utf-8.spl".source = nvim-spell-de-utf8-dictionary;
     "nvim/spell/de.utf-8.sug".source = nvim-spell-de-utf8-suggestions;

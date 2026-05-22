@@ -3,17 +3,19 @@ set -euo pipefail
 
 now=$(date +%s)
 
-die() { echo "error: $*" >&2; exit 1; }
-require() { command -v "$1" &>/dev/null || die "$1 not found"; }
-
-require wg
-require ip
+die() {
+  echo "error: $*" >&2
+  exit 1
+}
 
 fmt_ago() {
-  local secs=$(( now - $1 ))
-  if   (( secs < 60   )); then echo "${secs}s ago"
-  elif (( secs < 3600 )); then echo "$(( secs / 60 ))m ago"
-  else echo "$(( secs / 3600 ))h $(( (secs % 3600) / 60 ))m ago"
+  local secs=$((now - $1))
+  if ((secs < 60)); then
+    echo "${secs}s ago"
+  elif ((secs < 3600)); then
+    echo "$((secs / 60))m ago"
+  else
+    echo "$((secs / 3600))h $(((secs % 3600) / 60))m ago"
   fi
 }
 
@@ -53,15 +55,15 @@ for iface in ${interfaces}; do
   '
   echo ""
 
-  wg show "${iface}" dump | tail -n +2 | while IFS=$'\t' read -r pubkey _preshared endpoint allowed_ips last_handshake rx tx persistent_keepalive; do
+  sudo wg show "${iface}" dump | tail -n +2 | while IFS=$'\t' read -r pubkey _preshared endpoint allowed_ips last_handshake rx tx persistent_keepalive; do
     label="${pubkey:0:8}…"
 
     if [[ "${last_handshake}" == "0" ]]; then
       status="✗ never connected"
     else
-      age=$(( now - last_handshake ))
+      age=$((now - last_handshake))
       ago=$(fmt_ago "${last_handshake}")
-      if (( age > stale_threshold )); then
+      if ((age > stale_threshold)); then
         status="⚠ stale   (${ago})"
       else
         status="✔ active  (${ago})"

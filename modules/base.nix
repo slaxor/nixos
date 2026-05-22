@@ -28,7 +28,8 @@
     unstable.partclone
     unstable.partclone-utils
     psmisc
-    ripgrep
+    ripgrep-all
+    vgrep
     socat
     terminus_font
     tmux

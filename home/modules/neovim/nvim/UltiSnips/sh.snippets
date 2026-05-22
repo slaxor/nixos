@@ -1,8 +1,36 @@
 snippet #! "my standard is bash" b
 #!/usr/bin/env bash
 # shellcheck shell=bash
-set -euo pipefail
+# shellcheck disable=SC1091,SC2034,SC2016
+set -uo pipefail
+
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  set -e
+fi
 endsnippet
+
+snippet case "" b
+    case "${1}" in
+    -y | --yes)
+      assume_yes=true
+      shift
+      ;;
+    up | teardown)
+      action="${1}"
+      shift
+      ;;
+    -h | --help)
+      help
+      exit 0
+      ;;
+    *)
+      echo "Error: Unknown argument '$1'"
+      help
+      exit 1
+      ;;
+    esac
+  done
+endsnipped
 
 snippet trap "trap func for exit" b
 cleanup() {
@@ -10,5 +38,4 @@ cleanup() {
 }
 
 trap cleanup INT QUIT TERM EXIT
-
 endsnippet
