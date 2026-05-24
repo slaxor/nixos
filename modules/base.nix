@@ -35,6 +35,7 @@
     tmux
     tree
     unixtools.xxd
+    vorta
     wget
   ];
 
@@ -58,7 +59,8 @@
   };
 
   programs = {
-    nix-ld.enable = true;
+    fuse.userAllowOther = true;
+
     neovim = {
       enable = true;
       defaultEditor = true;
@@ -74,6 +76,8 @@
       # osFlake = "$HOME/git/codeberg.org/slaxor/nixos#$HOSTNAME";
       # homeFlake = " $HOME/git/codeberg.org/slaxor/home-manager#$USER@$HOSTNAME";
     };
+
+    nix-ld.enable = true;
   };
 
   nix = {
@@ -116,5 +120,6 @@
     packages = with pkgs; [ terminus_font ];
     keyMap = "us";
   };
+
   system.stateVersion = "25.11";
 }

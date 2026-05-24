@@ -11,6 +11,7 @@
     ../modules/docker.nix
     ../modules/fastfetch.nix
     ../modules/gfx
+    ../modules/keepass.nix
     ../modules/kubernetes.nix
     ../modules/librewolf.nix
     ../modules/mail.nix

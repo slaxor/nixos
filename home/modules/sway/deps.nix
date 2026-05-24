@@ -88,6 +88,7 @@ in
     wallust
     way-displays
     waybar
+    waypipe
     wayprompt
     wayvnc
     welle-io
@@ -171,19 +172,6 @@ in
           "--reload"
           "20"
         ];
-      };
-    };
-
-    firefox = {
-      enable = true;
-      profiles.your-profile-name = {
-        settings = {
-          "browser.shell.checkDefaultBrowser" = false;
-        };
-      };
-      # Alternatively, via policies (global for all Firefox profiles)
-      policies = {
-        DontCheckDefaultBrowser = true;
       };
     };
 
@@ -281,9 +269,9 @@ in
       };
     };
 
-    gnome-keyring.enable = true;
+    # gnome-keyring.enable = true;
 
-    gpg-agent.pinentry.package = pkgs.wayprompt;
+    # gpg-agent.pinentry.package = pkgs.wayprompt;
 
     udiskie.enable = true;
 
@@ -336,6 +324,7 @@ in
 
   xdg = {
     enable = true;
+    autostart.enable = true;
     portal = {
       enable = true;
       extraPortals = [

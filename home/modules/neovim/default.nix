@@ -242,11 +242,6 @@ in
       vim.g.vsnip_snippet_dir = vim.fn.stdpath('config') .. '/snippets'
 
       require("fidget").setup({})
-      -- require("claudecode").setup({})
-      -- vim.keymap.set('n', '<leader>cc', ':ClaudeCodeStart<CR>', { desc = 'Start ClaudeCode server' })
-      -- vim.keymap.set('n', '<leader>cs', ':ClaudeCodeStop<CR>', { desc = 'Stop ClaudeCode server' })
-      -- vim.keymap.set('n', '<leader>ca', ':ClaudeCodeAdd<CR>', { desc = 'Add file to ClaudeCode context' })
-      -- vim.keymap.set('v', '<leader>ca', ':ClaudeCodeAdd<CR>', { desc = 'Add selection to ClaudeCode context' })
       -- vim.api.nvim_set_keymap("i", "<Tab>", [[luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>']], {expr=true, silent=true})
       -- vim.api.nvim_set_keymap("s", "<Tab>", [[<Cmd>lua require('luasnip').jump(1)<CR>]], {silent=true})
       -- vim.api.nvim_set_keymap("i", "<S-Tab>", [[<Cmd>lua require('luasnip').jump(-1)<CR>]], {silent=true})

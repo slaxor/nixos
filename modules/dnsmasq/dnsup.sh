@@ -1,28 +1,33 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 set -euo pipefail
+hosts_file="/var/lib/dnsmasq/local.hosts"
+touch "${hosts_file}"
 
 add() {
   [[ $# -ne 2 ]] && {
     echo "usage: dnsup <hostname> <ip>"
     exit 1
   }
-  echo "$2  $1" >>/var/lib/dnsmasq/local.hosts
+  grep "${2}" "${hosts_file}" && (
+    echo "already defined"
+    exit 1
+  )
+  echo "$2 $1" >>"${hosts_file}"
 }
 
 del() {
-  echo "$1 -> $2"
   [[ $# -ne 1 ]] && {
-    echo "usage: dns-rm <hostname>"
+    echo "usage: ${0} del <hostname>|<ip-address>"
     exit 1
   }
-  sed -i "/ $1$/d" /var/lib/dnsmasq/local.hosts
+  sed -i -E "/(^$1 | $1$)/d" "${hosts_file}"
   pkill -HUP dnsmasq
   echo "removed $1"
 }
 
 list() {
-  cat /var/lib/dnsmasq/local.hosts
+  cat "${hosts_file}"
 }
 
 "$@"

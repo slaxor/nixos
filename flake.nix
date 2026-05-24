@@ -4,6 +4,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -96,7 +100,12 @@
           modules = [
             home-manager.nixosModules.home-manager
             { nixpkgs.hostPlatform.system = system; }
-            { nixpkgs.overlays = [ self.overlays.unstable ]; }
+            {
+              nixpkgs.overlays = [
+                self.overlays.unstable
+                inputs.nur.overlays.default
+              ];
+            }
             {
               home-manager = hmShared // {
                 users.slash = mkHmUser {
@@ -116,8 +125,12 @@
         taz = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs; };
           modules = [
-            home-manager.nixosModules.home-manager
-            { nixpkgs.overlays = [ self.overlays.unstable ]; }
+            {
+              nixpkgs.overlays = [
+                self.overlays.unstable
+                inputs.nur.overlays.default
+              ];
+            }
             {
               home-manager = hmShared // {
                 users.slash = mkHmUser {
@@ -138,7 +151,12 @@
           specialArgs = { inherit inputs; };
           modules = [
             home-manager.nixosModules.home-manager
-            { nixpkgs.overlays = [ self.overlays.unstable ]; }
+            {
+              nixpkgs.overlays = [
+                self.overlays.unstable
+                inputs.nur.overlays.default
+              ];
+            }
             {
               home-manager = hmShared // {
                 users.slash = mkHmUser {
