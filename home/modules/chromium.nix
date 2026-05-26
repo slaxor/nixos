@@ -1,11 +1,11 @@
-{ pkgs, config, ... }:
+{ ... }:
 {
-  home.packages = with pkgs; [
-    # ungoogled-chromium
-    # gopass
-    # gopass-summon-provider
-    # gopass-jsonapi
-  ];
+  # home.packages = with pkgs; [
+  # ungoogled-chromium
+  # gopass
+  # gopass-summon-provider
+  # gopass-jsonapi
+  # ];
 
   programs.chromium = {
     enable = true;

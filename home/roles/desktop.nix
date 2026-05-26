@@ -20,5 +20,6 @@
     ../modules/pico8
     ../modules/spicedb.nix
     ../modules/sway
+    ../modules/syncthing.nix
   ];
 }

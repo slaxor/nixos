@@ -37,9 +37,16 @@
     udftools
     usbutils
     minio-client
+    syncthing
   ];
 
   services = {
     upower.enable = true;
+  };
+
+  networking.firewall = {
+    allowedTCPPorts = [
+      22000 # Syncthing
+    ];
   };
 }

@@ -11,9 +11,9 @@
       General = {
         AutoGeneratePasswordForNewEntries = true;
         BackupBeforeSave = true;
-        HideWindowOnCopy = true;
-        MinimizeAfterUnlock = true;
-        MinimizeOnOpenUrl = true;
+        HideWindowOnCopy = false;
+        MinimizeAfterUnlock = false;
+        MinimizeOnOpenUrl = false;
       };
       Browser = {
         Enabled = true;
@@ -37,17 +37,17 @@
         ClearClipboardTimeout = 30;
         ClearSearch = true;
         EnableCopyOnDoubleClick = true;
-        HideTotpPreviewPanel = true;
+        HideTotpPreviewPanel = false;
         IconDownloadFallback = true;
         LockDatabaseIdleSeconds = 7200;
         PasswordEmptyPlaceholder = true;
         Security_HideNotes = true;
       };
       PasswordGenerator = {
-        AdvancedMode = true;
         Length = 17;
+        AdvancedMode = true;
         Logograms = true;
-        UpperCase = false;
+        UpperCase = true;
         WordCount = 15;
         # AdditionalChars=;
         # ExcludedChars=;

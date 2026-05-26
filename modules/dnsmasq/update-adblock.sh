@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
+[ "$(id -u)" -eq 0 ] || exec sudo "$0" "$@"
 set -euo pipefail
 
 tmp=$(mktemp)

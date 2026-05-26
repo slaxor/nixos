@@ -1,11 +1,30 @@
 #!/usr/bin/env bash
-set -euo pipefail
+# shellcheck shell=bash
+set -xeuo pipefail
 
-peers_dir=/etc/wireguard/peers
-users_db=/etc/wireguard/users
-networks_db=/etc/wireguard/networks
+[ "$(id -u)" -eq 0 ] || exec sudo "$0" "$@"
+
+base_dir="/tmp/etc/wireguard"
+peers_dir="${base_dir}/peers"
+users_db="${base_dir}/users"
+networks_db="${base_dir}/networks"
 iface=wg0
 endpoint=wg.m11s.de:51820
+
+help() {
+  cat >&2 <<'USAGE'
+usage: wg-peers <command> [args]
+  add     <user> <device> [subnet ...]   add peer, generate client config
+  del     <user> <device>                remove peer
+  list    [user]                         list peers
+  useradd <user> <subnet>                add user with WG subnet
+  netadd  <subnet> <label>               register LAN network
+  netdel  <subnet>                       remove LAN network
+  netlist                                list LAN networks
+  load                                   load all peers + routes (postSetup)
+  setup <user>                           setup files and directories for the user
+USAGE
+}
 
 die() {
   echo "error: $*" >&2
@@ -134,7 +153,7 @@ cmd_load() {
   # shellcheck disable=SC2064
   trap "rm -f ${tmp}" EXIT
   find "${peers_dir}" -name '*.conf' -exec cat {} \; >"${tmp}"
-  [ -s "${tmp}" ] && wg addconf "${iface}" "${tmp}"
+  [[ -s "${tmp}" ]] && wg syncconf "${iface}" "${tmp}"
   while IFS= read -r f; do
     add_routes "${f}"
   done < <(find "${peers_dir}" -name '*.conf')
@@ -252,6 +271,12 @@ cmd_netadd() {
   touch "${networks_db}"
   echo "${subnet} ${label}" >>"${networks_db}"
   echo "added network ${subnet} (${label})"
+
+  while IFS= read -r f; do
+    peer_extra_subnets "${f}" | grep -qxF "${subnet}" || continue
+    add_routes "${f}"
+    break
+  done < <(find "${peers_dir}" -name '*.conf')
 }
 
 cmd_netdel() {
@@ -260,6 +285,11 @@ cmd_netdel() {
   grep -q "^${subnet} " "${networks_db}" || die "network not found: ${subnet}"
   grep -v "^${subnet} " "${networks_db}" >"${networks_db}.tmp"
   mv "${networks_db}.tmp" "${networks_db}"
+  if ip route del "${subnet}" dev "${iface}"; then
+    echo "route removed: ${subnet}"
+  else
+    echo "no live route for ${subnet}"
+  fi
   echo "removed network ${subnet}"
 }
 
@@ -274,6 +304,17 @@ cmd_netlist() {
   done <"${networks_db}"
 }
 
+cmd_setup() {
+  [ ${#} == 1 ] || (help && exit 1)
+  mkdir -p "${peers_dir}"
+  if ! (grep "^${1} " "${users_db}"); then
+
+    echo "${1} 10.13.0.128/28" >>"${users_db}"
+
+  fi
+  touch "${networks_db}"
+}
+
 case "${1:-}" in
 load) cmd_load ;;
 add) cmd_add "${@:2}" ;;
@@ -283,18 +324,9 @@ useradd) cmd_useradd "${@:2}" ;;
 netadd) cmd_netadd "${@:2}" ;;
 netdel) cmd_netdel "${@:2}" ;;
 netlist) cmd_netlist ;;
+setup) cmd_setup "${@:2}" ;;
 *)
-  cat >&2 <<'USAGE'
-usage: wg-peers <command> [args]
-  add     <user> <device> [subnet ...]   add peer, generate client config
-  del     <user> <device>                remove peer
-  list    [user]                         list peers
-  useradd <user> <subnet>                add user with WG subnet
-  netadd  <subnet> <label>               register LAN network
-  netdel  <subnet>                       remove LAN network
-  netlist                                list LAN networks
-  load                                   load all peers + routes (postSetup)
-USAGE
+  help
   exit 1
   ;;
 esac

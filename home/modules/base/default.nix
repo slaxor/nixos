@@ -79,11 +79,6 @@
     };
   };
 
-  services = {
-    syncthing = {
-      enable = true;
-    };
-  };
   xdg.configFile = {
     "htop/htoprc".source = ./htop/htoprc;
   };
