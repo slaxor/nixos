@@ -5,7 +5,7 @@
     nixd
     nix-diff
     nixdoc
-    nixfmt-rfc-style
+    nixfmt
   ];
 
   programs = {

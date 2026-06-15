@@ -1,5 +1,9 @@
 { pkgs, ... }:
 {
+  imports = [
+    ./storage.nix
+  ];
+
   environment.systemPackages = with pkgs; [
     bash
     binutils
@@ -25,8 +29,8 @@
     neovim-remote
     net-tools
     parted
-    unstable.partclone
-    unstable.partclone-utils
+    partclone
+    partclone-utils
     psmisc
     ripgrep-all
     vgrep

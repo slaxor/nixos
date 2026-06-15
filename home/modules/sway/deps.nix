@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{ fonts }:
+{
+  lib,
+  pkgs,
+  ...
+}:
 let
   wpvol = pkgs.writeShellApplication {
     name = "wpvol";
@@ -11,10 +16,6 @@ let
   };
 in
 {
-  imports = [
-    ./waybar
-  ];
-
   home.packages = with pkgs; [
     gvfs
     file-roller
@@ -47,6 +48,10 @@ in
     handbrake
     kdePackages.okular
     inkscape
+    kitty
+    kitty-img
+    kitty-themes
+    kitti3
     libappindicator
     libnotify
     localsend
@@ -60,6 +65,7 @@ in
     obs-studio-plugins.obs-3d-effect
     obs-studio-plugins.obs-shaderfilter
     obs-studio-plugins.wlrobs
+    pango
     poppler-utils
     pulseaudioFull
     pwvucontrol
@@ -79,6 +85,11 @@ in
     transmission_4-gtk
     tray-tui
     tuba
+    thunar-unwrapped
+    thunar-archive-plugin
+    thunar-media-tags-plugin
+    thunar-vcs-plugin
+    thunar-volman
     unclutter
     virt-manager
     virt-viewer
@@ -101,13 +112,7 @@ in
     wttrbar
     wtype
     wvkbd
-    xfce.thunar
-    xfce.thunar-archive-plugin
-    xfce.thunar-bare
-    xfce.thunar-media-tags-plugin
-    xfce.thunar-vcs-plugin
-    xfce.thunar-volman
-    xorg.xhost
+    xhost
     xournalpp
     xsettingsd
     zbar
@@ -184,7 +189,7 @@ in
             "${pkgs.foot.themes}/share/foot/themes/srcery" # starlight,
           ];
           dpi-aware = "yes";
-          font = "FiraCode Nerd Font Mono Light:size=12";
+          font = "${fonts.term.name} ${fonts.term.size}";
           line-height = 12;
         };
         scrollback = {
@@ -193,11 +198,55 @@ in
       };
     };
 
+    kitty = lib.mkForce {
+      enable = true;
+      settings = {
+        # font = "${termfont}"
+
+        confirm_os_window_close = 0;
+        dynamic_background_opacity = true;
+        enable_audio_bell = false;
+        mouse_hide_wait = "1.0";
+        window_padding_width = 10;
+        background_opacity = "1.0";
+        background_blur = 5;
+        font_family = "${fonts.term.name}";
+        bold_font = "auto";
+        italic_font = "auto";
+        bold_italic_font = "auto";
+        font_size = "${fonts.term.size}";
+        symbol_map =
+          let
+            mappings = [
+              "U+23FB-U+23FE"
+              "U+2B58"
+              "U+E200-U+E2A9"
+              "U+E0A0-U+E0A3"
+              "U+E0B0-U+E0BF"
+              "U+E0C0-U+E0C8"
+              "U+E0CC-U+E0CF"
+              "U+E0D0-U+E0D2"
+              "U+E0D4"
+              "U+E700-U+E7C5"
+              "U+F000-U+F2E0"
+              "U+2665"
+              "U+26A1"
+              "U+F400-U+F4A8"
+              "U+F67C"
+              "U+E000-U+E00A"
+              "U+F300-U+F313"
+              "U+E5FA-U+E62B"
+            ];
+          in
+          (builtins.concatStringsSep "," mappings) + " Symbols Nerd Font";
+      };
+    };
+
     swaylock = {
       enable = true;
       package = pkgs.swaylock-effects;
       settings = {
-        font = "pango:Iosevka Nerd Font Propo Medium 12";
+        font = "${fonts.gui.name} ${fonts.gui.size}";
         image = "~/.config/sway/background.jpg";
         effect-blur = "7x5";
         effect-vignette = "0.5:0.5";
@@ -231,7 +280,7 @@ in
         default-timeout = 2000;
         layer = "overlay";
         anchor = "top-right";
-        font = "Iosevka Nerd Font Propo Medium";
+        font = "${fonts.gui.name} ${fonts.gui.size}";
         border-radius = 2;
         background-color = "#202020d0";
         border-color = "#00000000";
@@ -268,13 +317,7 @@ in
         finder = "fuzzel";
       };
     };
-
-    # gnome-keyring.enable = true;
-
-    # gpg-agent.pinentry.package = pkgs.wayprompt;
-
     udiskie.enable = true;
-
     swayidle =
       let
         lock = "${pkgs.swaylock-effects}/bin/swaylock --daemonize";
@@ -301,29 +344,16 @@ in
             command = "${pkgs.systemd}/bin/systemctl suspend";
           }
         ];
-        events = [
-          {
-            event = "before-sleep";
-            command = (display "off") + "; " + lock;
-          }
-          {
-            event = "after-resume";
-            command = display "on";
-          }
-          {
-            event = "lock";
-            command = (display "off") + "; " + lock;
-          }
-          {
-            event = "unlock";
-            command = display "on";
-          }
-        ];
+        events = {
+          "before-sleep" = "(display \"off\") ; lock";
+          "after-resume" = "display \"on\"";
+          "lock" = "(display \"off\");  lock";
+          "unlock" = "display \"on\"";
+        };
       };
   };
 
   xdg = {
-    enable = true;
     autostart.enable = true;
     portal = {
       enable = true;
@@ -341,13 +371,23 @@ in
           "org.freedesktop.impl.portal.ScreenCast" = "wlr";
           "org.freedesktop.impl.portal.Screenshot" = "wlr";
         };
+
+        sway = {
+          default = [
+            "wlr"
+            "gtk"
+          ];
+          "org.freedesktop.impl.portal.ScreenCast" = "wlr";
+          "org.freedesktop.impl.portal.Screenshot" = "wlr";
+        };
       };
     };
+
     configFile = {
       "waybar".source = ./waybar;
       "gtk-3.0/settings.ini".text = ''
         [Settings]
-        gtk-font-name = Noto Sans 12
+        gtk-font-name = "${fonts.gui.name} ${fonts.gui.size}";
         gtk-theme-name = Adwaita
         gtk-icon-theme-name = Adwaita
         gtk-cursor-theme-name = Adwaita
@@ -356,7 +396,7 @@ in
       '';
       "gtk-4.0/settings.ini".text = ''
         [Settings]
-        gtk-font-name = Noto Sans 12
+        gtk-font-name = "${fonts.gui.name} ${fonts.gui.size}";
         gtk-cursor-theme-size = 48
       '';
     };
@@ -380,15 +420,15 @@ in
       defaultApplications = {
         "application/pdf" = "org.kde.okular.desktop";
         "inode/directory" = "thunar.desktop";
-        # "text/html" = "librewolf.desktop";
+        "text/html" = "librewolf.desktop";
         "video/mp4" = "vlc.desktop";
-        # "x-scheme-handler/about" = "librewolf.desktop";
-        # "x-scheme-handler/http" = "librewolf.desktop";
-        # "x-scheme-handler/https" = "librewolf.desktop";
+        "x-scheme-handler/about" = "librewolf.desktop";
+        "x-scheme-handler/http" = "librewolf.desktop";
+        "x-scheme-handler/https" = "librewolf.desktop";
         "x-scheme-handler/tokodon" = "tokodon-handler.desktop";
-        # "x-scheme-handler/unknown" = "librewolf.desktop";
+        "x-scheme-handler/unknown" = "librewolf.desktop";
       };
     };
-    # terminal-exec = "${pkgs.foot}/bin/foot";
+    #terminal-exec = "${pkgs.foot}/bin/foot";
   };
 }

@@ -15,13 +15,21 @@ echo "fetching https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.tx
 curl -sSfL "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt" >>"${tmp}" ||
   echo "failed: https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt"
 
-# normalise: strip comments, blank lines, localhost entries, convert to hosts format
-grep -E '^(0\.0\.0\.0|127\.0\.0\.1) ' "${tmp}" |
-  grep -v '0\.0\.0\.0 0\.0\.0\.0' |
-  grep -v '127\.0\.0\.1 localhost' |
-  sed 's/^127\.0\.0\.1/0.0.0.0/' |
-  sort -u \
-    >/var/lib/dnsmasq/adblock.hosts
+# normalise + sanitize: hosts format, one valid name per line
+awk '
+  /^(0\.0\.0\.0|127\.0\.0\.1)[ \t]/ {
+    name = tolower($2)
+    if (name == "0.0.0.0" || name == "localhost") next
+    if (name ~ /^([a-z0-9_]([a-z0-9_-]{0,61}[a-z0-9_])?\.)+[a-z0-9_]([a-z0-9_-]{0,61}[a-z0-9_])?$/ \
+        && length(name) <= 253) {
+      print "0.0.0.0 " name
+      next
+    }
+    rejected++
+    print "rejected: " $0 > "/dev/stderr"
+  }
+  END { if (rejected) print rejected " lines rejected" > "/dev/stderr" }
+' "${tmp}" | sort -u >/var/lib/dnsmasq/adblock.hosts
 
 pkill -HUP dnsmasq
 echo "adblock: $(wc -l </var/lib/dnsmasq/adblock.hosts) entries"

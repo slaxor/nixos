@@ -1,3 +1,4 @@
+{ fonts }:
 { ... }:
 {
   programs.waybar = {
@@ -322,8 +323,9 @@
 
     style = ''
       * {
-        font-family: "UniversalisADFStd Nerd Font";
-        font-size: 14pt;
+        font-family: "${fonts.gui.name}";
+        font-weight: 500;
+        font-size: ${fonts.gui.size}px;
       }
 
       tooltip {

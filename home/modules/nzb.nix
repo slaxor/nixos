@@ -1,7 +1,6 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
-    sabnzbd
     nzbhydra2
     nzbget
     unrar-free

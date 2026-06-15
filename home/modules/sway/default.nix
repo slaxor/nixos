@@ -1,13 +1,28 @@
 { ... }:
+let
+  fonts = {
+    gui = {
+      # name = "Iosevka Nerd Font Propo Medium";
+      name = "FiraCode Nerd Font Mono Light";
+      style = "Medium";
+      size = "12";
+    };
+    term = {
+      name = "FiraCode Nerd Font Mono Light";
+      style = "Medium";
+      size = "12";
+    };
+  };
+in
 {
-
   imports = [
-    ./deps.nix
+    (import ./deps.nix { inherit fonts; })
     ./input.nix
     ./keybindings.nix
     ./output.nix
     ./session.nix
     ./window_settings.nix
+    (import ./waybar { inherit fonts; })
   ];
 
   wayland.windowManager.sway = {
@@ -18,9 +33,11 @@
     config = {
       defaultWorkspace = "1";
       workspaceLayout = "tabbed";
-      fonts.names = [
-        "pango:Iosevka Nerd Font Propo Medium 12"
-      ];
+      fonts = {
+        names = [ fonts.gui.name ];
+        style = fonts.gui.style;
+        size = fonts.gui.size;
+      };
     };
   };
 }

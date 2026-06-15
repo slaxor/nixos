@@ -29,7 +29,6 @@
 
   wayland.windowManager.sway.config.bars = [ ];
 
-  # seat is not exposed as a structured option in home-manager sway
   wayland.windowManager.sway.extraConfig = ''
     seat "*" xcursor_theme Adwaita 24
   '';

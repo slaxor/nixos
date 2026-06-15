@@ -26,10 +26,10 @@ let
       SDL2
       alsa-lib
       libGL
-      xorg.libX11
-      xorg.libXcursor
-      xorg.libXi
-      xorg.libXrandr
+      libx11
+      libxcursor
+      libxi
+      libxrandr
     ];
     installPhase = ''
       mkdir -p $out/bin
@@ -41,7 +41,7 @@ let
         --set SDL_VIDEODRIVER x11 \
         --set SDL_PATH ${pkgs.SDL2}/lib \
         --set LD_PRELOAD ${pkgs.SDL2}/lib/libSDL2-2.0.so.0 \
-        --prefix LD_LIBRARY_PATH :${pkgs.SDL2}/lib:${pkgs.xorg.libX11}/lib:${pkgs.xorg.libXcursor}/lib:${pkgs.xorg.libXi}/lib:${pkgs.xorg.libXrandr}/lib:${pkgs.alsa-lib}/lib:${pkgs.libGL}/lib
+        --prefix LD_LIBRARY_PATH :${pkgs.SDL2}/lib:${pkgs.libx11}/lib:${pkgs.libxcursor}/lib:${pkgs.libxi}/lib:${pkgs.libxrandr}/lib:${pkgs.alsa-lib}/lib:${pkgs.libGL}/lib
     '';
   };
 

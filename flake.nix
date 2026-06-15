@@ -2,14 +2,17 @@
   description = "Slaxor's NixOS";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     sops-nix = {
@@ -22,22 +25,15 @@
 
   outputs =
     {
-      self,
-      nixpkgs,
-      nixpkgs-unstable,
-      home-manager,
-      slaxor-editor,
+        self,
+        nixpkgs,
+        home-manager,
+        slaxor-editor,
       slaxor-replace,
       ...
     }@inputs:
     let
       system = "x86_64-linux";
-
-      pkgs-unstable = import nixpkgs-unstable {
-        inherit system;
-        config.allowUnfree = true;
-      };
-
       identity = {
         me.identity = {
           name = "Sascha Teske";
@@ -54,7 +50,9 @@
         ./home/modules/base
         ./home/modules/git
         ./home/modules/gpg.nix
-        ./home/modules/neovim
+        ./home/modules/lf.nix
+        # ./home/modules/neovim
+        ./home/modules/nixvim
         ./home/modules/shell
         ./home/modules/ssh.nix
         ./home/modules/tmux
@@ -73,7 +71,6 @@
       hmShared = {
         useGlobalPkgs = true;
         useUserPackages = true;
-        extraSpecialArgs = { inherit pkgs-unstable; };
       };
 
       slaxorPkgs =
@@ -87,13 +84,6 @@
 
     in
     {
-      overlays.unstable = final: prev: {
-        unstable = import nixpkgs-unstable {
-          system = prev.stdenv.hostPlatform.system;
-          config.allowUnfree = true;
-        };
-      };
-
       nixosConfigurations = {
         kea = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs; };
@@ -102,7 +92,6 @@
             { nixpkgs.hostPlatform.system = system; }
             {
               nixpkgs.overlays = [
-                self.overlays.unstable
                 inputs.nur.overlays.default
               ];
             }
@@ -127,7 +116,6 @@
           modules = [
             {
               nixpkgs.overlays = [
-                self.overlays.unstable
                 inputs.nur.overlays.default
               ];
             }
@@ -153,7 +141,6 @@
             home-manager.nixosModules.home-manager
             {
               nixpkgs.overlays = [
-                self.overlays.unstable
                 inputs.nur.overlays.default
               ];
             }

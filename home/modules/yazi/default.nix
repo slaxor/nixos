@@ -1,20 +1,13 @@
-{ pkgs-unstable, ... }:
+{ pkgs, ... }:
 {
-  home.packages = with pkgs-unstable; [
-    yazi
-  ];
-
-  home.shellAliases = {
-    y = "${pkgs-unstable.yazi}/bin/yazi";
-  };
-
   programs.yazi = {
     enable = true;
-    package = pkgs-unstable.yazi;
-    plugins = with pkgs-unstable.yaziPlugins; {
+    shellWrapperName = "y";
+    plugins = with pkgs.yaziPlugins; {
       inherit
         bypass
         chmod
+        diff
         mediainfo
         miller
         ouch
@@ -23,6 +16,83 @@
         toggle-pane
         ;
     };
+
+    keymap = {
+      mgr = {
+        prepend_keymap = [
+          {
+            on = [
+              "c"
+              "m"
+            ];
+            run = "plugin chmod";
+            desc = "Chmod on selected files";
+          }
+          {
+            on = "<C-d>";
+            run = "plugin diff";
+            desc = "Diff the selected with the hovered file";
+          }
+          {
+            on = "+";
+            run = "plugin toggle-pane max-preview";
+            desc = "Maximize or restore the preview pane";
+          }
+          {
+            on = "-";
+            run = "plugin toggle-pane min-preview";
+            desc = "Minimize or restore the preview pane";
+          }
+          {
+            on = "+";
+            run = "plugin toggle-pane max-preview";
+            desc = "Minimize or restore the preview pane";
+          }
+          {
+            on = [
+              "c"
+              "m"
+            ];
+            run = "plugin chmod";
+            desc = "Chmod on selected files";
+          }
+          {
+            on = "<C-m>";
+            run = "shell --block -- neomutt -a \"$@\"";
+          }
+          {
+            on = [ "<Up>" ];
+            run = "arrow -1";
+            desc = "Move cursor up";
+          }
+          {
+            on = [ "<Down>" ];
+            run = "arrow 1";
+            desc = "Move cursor down";
+          }
+          {
+            on = "<C-o>";
+            run = "shell --block -- /bin/bash -l";
+            desc = "create a subshell";
+          }
+          {
+            on = [
+              ","
+              "s"
+            ];
+            run = "plugin jump-to-char";
+            desc = "Jump to char";
+          }
+        ];
+        append_keymap = [ ];
+      };
+      tasks = { };
+      select = { };
+      input = { };
+      completion = { };
+      help = { };
+    };
+
     settings = {
       mgr = {
         ratio = [
@@ -85,7 +155,7 @@
   # };
 }
 
-# plugins = with pkgs-unstable.yaziPlugins; {
+# plugins = with pkgs.yaziPlugins; {
 # rich-preview = rich-preview;
 # wl-clipboard = wl-clipboard;
 # bypass = bypass

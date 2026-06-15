@@ -6,7 +6,6 @@
       exec systemd-run --user --scope -p CPUQuota=200% librewolf "$@"
     '')
   ];
-
   programs.librewolf = {
     enable = true;
     nativeMessagingHosts = [ pkgs.keepassxc ];
@@ -50,6 +49,7 @@
   };
 
   programs.firefox = {
+    configPath = "${config.xdg.configHome}/mozilla/firefox";
     enable = true;
     nativeMessagingHosts = [ pkgs.keepassxc ];
     profiles = {

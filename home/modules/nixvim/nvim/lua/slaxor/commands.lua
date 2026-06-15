@@ -1,0 +1,5 @@
+-- command! -nargs=1 AddExt execute "saveas ".expand("%:p").<q-args>
+-- command! -nargs=1 ChgExt execute "saveas ".expand("%:p:r").<q-args>
+-- command! -range=% Uniq <line1>,<line2> !awk '\!x[$0]++'
+-- command! -range=% RandStr r! dd if=/dev/urandom bs=1024 count=1 2>/dev/null|base64 -w0|cut -c256-310
+-- command! OpenTest e %:p:r_test.%:e

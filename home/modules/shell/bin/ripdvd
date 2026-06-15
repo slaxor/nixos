@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+set -euo pipefail
+TMDB_API_KEY=21f7c1eafad0f8bcb01c140fdc4cdcb4
+# : "${TMDB_API_KEY:?get one at themoviedb.org}"
+dump_dir=${DUMP_DIR:-/data/dump/movies}
+device=${DVD_DEVICE:-/dev/sr0}
+
+# volume label of the inserted disc, underscores despaced
+disc_label() {
+  lsdvd "${device}" | sed -n 's/^Disc Title: //p' | tr '_' ' '
+}
+
+# runtime in minutes of the longest title
+disc_runtime() {
+  lsdvd "${device}" | awk '
+    /^Title:/ { gsub(/,/, "", $2); split($4, t, ":"); m[$2] = t[1] * 60 + t[2] }
+    /^Longest track:/ { printf "%d\n", m[$3] }
+  '
+}
+
+# rip all titles >=70min into the given dir, echo the biggest mkv
+rip_main_feature() {
+  local tmp=$1
+  makemkvcon --robot --minlength=4200 mkv "dev:${device}" all "${tmp}" >&2
+  find "${tmp}" -maxdepth 1 -name '*.mkv' -printf '%s\t%p\n' |
+    sort -rn | head -n1 | cut -f2-
+}
+
+# search tmdb, echo "id<TAB>title<TAB>year" of the best runtime match
+identify() {
+  local query=$1 runtime=$2 id
+  curl -fsS --get https://api.themoviedb.org/3/search/movie \
+    --data-urlencode "api_key=${TMDB_API_KEY}" \
+    --data-urlencode "query=${query}" |
+    jq -r '.results[:5][].id' |
+    while read -r id; do
+      curl -fsS "https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}" |
+        jq -r --argjson rt "${runtime}" \
+          'select(.runtime != null and ((.runtime - $rt) | fabs) <= 3)
+           | [.id, .title, .release_date[:4]] | @tsv'
+    done | head -n1
+}
+
+# download the poster for a tmdb id to the given path
+fetch_cover() {
+  local id=$1 dest=$2 path
+  path=$(curl -fsS "https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}" |
+    jq -r '.poster_path')
+  [[ ${path} != null ]] && curl -fsS -o "${dest}" "https://image.tmdb.org/t/p/original${path}"
+}
+
+# rip the inserted dvd, name it via tmdb runtime fingerprint, drop a cover
+ripdvd() {
+  local tmp label runtime file match id title year dest
+  tmp=$(mktemp -d "${dump_dir}/.rip.XXXXXX")
+  trap 'rm -rf "$tmp"' RETURN
+
+  label=$(disc_label)
+  runtime=$(disc_runtime)
+  echo "disc: '${label}' (${runtime}min)" >&2
+
+  file=$(rip_main_feature "${tmp}")
+
+  match=$(identify "${label}" "${runtime}")
+  if [[ -z ${match} ]]; then
+    read -rp "no tmdb match for '${label}', search term: " label
+    match=$(identify "${label}" "${runtime}")
+  fi
+
+  if [[ -n ${match} ]]; then
+    IFS=$'\t' read -r id title year <<<"${match}"
+    title=${title//\//-}
+    dest="${dump_dir}/${title} (${year})"
+    mkdir -p "${dest}"
+    mv "${file}" "${dest}/${title} (${year}).mkv"
+    fetch_cover "${id}" "${dest}/cover.jpg" || echo "no poster available" >&2
+  else
+    dest="${dump_dir}/${label}"
+    mkdir -p "${dest}"
+    mv "${file}" "${dest}/${label}.mkv"
+    echo "unidentified, dumped as-is" >&2
+  fi
+  echo "${dest}"
+}
+
+ripdvd "$@"

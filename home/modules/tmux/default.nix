@@ -11,8 +11,9 @@
 
   programs.tmux = {
     enable = true;
+    terminal = "tmux-256color";
     shell = "${pkgs.bash}/bin/bash";
-    shortcut = "`";
+    # shortcut = "`";
     aggressiveResize = true;
     baseIndex = 1;
     newSession = true;
@@ -35,6 +36,12 @@
     ];
 
     extraConfig = ''
+      set -g allow-passthrough on
+      set -as terminal-features "*:RGB:hyperlinks:usstyle:clipboard:focus"
+      set -s set-clipboard on
+      set -s extended-keys on
+      set -as terminal-features "xterm-kitty:extkeys"
+      set -g focus-events on
       set -g @resurrect-strategy-vim 'session'
       set -g @resurrect-strategy-nvim 'session'
       set -g prefix `

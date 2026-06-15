@@ -1,6 +1,13 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    (lib.lowPrio nrf-command-line-tools.override { segger-jlink = segger-jlink-headless; })
+    nrfconnect
+    nrfconnect-bluetooth-low-energy
+    nrfutil
+    pulseview
+    sigrok-cli
+    smuview
     tio
   ];
 

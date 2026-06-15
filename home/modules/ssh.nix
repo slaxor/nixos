@@ -7,15 +7,15 @@
     enable = true;
     enableDefaultConfig = false;
 
-    matchBlocks = {
+    settings = {
       "127.0.0.1" = {
         userKnownHostsFile = "/dev/null";
-        extraOptions.StrictHostKeyChecking = "no";
+        StrictHostKeyChecking = "no";
       };
 
       "localhost" = lib.hm.dag.entryBefore [ "127.0.0.1" ] {
         userKnownHostsFile = "/dev/null";
-        extraOptions.StrictHostKeyChecking = "no";
+        StrictHostKeyChecking = "no";
       };
 
       "camel" = {
@@ -33,19 +33,19 @@
         hostname = "192.168.1.1";
         port = 22;
         user = "root";
-        extraOptions.StrictHostKeyChecking = "no";
+        StrictHostKeyChecking = "no";
         userKnownHostsFile = "/dev/null";
       };
 
       "boot.*" = {
         user = "root";
-        extraOptions.StrictHostKeyChecking = "no";
+        StrictHostKeyChecking = "no";
         userKnownHostsFile = "/dev/null";
       };
 
       "rescue.*" = {
         user = "root";
-        extraOptions.StrictHostKeyChecking = "no";
+        StrictHostKeyChecking = "no";
         userKnownHostsFile = "/dev/null";
       };
 
@@ -81,17 +81,11 @@
         forwardAgent = false;
         addKeysToAgent = "yes";
         compression = true;
-        extraOptions = {
-          KexAlgorithms = "sntrup761x25519-sha512@openssh.com,curve25519-sha256,diffie-hellman-group18-sha512";
-          HashKnownHosts = "yes";
-          VerifyHostKeyDNS = "yes";
-        };
+        KexAlgorithms = "sntrup761x25519-sha512@openssh.com,curve25519-sha256,diffie-hellman-group18-sha512";
+        HashKnownHosts = "yes";
+        VerifyHostKeyDNS = "yes";
 
       };
     };
   };
-
-  # gpg-agent does it for me:
-  # service.ssh-agent = {
-  # };
 }

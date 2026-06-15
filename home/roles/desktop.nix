@@ -18,7 +18,6 @@
     ../modules/luxoryitems.nix
     ../modules/nzb.nix
     ../modules/pico8
-    ../modules/spicedb.nix
     ../modules/sway
     ../modules/syncthing.nix
   ];

@@ -1,10 +1,11 @@
-{ lib, ... }:
+{ pkgs, lib, ... }:
 
 let
   mod = "Mod4"; # $cmd
   alt = "Mod1"; # $alt
-  term = "foot";
-  launcher = "fuzzel";
+  # term = "foot";
+  term = "${(lib.getExe pkgs.kitty)}";
+  launcher = "${(lib.getExe pkgs.fuzzel)}";
 in
 
 {
@@ -17,8 +18,6 @@ in
     # Remove it and use a plain attrset if you want full control over all keybindings.
     keybindings = lib.mkOptionDefault {
       "${mod}+space" = "exec ${launcher}";
-
-      # Workspaces
       "${mod}+0" = "workspace number 10";
       "${mod}+1" = "workspace number 1";
       "${mod}+2" = "workspace number 2";

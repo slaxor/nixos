@@ -35,7 +35,6 @@ in
   home.packages = with pkgs; [
     screenkey
     asciinema
-    asciinema-automation
     asciinema-scene
     asciiquarium-transparent
     direnv
@@ -147,9 +146,13 @@ in
 
       initExtra = ''
         [[ $- == *i* ]] || return
+        source ${./.bashrc.d/60-fns.sh}
         set-title() {
           printf "\033]0;%s@%s\007" "$USER" "$(hostname -s)"
         }
+
+        npa() { nix profile add nixpkgs/nixos-unstable#$1 ; }
+
         s3mount() {
           local bucket="''${1:?Usage: s3mount <bucket> <mountpoint> [profile]}"
           local mountpoint="''${2:?Usage: s3mount <bucket> <mountpoint> [profile]}"
@@ -212,9 +215,9 @@ in
     };
   };
 
-  home.file = {
-    ".bashrc.d/60-fns.sh".source = ./.bashrc.d/60-fns.sh;
-  };
+  # home.file = {
+  # ".bashrc.d/60-fns.sh".source = ./.bashrc.d/60-fns.sh;
+  # };
 
   xdg.configFile = {
     "mc/ini".source = ./mc/ini;

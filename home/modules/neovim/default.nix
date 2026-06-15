@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, ... }:
 let
   nvim-spell-de-utf8-dictionary = builtins.fetchurl {
     url = "https://ftp.pl.vim.org/pub/vim/runtime/spell/de.utf-8.spl";
@@ -37,7 +37,6 @@ in
       bash-language-server
       ccls
       cmake-language-server
-      docker-language-server
       dts-lsp
       efm-langserver
       gopls
@@ -68,7 +67,7 @@ in
       yaml-language-server
       yamllint
       vimPlugins.nvim-dap-virtual-text
-      tree-sitter
+      tree-sitter2
     ];
     plugins = with pkgs.vimPlugins; [
       (pkgs.vimUtils.buildVimPlugin {
@@ -101,6 +100,9 @@ in
           sha256 = "sha256-zx6ud3uh+0Z+cYdP2KkFA27Kb6fW/CSGpC1C4YmCIo0=";
         };
       })
+      nvim-origami
+      toggleterm-nvim
+      lf-nvim
       SudoEdit-vim
       barbar-nvim
       cmp-nvim-lsp
@@ -110,8 +112,6 @@ in
       fzf-lsp-nvim
       go-nvim
       lsp-format-nvim
-      vim-vsnip
-      vim-vsnip-integ
       markdown-nvim
       markdown-preview-nvim
       nerdcommenter
@@ -122,12 +122,33 @@ in
       nvim-dap-virtual-text
       nvim-lspconfig
       nvim-web-devicons
+      qmk-nvim
+      teamtype
+      # telescope-cheat-nvim
+      # telescope-file-browser-nvim
+      # telescope-fzf-native-nvim
+      # telescope-glyph-nvim
+      # telescope-manix
+      # telescope-nvim
+      # telescope-ultisnips-nvim
+      # telescope-undo-nvim
+      # telescope-vim-bookmarks-nvim
+      typst-conceal-vim
+      typst-preview-nvim
+      typst-vim
+      vim-abolish
+      vim-pug
+      vim-visual-increment
+      vim-vsnip
+      vim-vsnip-integ
+      yazi-nvim
       (nvim-treesitter.withPlugins (p: [
         p.awk
         p.bash
         p.c
         p.caddy
         p.cmake
+        p.comment
         p.css
         p.csv
         p.desktop
@@ -141,10 +162,9 @@ in
         p.gnuplot
         p.go
         p.gomod
-        p.gowork
-        p.gotmpl
-        p.comment
         p.gosum
+        p.gotmpl
+        p.gowork
         p.gpg
         p.helm
         p.html
@@ -178,6 +198,7 @@ in
         p.slint
         p.sql
         p.ssh_config
+        p.starlark
         p.strace
         p.sway
         p.terraform
@@ -189,25 +210,7 @@ in
         p.vim
         p.vimdoc
         p.yaml
-        p.starlark
       ]))
-      # telescope-nvim
-      # telescope-manix
-      # telescope-ultisnips-nvim
-      # telescope-cheat-nvim
-      # telescope-undo-nvim
-      # telescope-glyph-nvim
-      # telescope-fzf-native-nvim
-      # telescope-file-browser-nvim
-      # telescope-vim-bookmarks-nvim
-      teamtype
-      typst-conceal-vim
-      typst-preview-nvim
-      typst-vim
-      vim-abolish
-      vim-pug
-      vim-visual-increment
-      yazi-nvim
     ];
     extraLuaConfig = /* lua */ ''
       require("slaxor");
@@ -257,6 +260,52 @@ in
       --     ls.change_choice(1)
       --   end
       -- end, {silent = true})
+
+      vim.g.lf_netrw = 1
+      require("lf").setup({ escape_quit = false })
+      vim.keymap.set("n", "<leader>e", "<cmd>Lf<cr>")
+
+
+      --origami
+      -- default settings
+      require("origami").setup {
+        useLspFoldsWithTreesitterFallback = {
+          enabled = true,
+          foldmethodIfNeitherIsAvailable = "indent", ---@type string|fun(bufnr: number): string
+        },
+        pauseFoldsOnSearch = true,
+        foldtext = {
+          enabled = true,
+          -- padding = {
+          --   character = " ",
+          --   width = 3,  ---@type number|fun(win: number, foldstart: number, currentVirtualTextLength: number): number
+          --   hlgroup = nil,
+          -- },
+          padding = 2,
+          lineCount = {
+            template = "%d lines", -- `%d` is replaced with the number of folded lines
+            hlgroup = "Comment",
+          },
+          diagnosticsCount = true, -- uses hlgroups and icons from `vim.diagnostic.config().signs`
+          gitsignsCount = true, -- requires `gitsigns.nvim`
+          disableOnFt = { "snacks_picker_input" }, ---@type string[]
+        },
+        autoFold = {
+          enabled = true,
+          kinds = { "comment", "imports" }, ---@type lsp.FoldingRangeKind[]
+        },
+        foldKeymaps = {
+          setup = true, -- modifies `h`, `l`, `^`, and `$`
+          closeOnlyOnFirstColumn = false, -- `h` and `^` only fold in the 1st column
+          scrollLeftOnCaret = false, -- `^` should scroll left (basically mapped to `0^`)
+        },
+      }
+      vim.keymap.set("n", "<Left>", function() require("origami").h() end)
+      vim.keymap.set("n", "<Right>", function() require("origami").l() end)
+      vim.keymap.set("n", "<Home>", function() require("origami").caret() end)
+      vim.keymap.set("n", "<End>", function() require("origami").dollar() end)
+      -- eo origami
+
       vim.api.nvim_create_autocmd("BufEnter", {
         desc = "Meld-like mnemonic bindings using 'm' namespace",
         callback = function()

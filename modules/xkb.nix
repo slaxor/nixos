@@ -2,7 +2,7 @@
 {
 
   environment.systemPackages = with pkgs; [
-    xorg.xkbcomp
+    xkbcomp
   ];
 
   # xkbcomp $DISPLAY - | less

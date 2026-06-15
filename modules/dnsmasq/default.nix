@@ -58,7 +58,7 @@ in
         local = [ "/slax.lan/" ];
         addn-hosts = [
           "/var/lib/dnsmasq/local.hosts"
-          "/var/lib/dnsmasq/adblock.hosts"
+          # "/var/lib/dnsmasq/adblock.hosts"
         ];
         no-dhcp-interface = "*";
         dhcp-authoritative = false;
@@ -105,7 +105,7 @@ in
     wants = [ "network-online.target" ];
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${updateAdblock}/bin/dns-update-adblock";
+      ExecStart = "${updateAdblock}/bin/update-adblock";
     };
   };
 

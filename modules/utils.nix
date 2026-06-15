@@ -27,7 +27,6 @@
     mtr
     ncdu
     netcat
-    nixfmt-rfc-style
     ntfs3g
     pciutils
     plocate

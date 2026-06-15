@@ -10,6 +10,7 @@
       "audio"
       "dialout"
       "docker"
+      "hoarders"
       "input"
       "kvm"
       "libvirtd"

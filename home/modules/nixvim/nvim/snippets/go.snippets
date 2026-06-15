@@ -1,0 +1,144 @@
+
+snippet init an init() with log settings
+	func init() {
+		log.SetFlags(log.Lshortfile)
+	}
+
+snippet initc init vipercfg
+	func initConfig(env string) error {
+		viper.SetConfigName(fmt.Sprintf("%s_%s.conf", APPNAME, env))
+		viper.SetConfigType("toml")
+		viper.AddConfigPath(".")
+		viper.SetEnvPrefix(APPNAME)
+		viper.AutomaticEnv()
+		viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+		viper.SetDefault("log.level", "info")
+		viper.SetDefault("log.output", "stderr")
+		viper.SetDefault("${1:key}", "${2:val}")
+		return viper.ReadInConfig()
+	}
+
+snippet errl error logging
+	if err != nil {
+		logger.${1:Error}(err)
+	}
+
+snippet errr error return
+	if err != nil {
+		return err
+	}
+
+snippet errp error panic
+	if err != nil {
+		panic(err)
+	}
+
+snippet testm test main func
+	func TestMain(m *testing.M) {
+		code := m.Run()
+		os.Exit(code)
+	}
+
+snippet suite test suite for github.com/stretchr/testify/suite
+	func Test${1:Suite}(t *testing.T) {
+		suite.Run(t, new($1TestSuite))
+	}
+	
+	type $1TestSuite struct {
+		suite.Suite
+		$1 $1
+	}
+	
+	func (suite *$1TestSuite) SetupTest() {
+		suite.$1 = $1{}
+	}
+	
+	func (suite *$1TestSuite) Test${2:subject}() {
+		for _, tc := range []struct {
+			name string
+			in   $1
+			exp  []string
+		}{
+			{"zero", $1{}, []string{}},
+			{"one", $1{}, []string{""}},
+			{"two", $1{}, []string{"¿foo?"}},
+			{"four", $1{}, nil},
+			{"xmastree", $1{}, []string{"¿foo?", "¿bar?", "¿baz?", "¿gul?", "¿bit?", "¿lom?", "¿tir?", "¿lof?"}},
+		} {
+			suite.Run(tc.name, func() {
+				act := tc.in.$2()
+				suite.Equal(tc.exp, act)
+			})
+		}
+	}
+
+snippet sfn test suite func for github.com/stretchr/testify/suite
+	func (suite *${1:Suite}TestSuite) Test${2:subject}() {
+		for _, tc := range []struct {
+			name string
+			in   $1
+			exp  []string
+		}{
+			{"zero", $1{}, []string{}},
+			{"one", $1{}, []string{""}},
+			{"two", $1{}, []string{"¿foo?"}},
+			{"four", $1{}, nil},
+			{"xmastree", $1{}, []string{"¿foo?", "¿bar?", "¿baz?", "¿gul?", "¿bit?", "¿lom?", "¿tir?", "¿lof?"}},
+		} {
+			suite.Run(tc.name, func() {
+				act := tc.in.$2()
+				suite.Equal(tc.exp, act)
+			})
+		}
+	}
+
+snippet fn a standard func
+	// ${1:name} takes ${2:params} and returns ${3:value}
+	func $1($2) ($3) {
+		return $3{}
+	}
+
+snippet mfn a method func
+	// ${3:name} takes ${5:params} and returns ${6:value}
+	func (${1:r} ${2:Recv}) $3($5) ($6) {
+		return $6{}
+	}
+
+snippet tfn a standard test func (testify require)
+	func Test${1:name}(t *testing.T) {
+		exp := ${3:expectation}
+		act, err := $1(${2:params})
+		require.NoError(t, err)
+		require.Equal(t, exp, act)
+	}
+
+snippet ttfn table-driven test func for github.com/stretchr/testify/require
+	func Test${2:subject}(t *testing.T) {
+		for _, tc := range []struct {
+			name string
+			in   $1
+			exp  []string
+		}{
+			{"zero", $1{}, []string{}},
+			{"one", $1{}, []string{""}},
+			{"two", $1{}, []string{"¿foo?"}},
+			{"four", $1{}, nil},
+			{"xmastree", $1{}, []string{"¿foo?", "¿bar?", "¿baz?", "¿gul?", "¿bit?", "¿lom?", "¿tir?", "¿lof?"}},
+		} {
+			t.Run(tc.name, func(t *testing.T) {
+				act := tc.in.$2()
+				require.Equal(t, tc.exp, act)
+			})
+		}
+	}
+
+snippet pr panic recover
+	defer func() {
+		switch p := recover().(type) {
+		case nil, bailout:
+			// normal return or early exit
+		default:
+			// re-panic
+			panic(p)
+		}
+	}()

@@ -2,7 +2,7 @@
 {
   home = {
     packages = with pkgs; [
-      binwalk
+      # binwalk
       ghidra-bin
       ghidra-extensions.lightkeeper
       ghidra-extensions.machinelearning
@@ -12,7 +12,7 @@
       ghidra-extensions.ghidra-delinker-extension
       ghidra-extensions.wasm
       ghidra-extensions.gnudisassembler
-      ghidra-extensions.ghidraninja-ghidra-scripts
+      # ghidra-extensions.ghidraninja-ghidra-scripts
       ghidra-extensions.ghidra-firmware-utils
       ghidra-extensions.sleighdevtools
       ghidra-extensions.kaiju
