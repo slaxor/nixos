@@ -1,3 +1,4 @@
+{ lib, ... }:
 {
   imports = [
     # Core
@@ -13,6 +14,14 @@
     # Packages & Utils
     ./utils.nix
     ./yazi.nix
-    # ./slaxors-custom.nix
   ];
+  nixpkgs.config = {
+    allowUnfreePredicate =
+      pkg:
+      builtins.elem (lib.getName pkg) [
+        "barbar.nvim"
+        "diagram.nvim"
+        "unrar"
+      ];
+  };
 }
