@@ -35,9 +35,6 @@
       builtins.elem (lib.getName pkg) [
         "barbar.nvim"
         "diagram.nvim"
-        "cspell.nvim"
-        "claude-code"
-        "discord"
         "nrf-udev"
         "nrf-command-line-tools"
         "nrfconnect"

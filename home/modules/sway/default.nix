@@ -3,14 +3,15 @@ let
   fonts = {
     gui = {
       # name = "Iosevka Nerd Font Propo Medium";
-      name = "FiraCode Nerd Font Mono Light";
-      style = "Medium";
+      name = "FiraCode Nerd Font Propo";
+      weight = "Medium";
       size = "12";
     };
     term = {
-      name = "FiraCode Nerd Font Mono Light";
-      style = "Medium";
-      size = "12";
+      name = "FiraCode Nerd Font Mono";
+      # name = "Iosevka Nerd Font Mono";
+      weight = "Light";
+      size = "14";
     };
   };
 in
@@ -24,7 +25,7 @@ in
     ./window_settings.nix
     (import ./waybar { inherit fonts; })
   ];
-
+  # 🐧
   wayland.windowManager.sway = {
     enable = true;
     checkConfig = false;
@@ -35,7 +36,7 @@ in
       workspaceLayout = "tabbed";
       fonts = {
         names = [ fonts.gui.name ];
-        style = fonts.gui.style;
+        style = fonts.gui.weight;
         size = fonts.gui.size;
       };
     };

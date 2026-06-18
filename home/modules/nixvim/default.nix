@@ -126,26 +126,24 @@ in
         }
         {
           mode = [
+            "i"
             "n"
             "v"
           ];
           key = "<A-c>";
-          action = "<Plug>NERDCommenterToggle";
-          options = {
-            remap = true;
-            desc = "comment or uncomment";
-          };
+          action.__raw = ''require("slaxor.keymaps").comment_toggle'';
+          options.desc = "toggle comment and move down";
         }
         {
           mode = "n";
           key = "<A-S-w>";
-          action = ":bp!<cr>";
+          action = ":bd!<cr>";
           options.desc = "force delete buffer";
         }
         {
           mode = "n";
           key = "<A-w>";
-          action = ":bp<cr>";
+          action = ":bd<cr>";
           options.desc = "delete buffer";
         }
         {
@@ -196,16 +194,7 @@ in
             "s"
           ];
           key = "<Tab>";
-          action.__raw = ''
-            function()
-              local ls = require("luasnip")
-              if ls.expand_or_jumpable() then
-                ls.expand_or_jump()
-              else
-                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Tab>", true, false, true), "n", false)
-              end
-            end
-          '';
+          action.__raw = ''require("slaxor.keymaps").tab_expand'';
           options.desc = "snippet expand/jump or tab";
         }
         {
@@ -214,23 +203,13 @@ in
             "s"
           ];
           key = "<S-Tab>";
-          action.__raw = ''
-            function()
-              local ls = require("luasnip")
-              if ls.jumpable(-1) then
-                ls.jump(-1)
-              else
-                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<S-Tab>", true, false, true), "n", false)
-              end
-            end
-          '';
+          action.__raw = ''require("slaxor.keymaps").tab_jump_back'';
           options.desc = "snippet jump back or shift-tab";
         }
       ];
 
     globals = {
       mapleader = ",";
-      lf_netrw = 1;
     };
 
     opts = {
@@ -255,13 +234,17 @@ in
       blink-ripgrep.enable = true;
       bufdelete.enable = true;
       ccc.enable = true;
-      cspell.enable = true;
       commentary.enable = true;
+      comment = {
+        enable = true;
+        settings.pre_hook = ''
+          require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook()
+        '';
+      };
       dap.enable = true;
       dap-disasm.enable = true;
       dap-go.enable = true;
       dap-lldb.enable = true;
-      dap-virtual-tex.enable = true;
       dap-python.enable = true;
       dap-rr.enable = true;
       dap-ui.enable = true;
@@ -277,8 +260,6 @@ in
       helm.enable = true;
       hex.enable = true;
       just.enable = true;
-      kitty-navigator.enable = true;
-      kitty-scrollback.enable = true;
       vim-css-color.enable = true;
       typst-preview.enable = true;
       yazi.enable = true;
@@ -373,10 +354,11 @@ in
       };
       markdown-preview.enable = true;
       # origami.enable = true;
+      otter.enable = true;
       toggleterm.enable = true;
-      typst-vim.enable = true;
       treesitter = {
         enable = true;
+        settings.highlight.enable = true;
         grammarPackages = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
           awk
           bash
@@ -446,40 +428,39 @@ in
           yaml
         ];
       };
+      ts-context-commentstring = {
+        enable = true;
+        settings.enable_autocmd = false;
+      };
+      typst-vim.enable = true;
       web-devicons.enable = true;
       qmk-nvim.enable = true;
     };
 
     extraPlugins = with pkgs.vimPlugins; [
-      # lf-nvim
       SudoEdit-vim
       file-line
-      nerdcommenter
-      # vim-abolish
       vim-visual-increment
       qmk-nvim
-      # unokai colorscheme provider, guihua, d2-vim, ... (your buildVimPlugin blocks)
     ];
 
     extraConfigLua = ''
       require("slaxor")
       vim.filetype.add({
-          pattern = {
+        pattern = {
           ["%.yaml%.tmpl$"]  = "yaml.gotexttmpl",
           ["%.json%.tmpl$"]  = "json.gotexttmpl",
           [".*/kube/config"] = "yaml",
           [".*kubeconfig"]   = "yaml",
-          },
+        },
        })
        vim.api.nvim_create_autocmd("VimEnter", {
          once = true,
          callback = function()
-           ${lib.concatMapStrings (a: ''
-             vim.cmd [[Abolish ${a}]]
-           '') abolishes}
+           ${lib.concatMapStrings (a: "vim.cmd [[Abolish ${a}]]") abolishes}
          end,
        })
-    '';
+       vim.g.skip_ts_context_commentstring_module = true   -- speeds startup, skips legacy init'';
 
     extraFiles = {
       "after".source = ./nvim/after;
@@ -490,8 +471,6 @@ in
       "spell/en.utf-8.spl".source = nvim-spell-en-utf8-dictionary;
       "spell/en.utf-8.sug".source = nvim-spell-en-utf8-suggestions;
       "snippets".source = ./nvim/snippets;
-
-      # ... your fetchurl let-bindings move along, fix the en .sug while at it
     };
   };
 }

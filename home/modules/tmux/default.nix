@@ -32,7 +32,6 @@
       sensible
       tilish
       yank
-      tmux-floax
     ];
 
     extraConfig = ''
@@ -92,16 +91,6 @@
           --preview-window 'right:55%' \
           --preview 'sesh preview {}'
       )\""
-
-      set -g @floax-bind '<space>'
-      set -g @floax-bind-menu 'P'
-      set -g @floax-width '80%'
-      set -g @floax-height '80%'
-      set -g @floax-border-color 'magenta'
-      set -g @floax-text-color 'blue'
-      set -g @floax-change-path 'true'
-      set -g @floax-session-name 'some-other-session-name'
-      set -g @floax-title 'floax'
     '';
   };
 
@@ -205,16 +194,6 @@
             --preview-window 'right:55%' \
             --preview 'sesh preview {}'
         )\""
-
-        set -g @floax-bind '<space>'
-        set -g @floax-bind-menu 'P'
-        set -g @floax-width '80%'
-        set -g @floax-height '80%'
-        set -g @floax-border-color 'magenta'
-        set -g @floax-text-color 'blue'
-        set -g @floax-change-path 'true'
-        set -g @floax-session-name 'some-other-session-name'
-        set -g @floax-title 'floax'
       '';
     };
     fzf.tmux.enableShellIntegration = true;

@@ -3,8 +3,7 @@
 let
   mod = "Mod4"; # $cmd
   alt = "Mod1"; # $alt
-  # term = "foot";
-  term = "${(lib.getExe pkgs.kitty)}";
+  term = "${(lib.getExe pkgs.foot)}";
   launcher = "${(lib.getExe pkgs.fuzzel)}";
 in
 

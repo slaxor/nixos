@@ -28,7 +28,6 @@ in
     clipcat
     deskflow
     dex
-    discord
     evince
     fastfetch
     feh
@@ -48,10 +47,6 @@ in
     handbrake
     kdePackages.okular
     inkscape
-    kitty
-    kitty-img
-    kitty-themes
-    kitti3
     libappindicator
     libnotify
     localsend
@@ -186,11 +181,11 @@ in
       settings = {
         main = {
           include = [
-            "${pkgs.foot.themes}/share/foot/themes/srcery" # starlight,
+            "${pkgs.foot.themes}/share/foot/themes/starlight"
           ];
           dpi-aware = "yes";
-          font = "${fonts.term.name} ${fonts.term.size}";
-          line-height = 12;
+          font = "${fonts.term.name}:weight=${fonts.term.weight}:size=${fonts.term.size}";
+          line-height = 14;
         };
         scrollback = {
           lines = 100000;
@@ -198,55 +193,11 @@ in
       };
     };
 
-    kitty = lib.mkForce {
-      enable = true;
-      settings = {
-        # font = "${termfont}"
-
-        confirm_os_window_close = 0;
-        dynamic_background_opacity = true;
-        enable_audio_bell = false;
-        mouse_hide_wait = "1.0";
-        window_padding_width = 10;
-        background_opacity = "1.0";
-        background_blur = 5;
-        font_family = "${fonts.term.name}";
-        bold_font = "auto";
-        italic_font = "auto";
-        bold_italic_font = "auto";
-        font_size = "${fonts.term.size}";
-        symbol_map =
-          let
-            mappings = [
-              "U+23FB-U+23FE"
-              "U+2B58"
-              "U+E200-U+E2A9"
-              "U+E0A0-U+E0A3"
-              "U+E0B0-U+E0BF"
-              "U+E0C0-U+E0C8"
-              "U+E0CC-U+E0CF"
-              "U+E0D0-U+E0D2"
-              "U+E0D4"
-              "U+E700-U+E7C5"
-              "U+F000-U+F2E0"
-              "U+2665"
-              "U+26A1"
-              "U+F400-U+F4A8"
-              "U+F67C"
-              "U+E000-U+E00A"
-              "U+F300-U+F313"
-              "U+E5FA-U+E62B"
-            ];
-          in
-          (builtins.concatStringsSep "," mappings) + " Symbols Nerd Font";
-      };
-    };
-
     swaylock = {
       enable = true;
       package = pkgs.swaylock-effects;
       settings = {
-        font = "${fonts.gui.name} ${fonts.gui.size}";
+        font = "${fonts.gui.name} ${fonts.gui.weight} ${fonts.gui.size}";
         image = "~/.config/sway/background.jpg";
         effect-blur = "7x5";
         effect-vignette = "0.5:0.5";
@@ -280,7 +231,7 @@ in
         default-timeout = 2000;
         layer = "overlay";
         anchor = "top-right";
-        font = "${fonts.gui.name} ${fonts.gui.size}";
+        font = "${fonts.gui.name} ${fonts.gui.weight} ${fonts.gui.size}";
         border-radius = 2;
         background-color = "#202020d0";
         border-color = "#00000000";
@@ -387,7 +338,7 @@ in
       "waybar".source = ./waybar;
       "gtk-3.0/settings.ini".text = ''
         [Settings]
-        gtk-font-name = "${fonts.gui.name} ${fonts.gui.size}";
+        gtk-font-name = "${fonts.gui.name} ${fonts.gui.weight} ${fonts.gui.size}";
         gtk-theme-name = Adwaita
         gtk-icon-theme-name = Adwaita
         gtk-cursor-theme-name = Adwaita
@@ -396,7 +347,7 @@ in
       '';
       "gtk-4.0/settings.ini".text = ''
         [Settings]
-        gtk-font-name = "${fonts.gui.name} ${fonts.gui.size}";
+        gtk-font-name = "${fonts.gui.name} ${fonts.gui.weight} ${fonts.gui.size}";
         gtk-cursor-theme-size = 48
       '';
     };
@@ -429,6 +380,5 @@ in
         "x-scheme-handler/unknown" = "librewolf.desktop";
       };
     };
-    #terminal-exec = "${pkgs.foot}/bin/foot";
   };
 }

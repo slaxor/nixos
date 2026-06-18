@@ -30,24 +30,52 @@ let
     dependencies = [ pkgs.python3Packages.click ];
     doCheck = false;
   };
+
+  viewsqlite = pkgs.writeShellApplication {
+    name = "viewsqlite";
+    runtimeInputs = [
+      pkgs.glow
+      pkgs.sqlite
+    ];
+    text = builtins.readFile ./bin/viewsqlite.sh;
+  };
+
+  ripdvd = pkgs.writeShellApplication {
+    name = "ripdvd";
+    runtimeInputs = [
+      pkgs.lsdvd
+      pkgs.handbrake
+    ];
+    text = builtins.readFile ./bin/ripdvd.sh;
+  };
+
+  mkprj = pkgs.writeShellApplication {
+    name = "mkprj";
+    runtimeInputs = [
+      pkgs.nix
+      pkgs.git
+      pkgs.direnv
+      pkgs.jq
+    ];
+    text = builtins.readFile ./bin/mkprj.sh;
+  };
 in
 {
   home.packages = with pkgs; [
-    screenkey
+    alsa-utils
     asciinema
     asciinema-scene
     asciiquarium-transparent
-    direnv
-    d2
-    nix-direnv
-    bashdb
-    bash-language-server
-    bat
-    bats
-    alsa-utils
     aspell
     aspellDicts.de
     aspellDicts.en
+    bash-language-server
+    bash-language-server
+    bashdb
+    bat
+    bats
+    d2
+    direnv
     direnv
     eza
     fastfetch
@@ -55,19 +83,19 @@ in
     fzf
     glow
     gnutls
-    shellcheck
-    shfmt
-    bash-language-server
     gojq
+    gurk-rs
     htop
     imagemagick
     just
     libqalculate
     lnav
     mermaid-cli
+    mkprj
     moreutils
     mosquitto
     nh
+    nix-direnv
     nix-your-shell
     nixos-anywhere
     nixos-generators
@@ -75,8 +103,11 @@ in
     picocom
     rclone
     rich-cli
+    ripdvd
+    screenkey
+    shellcheck
+    shfmt
     signal-cli
-    gurk-rs
     timidity
     tmux
     trash-cli
@@ -84,7 +115,7 @@ in
     udiskie
     unzip
     usbutils
-    uutils-diffutils
+    viewsqlite
     vivid
     zoxide
   ];
