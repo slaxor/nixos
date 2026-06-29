@@ -60,7 +60,8 @@
           "browser.shell.checkDefaultBrowser" = false;
         };
         extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
-          keepassxc-browser
+          # keepassxc-browser
+          gopass
         ];
       };
 
@@ -68,7 +69,8 @@
         isDefault = false;
         id = 1;
         extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
-          keepassxc-browser
+          # keepassxc-browser
+          gopass
         ];
       };
     };
@@ -107,18 +109,6 @@
         "x-scheme-handler/https" = "librewolf.desktop";
         "x-scheme-handler/unknown" = "librewolf.desktop";
       };
-    };
-  };
-
-  home.file.".mozilla/native-messaging-hosts/com.justwatch.gopass.json" = {
-    text = builtins.toJSON {
-      name = "com.justwatch.gopass";
-      description = "Gopass wrapper to search and return passwords";
-      path = "${config.xdg.configHome}/gopass/gopass_wrapper.sh";
-      type = "stdio";
-      allowed_extensions = [
-        "{eec37db0-22ad-4bf1-9068-5ae08df8c7e9}"
-      ];
     };
   };
 }

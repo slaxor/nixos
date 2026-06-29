@@ -44,6 +44,7 @@
         "pico"
         "segger-jlink"
         "segger-jlink-headless"
+        "tampermonkey"
         "unrar"
       ];
     segger-jlink.acceptLicense = true;

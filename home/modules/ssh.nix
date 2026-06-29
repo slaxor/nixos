@@ -71,11 +71,11 @@
         proxyJump = "jump-host";
       };
 
-      "codeberg.org" = {
-        controlMaster = "auto";
-        controlPath = "~/.ssh/cm-%r@%h:%p";
-        controlPersist = "10m";
-      };
+      # "codeberg.org" = {
+      # controlMaster = "auto";
+      # controlPath = "~/.ssh/cm-%r@%h:%p";
+      # controlPersist = "10m";
+      # };
 
       "*" = {
         forwardAgent = false;

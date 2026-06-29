@@ -20,7 +20,6 @@
       pkg:
       builtins.elem (lib.getName pkg) [
         "barbar.nvim"
-        "diagram.nvim"
         "unrar"
       ];
   };

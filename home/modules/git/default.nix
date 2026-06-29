@@ -98,7 +98,6 @@ in
       "http \"https://gopkg.in\"" = {
         followRedirects = true;
       };
-      credential.helper = "!gopass show git-creds $@";
       clean.requireForce = false;
       init.defaultBranch = "master";
       rerere.enabled = true;

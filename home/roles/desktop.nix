@@ -10,10 +10,12 @@
     ../modules/dev-rust.nix
     ../modules/docker.nix
     ../modules/fastfetch.nix
+    ../modules/firefox
     ../modules/gfx
-    ../modules/keepass.nix
+    ../modules/gopass.nix
+    # ../modules/keepass.nix
     ../modules/kubernetes.nix
-    ../modules/librewolf.nix
+    # ../modules/librewolf.nix
     ../modules/mail.nix
     ../modules/luxoryitems.nix
     ../modules/nzb.nix

@@ -10,6 +10,7 @@
       aspellDicts.de
       aspellDicts.en
       bsdgames
+      bubblewrap
       direnv
       fastfetch
       gcc
@@ -18,7 +19,6 @@
       gnutls
       gojq
       gomplate
-      gopass
       graphviz-nox
       htop
       imagemagick
@@ -40,7 +40,7 @@
       pkg-config
       pulseaudioFull
       qrencode
-      # ratarmount
+      ratarmount
       rclone
       rtl-sdr
       dump1090-fa

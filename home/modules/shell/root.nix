@@ -30,10 +30,8 @@
     };
 
     shellAliases = {
-      hms = "home-manager switch --flake  $HOME/.config/home-manager#$USER";
       jq = "${pkgs.gojq}/bin/gojq";
       mc = "${pkgs.mc}/libexec/mc/mc-wrapper.sh";
-      nors = "sudo nixos-rebuild switch --flake /etc/nixos#$HOSTNAME";
       za = "zoxide add \"$PWD\"";
       dmesg = "dmesg -HT";
       g = "rg --hidden --follow --smart-case";
@@ -43,6 +41,11 @@
       timestamp = "date +%Y%m%d%H%M%S";
       sslconn = "rlwrap -D2 openssl s_client -crlf -connect";
       fixtty = "stty sane ; echo -e \"\\033c\" ; tput rs1";
+      hareboot = ''
+        ssh hareboot 'systemd-tty-ask-password-agent' \
+                < <(gopass show -f luks/hare | awk 'NR==1{for(i=0;i<3;i++) print}')
+      '';
+
     };
   };
 

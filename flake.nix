@@ -25,10 +25,10 @@
 
   outputs =
     {
-        self,
-        nixpkgs,
-        home-manager,
-        slaxor-editor,
+      self,
+      nixpkgs,
+      home-manager,
+      slaxor-editor,
       slaxor-replace,
       ...
     }@inputs:

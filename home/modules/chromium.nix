@@ -1,45 +1,17 @@
-{ ... }:
+{ pkgs, config, ... }:
 {
-  # home.packages = with pkgs; [
-  # ungoogled-chromium
-  # gopass
-  # gopass-summon-provider
-  # gopass-jsonapi
-  # ];
-
   programs.chromium = {
     enable = true;
-    # package = pkgs.ungoogled-chromium;
+    package = pkgs.ungoogled-chromium;
     commandLineArgs = [
       "--no-default-browser-check"
+      "--enable-features=UseOzonePlatform"
+      "--ozone-platform=wayland"
     ];
-    # nativeMessagingHosts = [ pkgs.keepassxc ];
+    nativeMessagingHosts = [ pkgs.gopass ];
     extensions = [
-      # { id = "kkhfnlkhiapbiehimabddjbimfaijdhk"; } # gopass bridge
-      { id = "oboonakemofpalcgghocfoadofidjkkk"; } # keepassxc-browser
+      { id = "kkhfnlkhiapbiehimabddjbimfaijdhk"; } # gopass bridge
     ];
   };
 
-  # systemd.user.tmpfiles.rules = [
-  # "C %h/.config/chromium/NativeMessagingHosts/com.justwatch.gopass.json - - - - ${
-  # pkgs.writeText "gopass-manifest.json" (
-  # builtins.toJSON {
-  # name = "com.justwatch.gopass";
-  # description = "Gopass wrapper to search and return passwords";
-  # path = "${config.xdg.configHome}/gopass/gopass_wrapper.sh";
-  # type = "stdio";
-  # allowed_origins = [ "chrome-extension://kkhfnlkhiapbiehimabddjbimfaijdhk/" ];
-  # }
-  # )
-  # }"
-  # ];
-  # xdg.configFile."chromium/NativeMessagingHosts/com.justwatch.gopass.json" = {
-  # text = builtins.toJSON {
-  # name = "com.justwatch.gopass";
-  # description = "Gopass wrapper to search and return passwords";
-  # path = "${config.xdg.configHome}/gopass/gopass_wrapper.sh";
-  # type = "stdio";
-  # allowed_origins = [ "chrome-extension://kkhfnlkhiapbiehimabddjbimfaijdhk/" ];
-  # };
-  # };
 }
