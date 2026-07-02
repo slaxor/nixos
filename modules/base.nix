@@ -12,6 +12,7 @@
     curl
     dialog
     efibootmgr
+    fastfetch
     gcc
     git
     git-filter-repo
@@ -125,5 +126,5 @@
     keyMap = "us";
   };
 
-  system.stateVersion = "25.11";
+  system.stateVersion = "26.05";
 }

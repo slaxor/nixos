@@ -4,7 +4,7 @@ set -xeuo pipefail
 
 [ "$(id -u)" -eq 0 ] || exec sudo "$0" "$@"
 
-base_dir="/tmp/etc/wireguard"
+base_dir="/etc/wireguard"
 peers_dir="${base_dir}/peers"
 users_db="${base_dir}/users"
 networks_db="${base_dir}/networks"

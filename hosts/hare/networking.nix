@@ -5,7 +5,7 @@ let
     runtimeInputs = [
       pkgs.wireguard-tools
       pkgs.iproute2
-      pkgs.python3
+      pkgs.gawk
       pkgs.qrencode
     ];
     text = builtins.readFile ./wg-peers.sh;
@@ -14,6 +14,8 @@ in
 {
   environment.systemPackages = [
     wgPeers
+    pkgs.nftables
+    pkgs.nftrace
   ];
 
   systemd.tmpfiles.rules = [
@@ -40,6 +42,7 @@ in
             tcp dport 22 accept
             # tmate — public
             tcp dport 2222 accept
+            tcp dport { 25, 143 } accept
             tcp dport { 80, 443 } accept
             iifname "wg0" accept
             ip saddr 10.42.0.0/16 accept
@@ -47,6 +50,11 @@ in
             tcp dport { 6443, 12000 } drop
             icmp type echo-request accept
             ip protocol icmp accept
+          }
+
+          chain forward {
+            type filter hook forward priority 0;
+            iifname "wg0" oifname "wg0" accept
           }
 
           chain forward {
@@ -87,8 +95,9 @@ in
       postSetup = ''
         ip link set wg0 txqueuelen 5000
         ${wgPeers}/bin/wg-peers load
+        wg set wg0 listen-port 51820
       '';
-      peers = [ ]; # all peers now managed via wg-peers
+      peers = [ ];
     };
 
     defaultGateway = {

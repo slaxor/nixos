@@ -251,7 +251,7 @@ in
       dap-view.enable = true;
       debugprint.enable = true;
       devdocs.enable = true;
-      diagram.enable = true;
+      # diagram.enable = true;
       diffview.enable = true;
       direnv.enable = true;
       emmet.enable = true;
