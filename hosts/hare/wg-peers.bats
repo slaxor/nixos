@@ -17,7 +17,7 @@ setup() {
 
   cat > "${users_db}" << 'EOF'
 slash    10.13.0.16/28
-thorsten 10.13.0.32/28
+eggert   10.13.0.32/28
 ming     10.13.0.48/28
 EOF
 

@@ -155,7 +155,7 @@
             ./hosts/hare
             ./users/ming.nix
             ./users/slash.nix
-            ./users/thorsten.nix
+            ./users/eggert.nix
             ./modules/common-server.nix
             ./modules/podman
             ./modules/kubernetes
