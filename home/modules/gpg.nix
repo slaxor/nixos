@@ -29,7 +29,9 @@
     maxCacheTtl = 28800;
     defaultCacheTtlSsh = 28800;
     maxCacheTtlSsh = 28800;
-    pinentry.package = lib.mkDefault pkgs.pinentry-curses;
+    pinentry.package = pkgs.wayprompt;
+    # pkgs.pinentry-gtk2; # or pinentry-gnome3, pinentry-qt, pinentry-curses
+    # pinentry.package = lib.mkDefault pkgs.pinentry-curses;
   };
 
 }

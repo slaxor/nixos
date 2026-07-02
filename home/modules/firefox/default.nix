@@ -4,8 +4,10 @@ let
 
   # about:config hardening - the subset that actually matters
   hardenedSettings = {
+    "accessibility.typeaheadfind" = false;
     "beacon.enabled" = false;
     "browser.contentblocking.report.lockwise.enabled" = false; # Lockwise password manager promo in protection report
+    "browser.link.open_newwindow.restriction" = 0;
     "browser.messaging-system.whatsNewPanel.enabled" = false;
     "browser.ml.chat.enabled" = false;
     "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons" = false;
@@ -33,9 +35,17 @@ let
     "datareporting.healthreport.uploadEnabled" = false;
     "datareporting.policy.dataSubmissionEnabled" = false;
     "dom.event.clipboardevents.enabled" = false;
+    "dom.disable_window_open_feature.menubar" = true;
+    "dom.disable_window_open_feature.toolbar" = true;
+    "dom.disable_window_open_feature.location" = true;
+    "dom.disable_window_open_feature.personalbar" = true;
+    "dom.disable_window_open_feature.status" = true;
+    "dom.disable_window_open_feature.scrollbars" = true;
+    "dom.disable_window_open_feature.resizable" = true;
     "extensions.autoDisableScopes" = 0;
     "extensions.pocket.enabled" = false; # already present, leaving for clarity
     "extensions.startupScanScopes" = 15;
+    "extensions.webextensions.ExtensionStorageIDB.enabled" = false; # Fix foxy gestures?
     "geo.enabled" = false;
     "identity.fxaccounts.enabled" = true; # keep sync if you want it
     "identity.fxaccounts.toolbar.accessed" = true; # suppresses "new" badge nagging
@@ -43,19 +53,21 @@ let
     # "media.peerconnection.enabled" = false; # kills WebRTC IP leak
     "media.peerconnection.ice.default_address_only" = true;
     "media.peerconnection.ice.no_host" = true;
-    "network.cookie.cookieBehavior" = 1; # block 3rd-party cookies
-    # "network.cookie.cookieBehavior" = 5; # Total Cookie Protection - stricter than 1, less breaky than FPI
+    # "network.cookie.cookieBehavior" = 1; # block 3rd-party cookies
+    "network.cookie.cookieBehavior" = 4;
     "network.dns.disablePrefetch" = true;
     # "network.http.referer.XOriginPolicy" = 2;
     # "network.http.referer.XOriginTrimmingPolicy" = 2;
     "network.predictor.enabled" = false;
     "network.prefetch-next" = false;
     "privacy.donottrackheader.enabled" = true;
-    # "privacy.firstparty.isolate" = true;
-    # "privacy.resistFingerprinting" = true;
+
+    "privacy.firstparty.isolate" = false;
+    "privacy.resistFingerprinting" = false;
     "privacy.spoof_english" = 1;
-    "privacy.trackingprotection.enabled" = true;
-    "privacy.trackingprotection.socialtracking.enabled" = true;
+    "privacy.trackingprotection.enabled" = false;
+    "privacy.trackingprotection.socialtracking.enabled" = false;
+
     "signon.autofillForms" = false; # don't autofill stored logins
     "signon.firefoxRelay.feature" = "disabled";
     "signon.generation.enabled" = false; # no "suggest strong password" popups
@@ -66,6 +78,7 @@ let
     "xpinstall.signatures.required" = false;
     "xpinstall.whitelist.required" = false;
   };
+
   # nix eval --raw .#nixosConfigurations.kea.pkgs.nur.repos.rycee.firefox-addons --apply 'a: builtins.concatStringsSep "\n" (builtins.attrNames a)'| grep -iE 'foxy|tabstash|tab-stash|umatrix|webdev|web-dev|download'
   fullExtensions = with addons; [
     consent-o-matic
@@ -126,8 +139,17 @@ in
         id = 2;
         # no settings, no extensions - as-is
       };
+
+      # 3. Sandbox Profile is not to be used directly but copied to /tmp and called there
+      # see
+      sandbox = {
+        id = 3;
+        settings = hardenedSettings;
+        extensions.packages = fullExtensions;
+      };
     };
   };
+
   xdg = {
     desktopEntries = {
       firefox-default = {
@@ -163,8 +185,36 @@ in
         ];
         terminal = false;
       };
-    };
 
+      firefox-sandbox = {
+        name = "Firefox (Sandbox)";
+        genericName = "Web Browser";
+        exec = "${pkgs.writeShellScript "firefox-sandbox" ''
+          # 1. Create a fresh, unique directory in /tmp
+          TMP_PROFILE=$(mktemp -d -p /tmp firefox-sandbox.XXXXXX)
+
+          # 2. Locate where Nix actually wrote your declarative 'sandbox' profile
+          NIX_PROFILE_SRC="${config.xdg.configHome}/mozilla/firefox/sandbox"
+
+          echo "Syncing declarative configuration to sandbox..."
+          if [ -d "$NIX_PROFILE_SRC" ]; then
+            # Copy the user.js (settings) and extensions folder to /tmp
+            mkdir -p "$TMP_PROFILE"
+            cp -rL "$NIX_PROFILE_SRC/." "$TMP_PROFILE/"
+          fi
+
+          echo "Launching isolated sandbox in $TMP_PROFILE"
+          # 3. Launch Firefox pointing to our temporary clone
+          exec ${pkgs.firefox}/bin/firefox --profile "$TMP_PROFILE" --no-remote %u
+        ''}";
+        icon = "firefox";
+        terminal = false;
+        categories = [
+          "Network"
+          "WebBrowser"
+        ];
+      };
+    };
     mimeApps = {
       enable = true;
       defaultApplications = {

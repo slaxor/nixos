@@ -143,21 +143,29 @@ in
       dmesg = "sudo dmesg -HT";
       fixtty = "stty sane ; echo -e \"\\033c\" ; tput rs1";
       g = "rg --hidden --follow --smart-case";
-      hms = "home-manager switch --flake  $HOME/.config/home-manager#\${USER}@\${HOSTNAME}";
       httpserver = "python3 -m http.server 8000 --bind 127.0.0.1";
       jq = "${pkgs.gojq}/bin/gojq";
-      yq = "${pkgs.gojq}/bin/gojq --yaml-input --yaml-output";
       lsdesktop = "fd -e desktop . /run/current-system/sw/share/applications /etc/profiles/per-user/$(id -n -u)/share/applications ~/.nix-profile/share/applications";
       mc = "${pkgs.mc}/libexec/mc/mc-wrapper.sh";
       ns = "nix search nixpkgs";
-      nors = "sudo nixos-rebuild switch --flake $HOME/git/codeberg.org/slaxor/nixos#$HOSTNAME";
       ownit = "sudo chown -R $USER:$GROUPS .";
       pwc = "gopass ls --flat | fzf | xargs --no-run-if-empty gopass show -c";
       qr = "qrencode -l L -t ANSI256UTF8";
       rmswp = "rm -vf ~/tmp/*.sw?";
       sslconn = "rlwrap -D2 openssl s_client -crlf -connect";
       timestamp = "date +%Y%m%d%H%M%S";
+      yq = "${pkgs.gojq}/bin/gojq --yaml-input --yaml-output";
       za = "zoxide add \"$PWD\"";
+      hareboot = ''
+        ssh hareboot 'systemd-tty-ask-password-agent' \
+                < <(gopass show -f luks/hare | awk 'NR==1{for(i=0;i<3;i++) print}')
+      '';
+      hm-repl = ''
+        nix repl \
+          --arg config "$(nix eval --raw .#nixosConfigurations.kea.config)" \
+          --arg home-manager "$(nix eval --raw .#nixosConfigurations.kea.config.home-manager)" \
+          --arg slash "$(nix eval --raw .#nixosConfigurations.kea.config.home-manager.users.slash)"\
+      '';
       ncdu = ''
         ncdu --enable-shell --enable-delete --no-confirm-delete \
           --graph-style eighth-block -2 --show-itemcount --show-graph \
@@ -266,5 +274,15 @@ in
     '';
 
     "shellcheckrc".source = ./shellcheckrc;
+
+    "nix/repl/default.nix".text = ''
+      { config ? (import ./. {}).nixosConfigurations.kea.config
+      , home-manager ? config.home-manager
+      , slash ? home-manager.users.slash
+      }:
+      {
+        _module.args = { inherit config home-manager slash; };
+      }
+    '';
   };
 }
