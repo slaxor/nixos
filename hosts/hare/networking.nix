@@ -95,7 +95,6 @@ in
       postSetup = ''
         ip link set wg0 txqueuelen 5000
         ${wgPeers}/bin/wg-peers load
-        wg set wg0 listen-port 51820
       '';
       peers = [ ];
     };

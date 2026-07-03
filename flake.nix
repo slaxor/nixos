@@ -107,6 +107,7 @@
             ./modules/laptop.nix
             ./hosts/kea
             ./users/slash.nix
+            inputs.sops-nix.nixosModules.sops
             slaxorPkgs
           ];
         };
@@ -131,6 +132,7 @@
             ./modules/laptop.nix
             ./hosts/taz
             ./users/slash.nix
+            inputs.sops-nix.nixosModules.sops
             slaxorPkgs
           ];
         };

@@ -40,7 +40,7 @@ user_subnet() {
 taken_ips() {
   local dir="${peers_dir}/${1}"
   [[ -d "${dir}" ]] || return 0
-  grep -rh "AllowedIPs" "${dir}/" 2>/dev/null |
+  grep -rh "AllowedIPs" "${dir}/" |
     awk '{print $3}' | tr ',' '\n' | tr -d ' ' |
     grep '/32$' | cut -d/ -f1
 }
@@ -142,8 +142,12 @@ add_routes() {
 }
 
 del_routes() {
+  local subnet
   while IFS= read -r subnet; do
-    ip route del "${subnet}" 2>/dev/null && echo "route removed: ${subnet}" || true
+    if [[ -n "$(ip route show "${subnet}" dev "${iface}")" ]]; then
+      ip route del "${subnet}" dev "${iface}"
+      echo "route removed: ${subnet}"
+    fi
   done < <(peer_extra_subnets "${1}")
 }
 
@@ -153,7 +157,11 @@ cmd_load() {
   # shellcheck disable=SC2064
   trap "rm -f ${tmp}" EXIT
   find "${peers_dir}" -name '*.conf' -exec cat {} \; >"${tmp}"
-  [[ -s "${tmp}" ]] && wg syncconf "${iface}" "${tmp}"
+  local pk
+  while IFS= read -r pk; do
+    grep -qF "${pk}" "${tmp}" || wg set "${iface}" peer "${pk}" remove
+  done < <(wg show "${iface}" peers)
+  [[ -s "${tmp}" ]] && wg addconf "${iface}" "${tmp}"
   while IFS= read -r f; do
     add_routes "${f}"
   done < <(find "${peers_dir}" -name '*.conf')

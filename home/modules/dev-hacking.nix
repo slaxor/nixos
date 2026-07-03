@@ -10,7 +10,7 @@
       ghidra-extensions.ret-sync
       ghidra-extensions.findcrypt
       ghidra-extensions.ghidra-delinker-extension
-      ghidra-extensions.wasm
+      # ghidra-extensions.wasm
       ghidra-extensions.gnudisassembler
       # ghidra-extensions.ghidraninja-ghidra-scripts
       ghidra-extensions.ghidra-firmware-utils

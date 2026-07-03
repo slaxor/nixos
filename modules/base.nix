@@ -116,6 +116,7 @@
     polkit.enable = true;
     sudo.extraConfig = ''
       Defaults timestamp_timeout=480
+      Defaults env_keep += "SYSTEMD_PAGER"
     '';
   };
 

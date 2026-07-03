@@ -24,7 +24,7 @@
       {
         name = "Brother_HL-5450DN";
         location = "Home";
-        deviceUri = "socket://192.168.178.49:9100";
+        deviceUri = "socket://192.168.178.24:9100";
         model = "drv:///brlaser.drv/br5450d.ppd";
         ppdOptions = {
           PageSize = "A4";

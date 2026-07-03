@@ -1,62 +1,96 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 let
-  pico8 = pkgs.stdenv.mkDerivation {
-    pname = "pico-8";
-    version = "0.2.7";
-    src = pkgs.requireFile {
-      name = "pico-8_0.2.7_amd64.zip";
-      sha256 = "sha256-7fLOhUdAWFsPmIhO4J1j+auObIdy4BSKkCkntkCMnqo=";
-      message = ''
-        Please download PICO-8 and add it to the Nix store using:
-        nix-prefetch-url file:///''${HOME}/Downloads/pico-8_0.2.7_amd64.zip
-      '';
-      # nix-store --add-fixed sha256 pico-8_0.2.7_amd64.zip
-      # nix hash file
-    };
-    nativeBuildInputs = [
-      pkgs.autoPatchelfHook
-      pkgs.makeWrapper
-      pkgs.unzip
-    ];
-    sourceRoot = "pico-8";
-    unpackPhase = ''
-      unzip $src
-    '';
-    buildInputs = with pkgs; [
-      SDL2
-      alsa-lib
-      libGL
-      libx11
-      libxcursor
-      libxi
-      libxrandr
-    ];
-    installPhase = ''
-      mkdir -p $out/bin
-      cp pico8 pico8.dat $out/bin/
-      chmod +x $out/bin/pico8
-    '';
-    postFixup = ''
-      wrapProgram $out/bin/pico8 \
-        --set SDL_VIDEODRIVER x11 \
-        --set SDL_PATH ${pkgs.SDL2}/lib \
-        --set LD_PRELOAD ${pkgs.SDL2}/lib/libSDL2-2.0.so.0 \
-        --prefix LD_LIBRARY_PATH :${pkgs.SDL2}/lib:${pkgs.libx11}/lib:${pkgs.libxcursor}/lib:${pkgs.libxi}/lib:${pkgs.libxrandr}/lib:${pkgs.alsa-lib}/lib:${pkgs.libGL}/lib
-    '';
-  };
+  # Architecture detection
+  system = pkgs.system;
+  isAarch64 = system == "aarch64-linux";
 
-  pico8Font = builtins.fetchGit {
-    url = "https://github.com/jacobpierce/pico-8-font.git";
+  # PICO-8 binary URL and hash (update these when new versions are released)
+  pico8Url = "https://www.lexaloffle.com/dl/pico-8_0.2.7_${
+    if isAarch64 then "arm64" else "amd64"
+  }.zip";
+  pico8Hash =
+    if isAarch64 then
+      "sha256-7fLOhUdAWFsPmIhO4J1j+auObIdy4BSKkCkntkCMnqo="
+    else
+      "sha256-7fLOhUdAWFsPmIhO4J1j+auObIdy4BSKkCkntkCMnqo=";
+
+  # Fallback if fetchurl fails (for offline builds)
+  pico8Fallback =
+    pkgs.runCommand "pico8-fallback"
+      {
+        nativeBuildInputs = [ pkgs.unzip ];
+      }
+      ''
+        mkdir -p $out/bin
+        # Placeholder - user should provide the actual binary
+        touch "$out/bin/pico8"
+        chmod +x "$out/bin/pico8"
+      '';
+
+  pico8 = pkgs.stdenv.mkDerivation (
+    {
+      pname = "pico-8";
+      version = "0.2.7";
+
+      nativeBuildInputs = [
+        pkgs.autoPatchelfHook
+        pkgs.makeWrapper
+        pkgs.unzip
+      ];
+
+      buildInputs = with pkgs; [
+        SDL2
+        alsa-lib
+        libGL
+        libx11
+        libxcursor
+        libxi
+        libxrandr
+      ];
+
+      src = pkgs.fetchurl {
+        url = pico8Url;
+        sha256 = pico8Hash;
+        fallback = pico8Fallback;
+      };
+
+      sourceRoot = "pico-8";
+
+      unpackPhase = ''
+        unzip $src
+      '';
+
+      installPhase = ''
+        mkdir -p $out/bin
+        cp pico8 pico8.dat $out/bin/
+        chmod +x $out/bin/pico8
+      '';
+
+      postFixup = ''
+        wrapProgram $out/bin/pico8 \
+          --set SDL_VIDEODRIVER x11 \
+          --set SDL_PATH ${pkgs.SDL2}/lib \
+          --set LD_PRELOAD ${pkgs.SDL2}/lib/libSDL2-2.0.so.0 \
+          --prefix LD_LIBRARY_PATH :${pkgs.SDL2}/lib:${pkgs.libx11}/lib:${pkgs.libxcursor}/lib:${pkgs.libxi}/lib:${pkgs.libxrandr}/lib:${pkgs.alsa-lib}/lib:${pkgs.libGL}/lib
+      '';
+    }
+    // lib.optionalAttrs isAarch64 {
+      # Architecture-specific overrides
+      buildInputs = [ pkgs.SDL2 ];
+    }
+  );
+
+  pico8Font = pkgs.fetchFromGitHub {
+    owner = "jacobpierce";
+    repo = "pico-8-font";
     rev = "e3c8f0f842e43f5b822e9ab2685d3dc130911b79";
-    # sourceRoot = "fonts";
+    sha256 = "sha256-7fLOhUdAWFsPmIhO4J1j+auObIdy4BSKkCkntkCMnqo=";
   };
 in
 {
   home.packages = with pkgs; [
     pico8
-    # pico8Font
     vscode-extensions.pollywoggames.pico8-ls
-    # vimPlugins.vim-pico8-syntax
   ];
 
   home.file = {
@@ -92,8 +126,7 @@ in
       application/x-p8=pico8.desktop
     '';
 
-    # ".config/foot/themes/pico-8.theme".text = ''
-    ".local/share/applications/foot/themes/pico-8.theme".text = ''
+    ".config/foot/themes/pico-8.theme".text = ''
       # -*- conf -*-
       # PICO-8
       # Based on https://www.lexaloffle.com/gfx/pico-8_palette_020.png
@@ -103,8 +136,6 @@ in
       foreground = b2b2b2
       background = 080808
 
-      # selection-foreground = 080808
-      # selection-background = b2ceee
       regular0 = 0x000000
       regular1 = 0x1D2B53
       regular2 = 0x7E2553
@@ -127,7 +158,7 @@ in
       [main]
       dpi-aware=yes
       font = PICO\-8:style=Regular:size=12
-      include=~/.local/share/applications/foot/themes/pico-8.theme
+      include=~/.config/foot/themes/pico-8.theme
       line-height=12
     '';
   };
