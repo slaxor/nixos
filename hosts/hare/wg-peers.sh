@@ -152,16 +152,12 @@ del_routes() {
 }
 
 cmd_load() {
-  local tmp
-  tmp=$(mktemp)
-  # shellcheck disable=SC2064
-  trap "rm -f ${tmp}" EXIT
-  find "${peers_dir}" -name '*.conf' -exec cat {} \; >"${tmp}"
-  local pk
+  local confs pk f
+  confs=$(find "${peers_dir}" -name '*.conf' -exec cat {} +)
   while IFS= read -r pk; do
-    grep -qF "${pk}" "${tmp}" || wg set "${iface}" peer "${pk}" remove
+    grep -qF "${pk}" <<<"${confs}" || wg set "${iface}" peer "${pk}" remove
   done < <(wg show "${iface}" peers)
-  [[ -s "${tmp}" ]] && wg addconf "${iface}" "${tmp}"
+  [[ -n "${confs}" ]] && wg addconf "${iface}" <(printf '%s\n' "${confs}")
   while IFS= read -r f; do
     add_routes "${f}"
   done < <(find "${peers_dir}" -name '*.conf')
