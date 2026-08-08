@@ -40,7 +40,6 @@
       pkg-config
       pulseaudioFull
       qrencode
-      ratarmount
       rclone
       rtl-sdr
       dump1090-fa

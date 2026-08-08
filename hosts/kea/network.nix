@@ -54,6 +54,9 @@
     };
     networkmanager = {
       enable = true;
+      unmanaged = [
+        "wghare"
+      ];
       wifi = {
         powersave = false;
         backend = "iwd";
@@ -67,20 +70,25 @@
       privateKeyFile = config.sops.secrets."wghare/key".path;
       peers = [
         {
-          presharedKeyFile = config.sops.secrets."wghare/psk".path;
           publicKey = "3GPB7wIX/lWLV5C54teL0D0/FvhOgJXazx8Fsv+ZbH0=";
-          allowedIPs = [ "10.13.0.16/28" ];
+          presharedKeyFile = config.sops.secrets."wghare/psk".path;
+          endpoint = "wg.m11s.de:51820";
+          persistentKeepalive = 25;
+          allowedIPs = [
+            "10.13.0.0/24"
+            "192.168.117.0/24"
+            "192.168.178.0/24"
+            "192.168.181.0/24"
+          ];
         }
       ];
-      # postSetup = ''
-      # ip route replace 192.168.117.0/24 dev wghare metric 1100
-      # ip route replace 192.168.178.0/24 dev wghare metric 1100
-      # ip route replace 192.168.181.0/24 dev wghare metric 1100
-      # '';
+      postSetup = ''
+        ip route replace 10.13.0.0/24 dev wghare metric 1100
+        ip route replace 192.168.117.0/24 via 10.13.0.1 dev wghare metric 1100
+        ip route replace 192.168.178.0/24 via 10.13.0.1 dev wghare metric 1100
+        ip route replace 192.168.181.0/24 via 10.13.0.1 dev wghare metric 1100
+      '';
       # postShutdown = ''
-      # ip route del 192.168.117.0/24 dev wghare
-      # ip route del 192.168.178.0/24 dev wghare
-      # ip route del 192.168.181.0/24 dev wghare
       # '';
     };
   };

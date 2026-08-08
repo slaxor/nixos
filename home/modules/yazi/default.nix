@@ -1,5 +1,8 @@
 { pkgs, ... }:
 {
+  home.packages = with pkgs; [
+    wl-clipboard
+  ];
   programs.yazi = {
     enable = true;
     shellWrapperName = "y";
@@ -82,6 +85,15 @@
             ];
             run = "plugin jump-to-char";
             desc = "Jump to char";
+          }
+          {
+            on = [
+              "Y"
+            ];
+            run = ''
+              shell -- printf 'file://%s\n' "$(realpath "$1")" | wl-copy --type text/uri-list
+            '';
+            desc = "Copy hovered file to Wayland clipboard";
           }
         ];
         append_keymap = [ ];

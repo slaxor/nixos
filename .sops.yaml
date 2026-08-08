@@ -1,6 +1,9 @@
 keys:
+  # to make hostkeys:
+  # nix run nixpkgs#ssh-to-age -- -i /etc/ssh/ssh_host_ed25519_key.pub
   - &hare age1g2nn6w0r5y09s20vzypna83wsl6q0r7w7fw2z72d85qljx5f4sjqax0wpc
   - &keaadmin age1n6fpv7v3xxhfhrul4lzeuvet5ugxufmx56rnsw48gcevppcu24ys8vvqzd
+  - &kea age1dkrjq3fvka5ae4amdz7lhhjdn6pkudjejncruu74746d8maelp8qg24dzc
   - &tazadmin age1jzsqepnmqgsx7qhdcdvtk56s02slnjv846hjz83gsgceypmxn35q8j3fxv
 
 creation_rules:
@@ -8,6 +11,7 @@ creation_rules:
     key_groups:
       - age:
           - *keaadmin
+          - *kea
   - path_regex: hosts/taz/secrets\.yaml$
     key_groups:
       - age:

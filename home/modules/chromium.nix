@@ -12,6 +12,9 @@
     extensions = [
       { id = "kkhfnlkhiapbiehimabddjbimfaijdhk"; } # gopass bridge
     ];
+    plugins = {
+      always_open_pdf_externally = true;
+    };
   };
 
 }

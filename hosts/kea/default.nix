@@ -15,6 +15,8 @@
     users.slash = import ./home.nix;
   };
 
+  sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+
   time.timeZone = "Europe/Berlin";
 
   environment.systemPackages = with pkgs; [

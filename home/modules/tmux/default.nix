@@ -79,15 +79,15 @@
       bind -N "switch to root session (via sesh) " 9 run-shell "sesh connect --root \'$(pwd)\'"
       bind-key "s" run-shell "sesh connect \"$(
         sesh list --icons | fzf-tmux -p 80%,70% \
-          --no-sort --ansi --border-label ' sesh ' --prompt '⚡  ' \
+          --no-sort --ansi --border-label ' sesh ' --prompt 'all: ' \
           --header '  ^a all ^t tmux ^g configs ^x zoxide ^d tmux kill ^f find' \
           --bind 'tab:down,btab:up' \
-          --bind 'ctrl-a:change-prompt(⚡  )+reload(sesh list --icons)' \
-          --bind 'ctrl-t:change-prompt(🪟  )+reload(sesh list -t --icons)' \
-          --bind 'ctrl-g:change-prompt(⚙️  )+reload(sesh list -c --icons)' \
-          --bind 'ctrl-x:change-prompt(📁  )+reload(sesh list -z --icons)' \
-          --bind 'ctrl-f:change-prompt(🔎  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
-          --bind 'ctrl-d:execute(tmux kill-session -t {2..})+change-prompt(⚡  )+reload(sesh list --icons)' \
+          --bind 'ctrl-a:change-prompt(all:  )+reload(sesh list --icons)' \
+          --bind 'ctrl-t:change-prompt(tplt:  )+reload(sesh list -t --icons)' \
+          --bind 'ctrl-g:change-prompt(cur:  )+reload(sesh list -c --icons)' \
+          --bind 'ctrl-x:change-prompt(dir:  )+reload(sesh list -z --icons)' \
+          --bind 'ctrl-f:change-prompt(find:  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
+          --bind 'ctrl-d:execute(tmux kill-session -t {2..})+change-prompt(all: )+reload(sesh list --icons)' \
           --preview-window 'right:55%' \
           --preview 'sesh preview {}'
       )\""
@@ -107,9 +107,9 @@
         blacklist = [ "scratch" ];
         dir_length = 2;
         sort_order = [
-          "config"
           "tmux"
-          # "zoxide"
+          "config"
+          "zoxide"
         ];
         default_session = {
           # preview_command = "ls -ogAht --group-directories-first {}";
@@ -120,7 +120,13 @@
         };
         session = [
           {
-            name = "Downloads 📥";
+            name = "m11s";
+            path = "~/work/microprojects/Microprojects_GmbH";
+            # preview_command = "bat --no-paging -n --line-range 2:27 flake.nix";
+            startup_command = "yazi";
+          }
+          {
+            name = "Downloads";
             path = "~/Downloads";
             startup_command = "yazi";
           }

@@ -42,9 +42,9 @@ in
     gopass-jsonapi
     gqrx
     grim
+    gucharmap
     gvfs
     halloy
-    handbrake
     kdePackages.okular
     inkscape
     libappindicator
@@ -114,6 +114,22 @@ in
     zeal
   ];
 
+  gtk = {
+    enable = true;
+    font = {
+      name = "${fonts.gui.name} ${fonts.gui.weight}";
+      size = 12; # gtk font size is its own number, not your fonts.gui.size string
+    };
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.papirus-icon-theme;
+    };
+    theme.name = "Adwaita";
+    gtk3.extraConfig = {
+      gtk-xft-dpi = 196608; # 2.0 * 96 * 1024
+    };
+  };
+
   home = {
     sessionVariables = {
       GIO_MODULE_DIR = "${pkgs.glib-networking}/lib/gio/modules/";
@@ -126,6 +142,8 @@ in
     };
 
     pointerCursor = {
+      enable = true;
+      gtk.enable = true;
       name = "Adwaita";
       package = pkgs.adwaita-icon-theme;
       size = 24;
@@ -336,20 +354,20 @@ in
 
     configFile = {
       "waybar".source = ./waybar;
-      "gtk-3.0/settings.ini".text = ''
-        [Settings]
-        gtk-font-name = "${fonts.gui.name} ${fonts.gui.weight} ${fonts.gui.size}";
-        gtk-theme-name = Adwaita
-        gtk-icon-theme-name = Adwaita
-        gtk-cursor-theme-name = Adwaita
-        gtk-cursor-theme-size = 48
-        gtk-xft-dpi = 196608  # 196608 = 2.0 * 96 * 1024
-      '';
-      "gtk-4.0/settings.ini".text = ''
-        [Settings]
-        gtk-font-name = "${fonts.gui.name} ${fonts.gui.weight} ${fonts.gui.size}";
-        gtk-cursor-theme-size = 48
-      '';
+      # "gtk-3.0/settings.ini".text = ''
+      # [Settings]
+      # gtk-font-name = "${fonts.gui.name} ${fonts.gui.weight} ${fonts.gui.size}";
+      # gtk-theme-name = Adwaita
+      # gtk-icon-theme-name = Adwaita
+      # gtk-cursor-theme-name = Adwaita
+      # gtk-cursor-theme-size = 48
+      # gtk-xft-dpi = 196608  # 196608 = 2.0 * 96 * 1024
+      # '';
+      # "gtk-4.0/settings.ini".text = ''
+      # [Settings]
+      # gtk-font-name = "${fonts.gui.name} ${fonts.gui.weight} ${fonts.gui.size}";
+      # gtk-cursor-theme-size = 48
+      # '';
     };
 
     desktopEntries = {

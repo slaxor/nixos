@@ -40,14 +40,14 @@ let
     text = builtins.readFile ./bin/viewsqlite.sh;
   };
 
-  ripdvd = pkgs.writeShellApplication {
-    name = "ripdvd";
-    runtimeInputs = [
-      pkgs.lsdvd
-      pkgs.handbrake
-    ];
-    text = builtins.readFile ./bin/ripdvd.sh;
-  };
+  # ripdvd = pkgs.writeShellApplication {
+  # name = "ripdvd";
+  # runtimeInputs = [
+  # pkgs.lsdvd
+  # pkgs.handbrake
+  # ];
+  # text = builtins.readFile ./bin/ripdvd.sh;
+  # };
 
   mkprj = pkgs.writeShellApplication {
     name = "mkprj";
@@ -103,7 +103,7 @@ in
     picocom
     rclone
     rich-cli
-    ripdvd
+    # ripdvd
     screenkey
     shellcheck
     shfmt

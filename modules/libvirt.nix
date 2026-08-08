@@ -4,14 +4,16 @@
     virter
     virtnbdbackup
     virt-manager
-    OVMFFull
+    OVMF
   ];
+
   virtualisation = {
     spiceUSBRedirection.enable = true;
     libvirtd = {
       enable = true;
       qemu = {
-        package = pkgs.qemu_full;
+        # package = pkgs.qemu_full.override { cephSupport = false; };
+        # package = pkgs.qemu;
         swtpm.enable = true;
       };
     };

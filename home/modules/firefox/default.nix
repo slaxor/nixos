@@ -125,13 +125,17 @@ in
       default = {
         id = 0;
         isDefault = true;
-        settings = hardenedSettings;
+        settings = hardenedSettings // {
+          "pdfjs.disabled" = true;
+        };
         extensions.packages = fullExtensions;
       };
 
       work = {
         id = 1;
-        settings = hardenedSettings;
+        settings = hardenedSettings // {
+          "pdfjs.disabled" = true;
+        };
         extensions.packages = workExtensions;
       };
 
@@ -144,7 +148,9 @@ in
       # see
       sandbox = {
         id = 3;
-        settings = hardenedSettings;
+        settings = hardenedSettings // {
+          "pdfjs.disabled" = true;
+        };
         extensions.packages = fullExtensions;
       };
     };
