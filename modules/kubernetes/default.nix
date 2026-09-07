@@ -2,6 +2,9 @@
   pkgs,
   ...
 }:
+let
+  nixpkgs-flannel.url = "github:NixOS/nixpkgs/b5aa0fbd538984f6e3d201be0005b4463d8b09f8";
+in
 {
   environment.systemPackages = with pkgs; [
     cilium-cli

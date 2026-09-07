@@ -105,11 +105,12 @@
       package = pkgs.plocate;
     };
     fwupd.enable = true;
-    journald.extraConfig = ''
-      SystemMaxUse=500M
-      SystemMaxFileSize=50M
-      MaxFileSec=1week
-    '';
+    journald.settings.Journal = {
+      SystemMaxUse = "1G";
+      SystemMaxFileSize = "50M";
+      MaxFileSec = "1month";
+      MaxRetentionSec = "1month";
+    };
   };
 
   security = {

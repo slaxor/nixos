@@ -398,7 +398,7 @@ in
           markdown
           markdown_inline
           mermaid
-          muttrc
+          # muttrc
           nasm
           nix
           nix
@@ -418,7 +418,7 @@ in
           strace
           sway
           terraform
-          tmux
+          # tmux
           toml
           typescript
           typst
