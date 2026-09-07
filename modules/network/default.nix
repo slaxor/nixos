@@ -34,6 +34,8 @@ in
     whois
   ];
 
+  systemd.network.wait-online.anyInterface = true;
+
   boot.specialFileSystems."/sys/fs/bpf" = {
     device = "bpffs";
     fsType = "bpf";

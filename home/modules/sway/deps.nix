@@ -54,12 +54,6 @@ in
     meld
     neovide
     networkmanagerapplet
-    obs-studio
-    obs-studio-plugins.advanced-scene-switcher
-    obs-studio-plugins.input-overlay
-    obs-studio-plugins.obs-3d-effect
-    obs-studio-plugins.obs-shaderfilter
-    obs-studio-plugins.wlrobs
     pango
     poppler-utils
     pulseaudioFull
@@ -94,8 +88,8 @@ in
     wallust
     way-displays
     waybar
-    waypipe
-    wayprompt
+    # waypipe
+    # wayprompt
     wayvnc
     welle-io
     wl-clipboard

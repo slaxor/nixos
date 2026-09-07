@@ -4,7 +4,6 @@
   home.packages =
     with pkgs;
     [
-      alsa-utils
       archivemount
       aspell
       aspellDicts.de
@@ -38,7 +37,6 @@
       pgcli
       picocom
       pkg-config
-      pulseaudioFull
       qrencode
       rclone
       rtl-sdr

@@ -13,33 +13,30 @@
     secrets = {
       "wghare/key" = { };
       "wghare/psk" = { };
-      "wifi/homenet" = { };
-      "wifi/hermitnet" = { };
-      "wifi/office" = { };
     };
-    templates = {
-      "homenet.psk" = {
-        path = "/var/lib/iwd/homenet.psk";
-        content = ''
-          [Security]
-          Passphrase=${config.sops.placeholder."wifi/homenet"}
-        '';
-      };
-      "hermitnet.psk" = {
-        path = "/var/lib/iwd/hermitnet.psk";
-        content = ''
-          [Security]
-          Passphrase=${config.sops.placeholder."wifi/hermitnet"}
-        '';
-      };
-      "office.psk" = {
-        path = "/var/lib/iwd/office.psk";
-        content = ''
-          [Security]
-          Passphrase=${config.sops.placeholder."wifi/office"}
-        '';
-      };
-    };
+    # templates = {
+    #   "homenet.psk" = {
+    #     path = "/var/lib/iwd/homenet.psk";
+    #     content = ''
+    #       [Security]
+    #       Passphrase=${config.sops.placeholder."wifi/homenet"}
+    #     '';
+    #   };
+    #   "hermitnet.psk" = {
+    #     path = "/var/lib/iwd/hermitnet.psk";
+    #     content = ''
+    #       [Security]
+    #       Passphrase=${config.sops.placeholder."wifi/hermitnet"}
+    #     '';
+    #   };
+    #   "office.psk" = {
+    #     path = "/var/lib/iwd/office.psk";
+    #     content = ''
+    #       [Security]
+    #       Passphrase=${config.sops.placeholder."wifi/office"}
+    #     '';
+    #   };
+    # };
   };
 
   networking = {
@@ -47,7 +44,6 @@
     usePredictableInterfaceNames = false;
     useDHCP = false;
     useNetworkd = true;
-    networkmanager.enable = false;
 
     wireless.iwd = {
       enable = true;
@@ -120,16 +116,16 @@
           ];
         }
       ];
-      postSetup = ''
-        ip route replace 192.168.117.0/24 dev wghare metric 1100
-        ip route replace 192.168.178.0/24 dev wghare metric 1100
-        ip route replace 192.168.181.0/24 dev wghare metric 1100
-      '';
-      postShutdown = ''
-        ip route del 192.168.117.0/24 dev wghare
-        ip route del 192.168.178.0/24 dev wghare
-        ip route del 192.168.181.0/24 dev wghare
-      '';
+      # postSetup = ''
+      # ip route replace 192.168.117.0/24 dev wghare metric 1100
+      # ip route replace 192.168.178.0/24 dev wghare metric 1100
+      # ip route replace 192.168.181.0/24 dev wghare metric 1100
+      # '';
+      # postShutdown = ''
+      # ip route del 192.168.117.0/24 dev wghare
+      # ip route del 192.168.178.0/24 dev wghare
+      # ip route del 192.168.181.0/24 dev wghare
+      # '';
     };
   };
 
@@ -148,9 +144,25 @@
         dhcpV4Config.RouteMetric = 600;
         linkConfig.RequiredForOnline = "no";
       };
+      "30-wghare" = {
+        matchConfig.Name = "wghare";
+        routes = [
+          {
+            Destination = "192.168.117.0/24";
+            Metric = 1100;
+          }
+          {
+            Destination = "192.168.178.0/24";
+            Metric = 1100;
+          }
+          {
+            Destination = "192.168.181.0/24";
+            Metric = 1100;
+          }
+        ];
+      };
     };
   };
-
   # { config, pkgs, ... }:
   # {
   # environment.systemPackages = with pkgs; [

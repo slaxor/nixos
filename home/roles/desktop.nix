@@ -19,7 +19,7 @@
     ../modules/mail.nix
     ../modules/luxoryitems.nix
     ../modules/nzb.nix
-    # ../modules/pico8
+    ../modules/audio.nix
     ../modules/sway
     ../modules/syncthing.nix
   ];

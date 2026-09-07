@@ -2,6 +2,10 @@
   description = "Slaxor's NixOS";
 
   inputs = {
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixvim = {
       url = "github:nix-community/nixvim";
@@ -22,7 +26,6 @@
     slaxor-editor.url = "git+https://codeberg.org/slaxor/editor";
     slaxor-replace.url = "git+https://codeberg.org/slaxor/replace";
   };
-
   outputs =
     {
       self,
@@ -81,6 +84,11 @@
             slaxor-replace.packages.${pkgs.stdenv.hostPlatform.system}.default
           ];
         };
+      nixIndex = {
+        imports = [ inputs.nix-index-database.nixosModules.nix-index ];
+        programs.command-not-found.enable = false;
+        programs.nix-index-database.comma.enable = true;
+      };
 
     in
     {
@@ -109,6 +117,7 @@
             ./users/slash.nix
             inputs.sops-nix.nixosModules.sops
             slaxorPkgs
+            nixIndex
           ];
         };
 
@@ -134,6 +143,7 @@
             ./users/slash.nix
             inputs.sops-nix.nixosModules.sops
             slaxorPkgs
+            nixIndex
           ];
         };
 
@@ -163,6 +173,7 @@
             ./modules/kubernetes
             inputs.sops-nix.nixosModules.sops
             slaxorPkgs
+            nixIndex
           ];
         };
       };

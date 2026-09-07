@@ -12,17 +12,18 @@
     ./local-pki.nix
 
     # GUI
+    ./fonts.nix
     ./greetd.nix
     ./sway.nix
-    ./fonts.nix
     ./xkb.nix
 
     # Services
+    ./audio.nix
     # ./docker
-    ./podman
     ./libvirt.nix
-    ./printing.nix
+    ./podman
     ./postgresql.nix
+    ./printing.nix
 
     # Packages & Utils
     ./utils.nix

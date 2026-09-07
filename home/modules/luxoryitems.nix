@@ -2,7 +2,6 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
-    alsa-utils
     graphviz-nox
     imagemagick
     libqalculate
@@ -10,13 +9,11 @@
     mermaid-cli
     miller # data manipulation for csv,json etc.
     nh
-    pulseaudioFull
     qrencode
     rtl-sdr
     dump1090-fa
     soapysdr-with-plugins
     signal-cli
-    timidity
     tinymist
     typst
     udiskie

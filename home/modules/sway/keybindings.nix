@@ -5,6 +5,8 @@ let
   alt = "Mod1"; # $alt
   term = "${(lib.getExe pkgs.foot)}";
   launcher = "${(lib.getExe pkgs.fuzzel)}";
+  grim = "${(lib.getExe pkgs.grim)}";
+  slurp = "${(lib.getExe pkgs.slurp)} -d  -b \"#3989b0a0\" -c \"#49afe2ff\" -w 5";
 in
 
 {
@@ -95,10 +97,9 @@ in
       "${mod}+Control+Shift+q" = "exec --no-startup-id xkill";
 
       # Screenshot
-      "Print" = "exec grim -g \"$(slurp -d)\" - | wl-copy";
-      "Shift+Print" =
-        "exec grim -g \"$(slurp)\" \"$\{HOME}/tmp/screenshot_$(date +%Y-%m-%d_%H%M%e).png\"";
-      "${mod}+b" = "exec grim -g \"$(slurp -d)\" - | zbarimg --quiet - | wl-copy -pn";
+      "Print" = "exec ${grim} -g \"$(${slurp})\" \"/tmp/screenshot_$(date +%Y-%m-%d_%H%M%e).png\"";
+      "Shift+Print" = "exec ${grim} -g \"$(${slurp})\" - | wl-copy";
+      "${mod}+b" = "exec ${grim} -g \"${slurp}\" - | zbarimg --quiet - | wl-copy -pn";
 
       # Brightness
       "XF86MonBrightnessUp" =

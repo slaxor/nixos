@@ -1,15 +1,20 @@
 {
-  config,
   pkgs,
-  lib,
   ...
 }:
-
+let
+  pinentry-switch = pkgs.writeShellScriptBin "pinentry" ''
+    case "$PINENTRY_USER_DATA" in
+    *curses*)
+      exec ${pkgs.pinentry-curses}/bin/pinentry-curses "$@"
+      ;;
+    esac
+    exec ${pkgs.pinentry-qt}/bin/pinentry-qt "$@"
+  '';
+in
 {
   home.packages = with pkgs; [
     gnupg
-    wayprompt
-    pinentry-curses
   ];
 
   programs = {
@@ -18,6 +23,10 @@
       mutableKeys = true;
       mutableTrust = true;
     };
+
+    bash.initExtra = ''
+      export PINENTRY_USER_DATA=curses
+    '';
   };
 
   services.gpg-agent = {
@@ -29,9 +38,7 @@
     maxCacheTtl = 28800;
     defaultCacheTtlSsh = 28800;
     maxCacheTtlSsh = 28800;
-    pinentry.package = pkgs.wayprompt;
-    # pkgs.pinentry-gtk2; # or pinentry-gnome3, pinentry-qt, pinentry-curses
-    # pinentry.package = lib.mkDefault pkgs.pinentry-curses;
+    pinentry.package = pinentry-switch;
   };
 
 }

@@ -19,7 +19,7 @@
       swaylock
       swayidle
       wl-clipboard
-      wf-recorder
+      # wf-recorder
       mako
       grim
       kanshi

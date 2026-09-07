@@ -7,14 +7,12 @@
       "--no-default-browser-check"
       "--enable-features=UseOzonePlatform"
       "--ozone-platform=wayland"
+      "--disable-pdf-extension"
     ];
     nativeMessagingHosts = [ pkgs.gopass ];
     extensions = [
       { id = "kkhfnlkhiapbiehimabddjbimfaijdhk"; } # gopass bridge
     ];
-    plugins = {
-      always_open_pdf_externally = true;
-    };
   };
 
 }
