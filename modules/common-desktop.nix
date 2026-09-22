@@ -45,6 +45,10 @@
         "pico"
         "segger-jlink"
         "segger-jlink-headless"
+        "steam"
+        "steam-unwrapped"
+        "steam-original"
+        "steam-run"
         "tampermonkey"
         "unrar"
       ];

@@ -1,4 +1,8 @@
-{ config, pkgs, ... }:
+{
+  pkgs,
+  lib,
+  ...
+}:
 {
   nix.settings.experimental-features = [
     "nix-command"
@@ -142,5 +146,11 @@
     services = {
       systemd-journald.serviceConfig.WatchdogSec = "10min";
     };
+  };
+
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; # optional
+    gamescopeSession.enable = true; # optional, for handheld/gamescope launches
   };
 }

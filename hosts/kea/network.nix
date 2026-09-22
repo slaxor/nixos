@@ -100,6 +100,7 @@
 
     wireguard.interfaces.wghare = {
       ips = [ "10.13.0.17/32" ];
+      allowedIPsAsRoutes = false;
       listenPort = 51820;
       privateKeyFile = config.sops.secrets."wghare/key".path;
       peers = [
@@ -142,11 +143,23 @@
         matchConfig.Name = "wlan0";
         networkConfig.DHCP = "yes";
         dhcpV4Config.RouteMetric = 600;
-        linkConfig.RequiredForOnline = "no";
+        linkConfig.RequiredForOnline = "yes";
       };
       "30-wghare" = {
         matchConfig.Name = "wghare";
+        networkConfig.DHCP = "no";
+        addresses = [
+          {
+            Address = "10.13.0.17/32";
+            AddPrefixRoute = false;
+          }
+        ];
+        linkConfig.RequiredForOnline = "no";
         routes = [
+          {
+            Destination = "10.13.0.0/24";
+            Metric = 0;
+          }
           {
             Destination = "192.168.117.0/24";
             Metric = 1100;
