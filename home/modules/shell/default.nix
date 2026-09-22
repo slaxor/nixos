@@ -39,7 +39,18 @@ let
     ];
     text = builtins.readFile ./bin/viewsqlite.sh;
   };
-
+  which = pkgs.writeShellApplication {
+    name = "which";
+    runtimeInputs = [ pkgs.which ];
+    text = builtins.readFile ./bin/which.sh;
+  };
+  # which = pkgs.writeShellApplication {
+  # name = "which";
+  # runtimeInputs = [
+  # pkgs.which
+  # ];
+  # text = ''realpath "$(${pkgs.which} "$1")"'';
+  # };
   # ripdvd = pkgs.writeShellApplication {
   # name = "ripdvd";
   # runtimeInputs = [
@@ -117,6 +128,7 @@ in
     usbutils
     viewsqlite
     vivid
+    which
     zoxide
   ];
 
