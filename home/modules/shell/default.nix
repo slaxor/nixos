@@ -39,18 +39,25 @@ let
     ];
     text = builtins.readFile ./bin/viewsqlite.sh;
   };
-  which = pkgs.writeShellApplication {
-    name = "which";
-    runtimeInputs = [ pkgs.which ];
-    text = builtins.readFile ./bin/which.sh;
-  };
+
   # which = pkgs.writeShellApplication {
   # name = "which";
-  # runtimeInputs = [
-  # pkgs.which
-  # ];
-  # text = ''realpath "$(${pkgs.which} "$1")"'';
+  # runtimeInputs = [ pkgs.which ];
+  # text = builtins.readFile ./bin/which.sh;
   # };
+  which =
+    (pkgs.writeShellApplication {
+      name = "which";
+      runtimeInputs = [ pkgs.which ];
+      text = builtins.readFile ./bin/which.sh;
+    }).overrideAttrs
+      (old: {
+        doInstallCheck = true;
+        installCheckPhase = ''
+          ${old.installCheckPhase or ""}
+          PATH="$out/bin:$PATH" ${pkgs.bats}/bin/bats ${./bin/which-test.bats}
+        '';
+      });
   # ripdvd = pkgs.writeShellApplication {
   # name = "ripdvd";
   # runtimeInputs = [
