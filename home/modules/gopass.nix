@@ -13,7 +13,11 @@ in
 {
   home = {
     shellAliases = {
-      boott5l = "while ! $(ping -4 -W 1 -c 1 hare.t5l.de >/dev/null 2>&1 ) ; do echo down ; done ; gopass show -f luks/hare |ssh hareboot cryptsetup-askpass";
+      boothare = ''
+        ssh hareboot 'systemd-tty-ask-password-agent' \
+                < <(gopass show -f luks/hare | awk 'NR==1{for(i=0;i<3;i++) print}')
+      '';
+      # gopass show -f luks/hare | ssh hareboot systemd-tty-ask-password-agent
       pwc = "gopass ls --flat | fzf | xargs --no-run-if-empty gopass show -c";
     };
     file = {

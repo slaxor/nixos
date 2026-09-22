@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   home.packages = with pkgs; [
     algia
@@ -54,5 +54,6 @@
       };
     };
   };
+
   home.stateVersion = "26.05";
 }
