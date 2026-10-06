@@ -40,7 +40,6 @@ in
     gmrun
     gnomeExtensions.appindicator
     gopass-jsonapi
-    gqrx
     grim
     gucharmap
     gvfs
@@ -65,6 +64,7 @@ in
     scrcpy
     seahorse
     signal-desktop
+    # signal-backup
     slurp
     solaar
     spice-vdagent
@@ -91,7 +91,6 @@ in
     # waypipe
     # wayprompt
     wayvnc
-    welle-io
     wl-clipboard
     wlay
     wlogout

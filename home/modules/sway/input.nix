@@ -13,6 +13,10 @@ let
   };
 in
 {
+  home.packages = with pkgs; [
+    wlrctl
+  ];
+
   services.espanso = {
     enable = true;
     package = pkgs.espanso-wayland;
@@ -27,7 +31,15 @@ in
         replace = "----------->8----------->8----------->8----------->8----------->8-----------";
       }
       {
-        trigger = "@stvat";
+        trigger = "@st .";
+        replace = "Sascha Teske";
+      }
+      {
+        trigger = "@st tel";
+        replace = "+491633922933";
+      }
+      {
+        trigger = "@st vat";
         replace = "DE20882888";
       }
       {
@@ -39,11 +51,15 @@ in
         replace = "sascha.teske@microprojects.de";
       }
       {
+        trigger = "@a@m";
+        replace = "accounting@microprojects.de";
+      }
+      {
         trigger = "@s@p";
         replace = "slaxor@posteo.de";
       }
       {
-        trigger = "@gls";
+        trigger = "@st bank";
         replace = ''
           Bankverbindung
           Kontoinhaber: Sascha Teske
@@ -53,15 +69,19 @@ in
         '';
       }
       {
-        trigger = "@ibangls";
+        trigger = "@st iban";
         replace = "DE33430609672019279100";
       }
       {
-        trigger = "@bicgls";
+        trigger = "@st bic";
         replace = "GENODEM1GLS";
       }
       {
-        trigger = "@mpadr";
+        trigger = "@mp .";
+        replace = "Microprojects GmbH";
+      }
+      {
+        trigger = "@mp adr";
         replace = ''
           Microprojects GmbH
           Beltgens Garten 5
@@ -70,15 +90,33 @@ in
         '';
       }
       {
+        trigger = "@mp bank";
+        replace = ''
+          Bankverbindung
+          Kontoinhaber: Microprojects GmbH
+          Bank: GLS Bank
+          IBAN: DE20 4306 0967 1390 0382 00
+          BIC: GENODEM1GLS
+        '';
+      }
+      {
+        trigger = "@mp iban";
+        replace = "DE20430609671390038200";
+      }
+      {
+        trigger = "@mp bic";
+        replace = "GENODEM1GLS";
+      }
+      {
         trigger = "@a@m";
         replace = "accounting@microprojects.de";
       }
       {
-        trigger = "@mpvat";
+        trigger = "@mp vat";
         replace = "DE312932732";
       }
       {
-        trigger = "@mpfoot";
+        trigger = "@mp foot";
         replace = ''
           =======================================================================
             Microprojects GmbH
@@ -122,7 +160,7 @@ in
         ];
       }
       {
-        regex = ":pw (?P<account>[\\w/.-]+) ?(?P<index>\\d*)@";
+        regex = "@pw (?P<account>[\\w/.-]+) ?(?P<index>\\d*):";
         replace = "{{pass}}!";
         vars = [
           {

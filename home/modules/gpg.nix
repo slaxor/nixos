@@ -38,6 +38,9 @@ in
     maxCacheTtl = 28800;
     defaultCacheTtlSsh = 28800;
     maxCacheTtlSsh = 28800;
+    extraConfig = ''
+      pinentry-timeout 30
+    '';
     pinentry.package = pinentry-switch;
   };
 

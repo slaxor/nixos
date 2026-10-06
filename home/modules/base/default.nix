@@ -39,9 +39,6 @@
       pkg-config
       qrencode
       rclone
-      rtl-sdr
-      dump1090-fa
-      soapysdr-with-plugins
       signal-cli
       tcpdump
       tcpflow

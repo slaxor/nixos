@@ -2,7 +2,6 @@
 
 let
   mod = "Mod4"; # $cmd
-  alt = "Mod1"; # $alt
   term = "${(lib.getExe pkgs.foot)}";
   launcher = "${(lib.getExe pkgs.fuzzel)}";
   grim = "${(lib.getExe pkgs.grim)}";
@@ -17,7 +16,8 @@ in
 
     # lib.mkOptionDefault preserves home-manager's default bindings and adds these on top.
     # Remove it and use a plain attrset if you want full control over all keybindings.
-    keybindings = lib.mkOptionDefault {
+    # keybindings = lib.mkOptionDefault {
+    keybindings = {
       "${mod}+space" = "exec ${launcher}";
       "${mod}+0" = "workspace number 10";
       "${mod}+1" = "workspace number 1";
@@ -130,6 +130,5 @@ in
   wayland.windowManager.sway.extraConfig = ''
     bindsym --no-repeat XF86Display exec wlay
     bindsym --no-repeat XF86Keyboard exec wvkbd-mobintl
-    bindsym ${alt}+s exec alacritty --class 'snipkey' --command bash -c 'fzsnip | xargs -r swaymsg -t command exec'
   '';
 }

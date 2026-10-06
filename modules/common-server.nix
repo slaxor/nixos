@@ -8,7 +8,6 @@
 
     # Services
     # ./libvirt.nix
-    ./tmate-server.nix
     ./kubernetes
 
     # Packages & Utils

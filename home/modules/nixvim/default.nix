@@ -2,20 +2,20 @@
 let
   nixvim = builtins.getFlake "github:nix-community/nixvim/e9fbbd56eab78751ba4c166c31a1667042528ced";
   nvim-spell-de-utf8-dictionary = builtins.fetchurl {
-    url = "https://ftp.pl.vim.org/pub/vim/runtime/spell/de.utf-8.spl";
+    url = "https://ftp.nluug.nl/pub/vim/runtime/spell/de.utf-8.spl";
     sha256 = "sha256:1ld3hgv1kpdrl4fjc1wwxgk4v74k8lmbkpi1x7dnr19rldz11ivk";
   };
   nvim-spell-de-utf8-suggestions = builtins.fetchurl {
-    url = "https://ftp.pl.vim.org/pub/vim/runtime/spell/de.utf-8.sug";
+    url = "https://ftp.nluug.nl/pub/vim/runtime/spell/de.utf-8.sug";
     sha256 = "sha256:0j592ibsias7prm1r3dsz7la04ss5bmsba6l1kv9xn3353wyrl0k";
   };
   nvim-spell-en-utf8-dictionary = builtins.fetchurl {
-    url = "https://ftp.pl.vim.org/pub/vim/runtime/spell/en.utf-8.spl";
+    url = "https://ftp.nluug.nl/pub/vim/runtime/spell/en.utf-8.spl";
     sha256 = "sha256:0w1h9lw2c52is553r8yh5qzyc9dbbraa57w9q0r9v8xn974vvjpy";
   };
   nvim-spell-en-utf8-suggestions = builtins.fetchurl {
-    url = "https://ftp.pl.vim.org/pub/vim/runtime/spell/en.utf-8.sug";
-    sha256 = "sha256:1v1jr4rsjaxaq8bmvi92c93p4b14x2y1z95zl7bjybaqcmhmwvjv";
+    url = "https://ftp.nluug.nl/pub/vim/runtime/spell/en.utf-8.spl";
+    sha256 = "sha256:0w1h9lw2c52is553r8yh5qzyc9dbbraa57w9q0r9v8xn974vvjpy";
   };
   insert-abbrevs = {
     "teh" = "the";
@@ -260,9 +260,6 @@ in
       helm.enable = true;
       hex.enable = true;
       just.enable = true;
-      vim-css-color.enable = true;
-      typst-preview.enable = true;
-      yazi.enable = true;
       cmp = {
         enable = true;
         settings = {
@@ -353,8 +350,10 @@ in
         fromSnipmate = [ { paths = ./nvim/snippets; } ];
       };
       markdown-preview.enable = true;
+      multicursor-nvim.enable = true;
       # origami.enable = true;
       otter.enable = true;
+      qmk-nvim.enable = true;
       toggleterm.enable = true;
       treesitter = {
         enable = true;
@@ -433,8 +432,10 @@ in
         settings.enable_autocmd = false;
       };
       typst-vim.enable = true;
+      typst-preview.enable = true;
+      vim-css-color.enable = true;
       web-devicons.enable = true;
-      qmk-nvim.enable = true;
+      yazi.enable = true;
     };
 
     extraPlugins = with pkgs.vimPlugins; [

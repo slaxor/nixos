@@ -96,7 +96,6 @@
         }
       ];
     };
-    tmate-ssh-server.host = "hare.t5l.de";
   };
   system.stateVersion = "26.05";
 }

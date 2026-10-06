@@ -10,9 +10,9 @@
     miller # data manipulation for csv,json etc.
     nh
     qrencode
-    rtl-sdr
-    dump1090-fa
-    soapysdr-with-plugins
+    # rtl-sdr
+    # dump1090-fa
+    # soapysdr-with-plugins
     signal-cli
     tinymist
     typst

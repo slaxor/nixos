@@ -40,8 +40,6 @@ in
             ip6 nexthdr icmpv6 accept
             udp dport 51820 accept
             tcp dport 22 accept
-            # tmate — public
-            tcp dport 2222 accept
             tcp dport { 25, 143 } accept
             tcp dport { 80, 443 } accept
             iifname "wg0" accept

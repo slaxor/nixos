@@ -5,6 +5,8 @@ set -uo pipefail
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
   term="$1"
   index="$2"
+  gopass_timeout=30
+  menu_timeout=60
 
   not_found() {
     echo "[gopass: no entry matching '${term}'${index:+ #${index}}]"
@@ -18,14 +20,14 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     elif [ "$(wc -l <<<"${matches}")" -eq 1 ]; then
       echo "${matches}"
     else
-      fuzzel --dmenu --prompt "gopass> " <<<"${matches}"
+      timeout --kill-after=5 "${menu_timeout}" fuzzel --dmenu --prompt "gopass> " <<<"${matches}"
     fi
   }
 
-  entries="$(gopass ls --flat)"
+  entries="$(timeout --kill-after=5 "${gopass_timeout}" gopass ls --flat)"
   matches="$(grep -F -- "${term}" <<<"${entries}")" || not_found
   entry="$(pick "${matches}")" || exit 0
   [ -n "${entry}" ] || not_found
 
-  gopass show -o "${entry}"
+  timeout --kill-after=5 "${gopass_timeout}" gopass show -o "${entry}"
 fi
