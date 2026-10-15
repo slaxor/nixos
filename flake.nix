@@ -23,8 +23,12 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    slaxor-editor.url = "git+https://codeberg.org/slaxor/editor";
-    slaxor-replace.url = "git+https://codeberg.org/slaxor/replace";
+    slaxor-editor.url = "git+https://github.com/slaxor/editor";
+    slaxor-replace.url = "git+https://github.com/slaxor/replace";
+    kai = {
+      url = "github:slaxor/Kai/enable_nixos";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     {
@@ -33,6 +37,7 @@
       home-manager,
       slaxor-editor,
       slaxor-replace,
+      kai,
       ...
     }@inputs:
     let
@@ -101,6 +106,7 @@
             {
               nixpkgs.overlays = [
                 inputs.nur.overlays.default
+                inputs.kai.overlays.default
               ];
             }
             {

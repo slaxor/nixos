@@ -1,6 +1,6 @@
 { pkgs, ... }:
 # let
-# fdCmd = "${pkgs.fd}/bin/fd --search-path git.int.m11s.de/slaxor --search-path git.int.m11s.de/microprojects --search-path codeberg.org/slaxor --type d --changed-within 52w --follow --max-depth 1";
+# fdCmd = "${pkgs.fd}/bin/fd --search-path git.int.m11s.de/slaxor --search-path git.int.m11s.de/microprojects --search-path github.com/slaxor --type d --changed-within 52w --follow --max-depth 1";
 # in
 {
   home.packages = with pkgs; [
@@ -131,7 +131,7 @@
           }
           {
             name = "nixos";
-            path = "~/git/codeberg.org/slaxor/nixos";
+            path = "~/git/github.com/slaxor/nixos";
             preview_command = "bat --no-paging -n --line-range 2:27 flake.nix";
             windows = [
               "edit"

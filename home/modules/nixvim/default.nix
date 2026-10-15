@@ -206,6 +206,15 @@ in
           action.__raw = ''require("slaxor.keymaps").tab_jump_back'';
           options.desc = "snippet jump back or shift-tab";
         }
+        # {
+        #   mode = [
+        #     "n"
+        #     "x"
+        #   ];
+        #   key = "<leader>n";
+        #   action = "function() mc.matchAddCursor(1) end";
+        #   options.desc = "force delete buffer";
+        # }
       ];
 
     globals = {
@@ -350,7 +359,8 @@ in
         fromSnipmate = [ { paths = ./nvim/snippets; } ];
       };
       markdown-preview.enable = true;
-      multicursor-nvim.enable = true;
+      # multicursor-nvim.enable = true;
+      multiple-cursors-nvim.enable = true;
       # origami.enable = true;
       otter.enable = true;
       qmk-nvim.enable = true;

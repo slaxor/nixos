@@ -1,5 +1,9 @@
 { pkgs, ... }:
 {
+  imports = [
+    ../modules/ai
+  ];
+
   home.packages = with pkgs; [
     algia
     vivid

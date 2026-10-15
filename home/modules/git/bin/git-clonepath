@@ -1,13 +1,29 @@
 #!/usr/bin/env bash
-# set -ex
-GIT_REPOS="${GIT_REPOS-${HOME}/git}"
-repo_to_dir() {
-  for p in $(echo "$1" | sed -e 's#https\?://##; s#.*@##; s#:v3/#/#; s#/_git/#/#g; s#:#/#g; s#.git$##g; s#[:/@]\+# #g'); do
-    printf '/%q' "$p"
-  done
-}
+# shellcheck shell=bash
+set -uo pipefail
 
-target="${GIT_REPOS}$(repo_to_dir "$1")"
-[ "$#" = 0 ] || git clone "$1" "$target"
-echo "cd \"$target\""
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  set -e
 
+  GIT_REPOS="${GIT_REPOS-${HOME}/git}"
+
+  repo_to_dir() {
+    for p in $(echo "$1" | sed -e 's#https\?://##; s#.*@##; s#:v3/#/#; s#/_git/#/#g; s#:#/#g; s#.git$##g; s#[:/@]\+# #g'); do
+      printf '/%s' "${p}"
+    done
+  }
+
+  type_cd() {
+    cmd=$(printf 'cd %q' "$1")
+    if [ -n "${TMUX-}" ]; then
+      tmux send-keys -t "${TMUX_PANE}" -l "${cmd}"
+      tmux send-keys -t "${TMUX_PANE}" Enter
+    else
+      printf '%s\n' "${cmd}"
+    fi
+  }
+
+  target="${GIT_REPOS}$(repo_to_dir "$1")"
+  [ -d "${target}/.git" ] || git clone "$1" "${target}"
+  type_cd "${target}"
+fi

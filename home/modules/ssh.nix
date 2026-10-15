@@ -6,6 +6,9 @@
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
+    extraConfig = ''
+      Match host * exec "gpg-connect-agent updatestartuptty /bye >/dev/null"
+    '';
 
     settings = {
       "127.0.0.1" = {
@@ -70,12 +73,6 @@
         user = "slash";
         proxyJump = "jump-host";
       };
-
-      # "codeberg.org" = {
-      # controlMaster = "auto";
-      # controlPath = "~/.ssh/cm-%r@%h:%p";
-      # controlPersist = "10m";
-      # };
 
       "*" = {
         forwardAgent = false;

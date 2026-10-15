@@ -42,8 +42,27 @@
 
       [usb-devices]
       pattern = ^usb([0-9]*)
+      baudrate = 115200
       device = /dev/ttyUSB%m1
-      color = 14
+      color = 10
+
+      [acm-devices]
+      pattern = ^acm([0-9]*)
+      baudrate = 115200
+      device = /dev/ttyACM%m1
+      color = 11
+
+      [slow-usb-devices]
+      pattern = ^susb([0-9]*)
+      baudrate = 9600
+      device = /dev/ttyUSB%m1
+      color = 12
+
+      [slow-acm-devices]
+      pattern = ^sacm([0-9]*)
+        baudrate = 9600
+      device = /dev/ttyACM%m1
+      color = 13
     '';
   };
 }

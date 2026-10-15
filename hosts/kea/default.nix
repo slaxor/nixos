@@ -59,11 +59,11 @@
         "amdgpu"
       ];
       systemd.enable = true;
-      luks.devices = {
-        KEAROOT.crypttabExtraOpts = [ "fido2-device=auto" ];
-        KEADATA.crypttabExtraOpts = [ "fido2-device=auto" ];
-        KEAHOME.crypttabExtraOpts = [ "fido2-device=auto" ];
-      };
+      # luks.devices = {
+      # KEAROOT.crypttabExtraOpts = [ "fido2-device=auto" ];
+      # KEADATA.crypttabExtraOpts = [ "fido2-device=auto" ];
+      # KEAHOME.crypttabExtraOpts = [ "fido2-device=auto" ];
+      # };
     };
   };
 

@@ -69,11 +69,11 @@ let
 
   mkprj = pkgs.writeShellApplication {
     name = "mkprj";
-    runtimeInputs = [
-      pkgs.nix
-      pkgs.git
-      pkgs.direnv
-      pkgs.jq
+    runtimeInputs = with pkgs; [
+      nix
+      git
+      direnv
+      jq
     ];
     text = builtins.readFile ./bin/mkprj.sh;
   };
@@ -234,6 +234,7 @@ in
     direnv = {
       enable = true;
       nix-direnv.enable = true;
+      config.global.hide_env_diff = true;
     };
 
     fzf.enable = true;

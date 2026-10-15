@@ -17,6 +17,7 @@
         rich-preview
         smart-enter
         toggle-pane
+        bookmarks
         ;
     };
 
@@ -94,6 +95,35 @@
               shell -- printf 'file://%s\n' "$(realpath "$1")" | wl-copy --type text/uri-list
             '';
             desc = "Copy hovered file to Wayland clipboard";
+          }
+          {
+            on = [ "m" ];
+            run = "plugin bookmarks save";
+            desc = "Save current position as a bookmark";
+          }
+          {
+
+            on = [ "'" ];
+            run = "plugin bookmarks jump";
+            desc = "Jump to a bookmark";
+          }
+          {
+
+            on = [
+              "b"
+              "d"
+            ];
+            run = "plugin bookmarks delete";
+            desc = "Delete a bookmark";
+          }
+          {
+
+            on = [
+              "b"
+              "D"
+            ];
+            run = "plugin bookmarks delete_all";
+            desc = "Delete all bookmarks";
           }
         ];
         append_keymap = [ ];

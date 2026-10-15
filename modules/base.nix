@@ -77,9 +77,7 @@
       enable = true;
       clean.enable = true;
       clean.extraArgs = "--keep-since 14d --keep 8";
-      flake = "$HOME/git/codeberg.org/slaxor/nixos#$HOSTNAME";
-      # osFlake = "$HOME/git/codeberg.org/slaxor/nixos#$HOSTNAME";
-      # homeFlake = " $HOME/git/codeberg.org/slaxor/home-manager#$USER@$HOSTNAME";
+      flake = "$HOME/git/github.com/slaxor/nixos#$HOSTNAME";
     };
 
     nix-ld.enable = true;
