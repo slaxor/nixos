@@ -49,11 +49,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791306979,
-        "narHash": "sha256-KuLePuhwJM9NLt/gTLHzXaOoSZKGoB3m7NfXjiQ98HY=",
+        "lastModified": 1792000010,
+        "narHash": "sha256-4jtkwQlReQdXsKJJfB9yT7nIf0TlwgZOk2XtxjUgDS8=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "fae6e9e42c3b762ab47635cddcfaf6f52374a61b",
+        "rev": "5a9d300bd619c03857521b50c8877a19dbad7078",
         "type": "github"
       },
       "original": {
@@ -91,11 +91,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791105314,
-        "narHash": "sha256-oTM7QFgRQ+vxBpMBMc7hEYpqBtpXAzXu2xuB/tru84U=",
+        "lastModified": 1791711434,
+        "narHash": "sha256-LpIhxnuO0tYeZ4k7BbNMxsPs2zJpB4hWXO1jdhUuE7Q=",
         "owner": "nix-community",
         "repo": "nix-index-database",
-        "rev": "e740bc4e9d8918d7819a51486d5099930c65c72e",
+        "rev": "9a2dd40780eeab8543aa97c59c26f11267025616",
         "type": "github"
       },
       "original": {
@@ -106,11 +106,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1791260994,
-        "narHash": "sha256-Miqqk/ammqnTUxaoCyvtwoPeLbI1ksFyLxi/CazZpWY=",
+        "lastModified": 1791956154,
+        "narHash": "sha256-jBYGPi4udQ9uo4KQp9m2J0546nJVQitG15gvZSaVVAs=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "151fa4e8ddfdd8dd25d945ad94ed54a13de9f6e4",
+        "rev": "55bfb4d7437bd4e09ab7cba58a43bd68eb310044",
         "type": "github"
       },
       "original": {
@@ -157,11 +157,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1791235629,
-        "narHash": "sha256-ySIbhYpjg8CnfuJTs/cfkEQuGpk02IzT+a3VDz7Cec0=",
+        "lastModified": 1792012326,
+        "narHash": "sha256-DApZIjaKdU4XzglZ56yrPYLhG/ajoyuQ4g4s8tkHqxU=",
         "owner": "nix-community",
         "repo": "nixvim",
-        "rev": "8fbc7d3ff1154fab898895e7c4e71a4d06936ce3",
+        "rev": "8485794923eb406ce3728af320392226608f724b",
         "type": "github"
       },
       "original": {
@@ -178,11 +178,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791326947,
-        "narHash": "sha256-NziMwpKcAWlVessZiV486sYB/zs/3Rd5lYgyoxUeR1Y=",
+        "lastModified": 1792074377,
+        "narHash": "sha256-w51taY7OYhOiL+X5r3tVs12PTKAejmx8l3oU2SNFtZs=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "f5781fa8d389b1ae3aad9a233c945e7c6f1554bf",
+        "rev": "b5917d68a16f50297aa42e3dce57891e9befcdd5",
         "type": "github"
       },
       "original": {
@@ -209,17 +209,17 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1761275552,
-        "narHash": "sha256-RMcHLgQXbEdyyl0GgQJSNYK9ZtX1NX4L4ZjUrknu/wk=",
+        "lastModified": 1792073926,
+        "narHash": "sha256-gUkXkREPeLerjhN0c7iXUaxC72KQjJyAnJk0lf3x0P4=",
         "ref": "refs/heads/master",
-        "rev": "c19a9cdfc8017896102ccc82935aee47c046e798",
-        "revCount": 6,
+        "rev": "1890511416cf312480b5c3344d85db248a367c9d",
+        "revCount": 7,
         "type": "git",
-        "url": "https://codeberg.org/slaxor/editor"
+        "url": "https://github.com/slaxor/editor"
       },
       "original": {
         "type": "git",
-        "url": "https://codeberg.org/slaxor/editor"
+        "url": "https://github.com/slaxor/editor"
       }
     },
     "slaxor-replace": {
@@ -227,17 +227,17 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1774132910,
-        "narHash": "sha256-rPhkscCYlhYNW4RYR/++wwTACuRm3vxfu9tehh+zEyk=",
+        "lastModified": 1792073700,
+        "narHash": "sha256-js7XOt68z/pw2kH4KdQURino7rUNObFcBDDnzqTNkR4=",
         "ref": "refs/heads/master",
-        "rev": "8bc1d2ac073b9c68b47f6f9433ee5575d1eb1ba0",
-        "revCount": 19,
+        "rev": "1454aa0c0f8ed78fa7a619c3b5757e081746adf1",
+        "revCount": 20,
         "type": "git",
-        "url": "https://codeberg.org/slaxor/replace"
+        "url": "https://github.com/slaxor/replace"
       },
       "original": {
         "type": "git",
-        "url": "https://codeberg.org/slaxor/replace"
+        "url": "https://github.com/slaxor/replace"
       }
     },
     "sops-nix": {
@@ -247,11 +247,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791103873,
-        "narHash": "sha256-nFxM+pKoZ8LJAEnUXARyCaOAloWgaW9kZQOSjWzKcTE=",
+        "lastModified": 1792056300,
+        "narHash": "sha256-YU1LjDe1o2Ymg5zEiCHbmMXLkDCtxHQRiVqZ3nC5GGk=",
         "owner": "Mic92",
         "repo": "sops-nix",
-        "rev": "dcd241ba97088c22569d1573286e1b9daad340c0",
+        "rev": "44931708c62937c2b1bf7953902989fa5bb9ee1b",
         "type": "github"
       },
       "original": {
@@ -263,11 +263,11 @@
     "systems": {
       "flake": false,
       "locked": {
-        "lastModified": 1774449309,
-        "narHash": "sha256-brhZ8DmuGtzkCYHJg4HEd602amKm89Y9ytsFZ5uWD1w=",
+        "lastModified": 1791244623,
+        "narHash": "sha256-uuanbkFk8a313Zfrxdcz8Us/yQtaxNnKJtX8v0ZPpd8=",
         "owner": "nix-systems",
         "repo": "default",
-        "rev": "c29398b59d2048c4ab79345812849c9bd15e9150",
+        "rev": "d36eeed142f88b5a636f2e3856a53c61654cf29b",
         "type": "github"
       },
       "original": {

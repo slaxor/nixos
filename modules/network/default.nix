@@ -21,7 +21,6 @@ in
     djbdns
     dnsdiag
     dnsperf
-    dnsmon-go
     tcping-go
     tcpdump
     tcptraceroute

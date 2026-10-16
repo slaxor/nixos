@@ -11,7 +11,7 @@
     satty
     tray-tui
     ghostty
-    cavalier
+    cavasik
     podman
     podman-tui
     podman-bootc
