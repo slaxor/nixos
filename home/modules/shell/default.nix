@@ -141,7 +141,7 @@ in
 
   home = {
     shellAliases = {
-      dmesg = "sudo dmesg -HT";
+      dmesg = "dmesg -HT";
       fixtty = "stty sane ; echo -e \"\\033c\" ; tput rs1";
       g = "rg --hidden --follow --smart-case";
       httpserver = "python3 -m http.server 8000 --bind 127.0.0.1";

@@ -3,6 +3,7 @@
     ../modules/chromium.nix
     ../modules/dev-android.nix
     ../modules/dev-db.nix
+    ../modules/dev-forth.nix
     ../modules/dev-go.nix
     ../modules/dev-hardware.nix
     # ../modules/dev-hacking.nix

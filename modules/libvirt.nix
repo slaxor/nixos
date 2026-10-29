@@ -34,21 +34,26 @@
           					<name>k8s-net</name>
           					<bridge name="virbr-k8s"/>
           					<forward mode="nat"/>
-          					<ip address="192.168.122.1" netmask="255.255.255.0">
+          					<ip address="192.168.123.1" netmask="255.255.255.0">
           						<dhcp>
-          							<range start="192.168.122.10" end="192.168.122.50"/>
+          							<range start="192.168.123.10" end="192.168.123.50"/>
           						</dhcp>
           					</ip>
           				</network>
           			'';
       in
       ''
-        				if ! ${pkgs.libvirt}/bin/virsh -c qemu:///system net-info k8s-net >/dev/null 2>&1; then
-        					${pkgs.libvirt}/bin/virsh -c qemu:///system net-define ${networkXml}
-        				fi
-        				${pkgs.libvirt}/bin/virsh -c qemu:///system net-start k8s-net || true
-        				${pkgs.libvirt}/bin/virsh -c qemu:///system net-autostart k8s-net || true
-        			'';
+        virsh() { ${pkgs.libvirt}/bin/virsh -c qemu:///system "$@"; }
+        has_net() { virsh net-list "$@" --name | ${pkgs.gnugrep}/bin/grep -qx k8s-net; }
+        if ! has_net --all; then
+          virsh net-define ${networkXml}
+        fi
+        if ! has_net; then
+          virsh net-start k8s-net
+        fi
+        virsh net-autostart k8s-net
+      '';
+
   };
 
 }

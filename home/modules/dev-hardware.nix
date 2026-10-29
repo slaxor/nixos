@@ -46,6 +46,12 @@
       device = /dev/ttyUSB%m1
       color = 10
 
+      [bus-pirate4]
+      pattern = ^bp4$
+      baudrate = 115200
+      device = /dev/serial/by-id/usb-Dangerous_Prototypes_Bus_Pirate_V4_00000001-if00
+      color = 1
+
       [acm-devices]
       pattern = ^acm([0-9]*)
       baudrate = 115200

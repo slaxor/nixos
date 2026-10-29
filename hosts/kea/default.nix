@@ -1,7 +1,58 @@
 {
   pkgs,
+  lib,
   ...
 }:
+let
+  # curl -sS 'https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/plain/drivers/gpu/drm/amd/include/amd_shared.h?h=v7.2.10' | rg -A40 'enum DC_DEBUG_MASK'
+  #
+  # Bit	Name	Effect
+  # 0x1	DC_DISABLE_PIPE_SPLIT	no splitting of one output across several display pipes
+  # 0x2	DC_DISABLE_STUTTER	no memory self-refresh (“stutter”) during scanout
+  # 0x4	DC_DISABLE_DSC	no Display Stream Compression
+  # 0x8	DC_DISABLE_CLOCK_GATING	display clocks stay on
+  # 0x10	DC_DISABLE_PSR	no Panel Self Refresh
+  # 0x20	DC_FORCE_SUBVP_MCLK_SWITCH	forces memory clock switching via SubVP (dGPU)
+  # 0x40	DC_DISABLE_MPO	no multi-plane overlay; everything composited into one plane
+  # 0x80	DC_ENABLE_DPIA_TRACE	debug tracing for USB4/DP tunneling
+  # 0x100	DC_ENABLE_DML2	newer display-mode library for bandwidth calculations
+  # 0x200	DC_DISABLE_PSR_SU	keeps PSR but disables selective-update (PSR2)
+  # 0x400	DC_DISABLE_REPLAY	no Panel Replay
+  # 0x800	DC_DISABLE_IPS	no Idle Power States of the display engine
+  # 0x1000	DC_DISABLE_IPS_DYNAMIC	IPS only on static screens
+  # 0x2000	DC_DISABLE_IPS2_DYNAMIC	the deepest IPS level only on static screens
+  # 0x4000	DC_FORCE_IPS_ENABLE	forces IPS on
+  # 0x8000	DC_DISABLE_ACPI_EDID	ignores the EDID supplied by ACPI firmware
+  #
+  # The counterpart is amdgpu.dcfeaturemask, which enables features that
+  # are off by default.
+  # For a finer-grained test on your panel, 0x200 is worth a try. It
+  # keeps basic PSR and only disables selective update, the more complex
+  # PSR2 mode. If that alone, or together with 0x400, keeps resume
+  # stable, you keep most of the power savings.
+  dcDebugBits = {
+    DC_DISABLE_PIPE_SPLIT = 1;
+    DC_DISABLE_STUTTER = 2;
+    DC_DISABLE_DSC = 4;
+    DC_DISABLE_CLOCK_GATING = 8;
+    DC_DISABLE_PSR = 16;
+    DC_FORCE_SUBVP_MCLK_SWITCH = 32;
+    DC_DISABLE_MPO = 64;
+    DC_ENABLE_DPIA_TRACE = 128;
+    DC_ENABLE_DML2 = 256;
+    DC_DISABLE_PSR_SU = 512;
+    DC_DISABLE_REPLAY = 1024;
+    DC_DISABLE_IPS = 2048;
+    DC_DISABLE_IPS_DYNAMIC = 4096;
+    DC_DISABLE_IPS2_DYNAMIC = 8192;
+    DC_FORCE_IPS_ENABLE = 16384;
+    DC_DISABLE_ACPI_EDID = 32768;
+  };
+  dcdebugmask =
+    names:
+    "amdgpu.dcdebugmask=0x"
+    + lib.toHexString (lib.foldl' builtins.bitOr 0 (map (name: dcDebugBits.${name}) names));
+in
 {
   nix.settings.experimental-features = [
     "nix-command"
@@ -38,7 +89,11 @@
     tmp.cleanOnBoot = true;
     kernelParams = [
       "amd_pstate=active"
-      "pci=noaer"
+      (dcdebugmask [
+        # "DC_DISABLE_PSR"
+        "DC_DISABLE_REPLAY"
+      ])
+
       # "mem_sleep_default=deep"
       # "usbcore.autosuspend=-1"
       # "amd_idle.max_cstate=9"
@@ -58,13 +113,14 @@
         "nvme"
         "amdgpu"
       ];
-      systemd.enable = true;
       # luks.devices = {
       # KEAROOT.crypttabExtraOpts = [ "fido2-device=auto" ];
       # KEADATA.crypttabExtraOpts = [ "fido2-device=auto" ];
       # KEAHOME.crypttabExtraOpts = [ "fido2-device=auto" ];
       # };
     };
+
+    extraModprobeConfig = "options iwlmvm power_scheme=1";
   };
 
   hardware = {
@@ -117,38 +173,8 @@
       SUBSYSTEM=="pci", ATTR{vendor}=="0x1002", ATTR{class}=="0x040300", ATTR{power/control}="on"
     '';
 
-    tlp = {
-      enable = false;
-      settings = {
-        CPU_SCALING_GOVERNOR_ON_AC = "performance";
-        CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
-        CPU_ENERGY_PERF_POLICY_ON_AC = "balance_performance";
-        CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
-        PLATFORM_PROFILE_ON_AC = "balanced";
-        PLATFORM_PROFILE_ON_BAT = "low-power";
-        PCIE_ASPM_ON_AC = "default";
-        PCIE_ASPM_ON_BAT = "powersupersave";
-        RUNTIME_PM_ON_AC = "on";
-        RUNTIME_PM_ON_BAT = "auto";
-        DISK_DEVICES = "nvme0n1";
-        DISK_IOSCHEDULER_ON_BAT = "none";
-        WIFI_PWR_ON_AC = "off";
-        WIFI_PWR_ON_BAT = "on";
-        USB_AUTOSUSPEND = 1;
-        USB_DENYLIST = "32ac:0012 32ac:0013";
-        CPU_BOOST_ON_AC = 1;
-        CPU_BOOST_ON_BAT = 0;
-      };
-    };
-    power-profiles-daemon.enable = false;
-    auto-cpufreq.enable = true;
+    power-profiles-daemon.enable = true;
   };
-
-  powerManagement.resumeCommands = ''
-    modprobe -r mt7921e mt7921_common mt792x_lib mt76_connac_lib mt76
-    modprobe mt7921e
-  '';
-
   systemd = {
     services = {
       systemd-journald.serviceConfig.WatchdogSec = "10min";

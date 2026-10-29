@@ -22,7 +22,6 @@
     gitui
     gnupg
     hyprpolkitagent
-    libguestfs
     lshw
     mtr
     ncdu
@@ -35,7 +34,7 @@
     sops
     udftools
     usbutils
-    minio-client
+    rclone
     syncthing
   ];
 

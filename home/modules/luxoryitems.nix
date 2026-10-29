@@ -17,7 +17,7 @@
     tinymist
     typst
     udiskie
-    toot
+    # toot
     tut
     stu
     s3fs

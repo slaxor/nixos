@@ -16,7 +16,7 @@
     cri-o.enable = false;
     containers = {
       enable = true;
-      registries.search = [ "docker.io" ];
+      registries.settings.unqualified-search-registries = [ "docker.io" ];
     };
     podman = {
       enable = true;

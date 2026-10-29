@@ -10,6 +10,7 @@
     ./polkit.nix
     ./udev.nix
     ./local-pki.nix
+    ./overlay-fixes.nix
 
     # GUI
     ./fonts.nix

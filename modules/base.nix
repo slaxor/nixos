@@ -111,12 +111,28 @@
     # };
   };
 
+  boot.kernel.sysctl."kernel.dmesg_restrict" = 0;
+
   security = {
     polkit.enable = true;
-    sudo.extraConfig = ''
-      Defaults timestamp_timeout=480
-      Defaults env_keep += "SYSTEMD_PAGER"
-    '';
+    sudo = {
+      enable = true;
+      extraConfig = ''
+        Defaults timestamp_timeout=480
+        Defaults env_keep += "SYSTEMD_PAGER"
+      '';
+      extraRules = [
+        {
+          users = [ "slash" ];
+          commands = [
+            {
+              command = "/run/current-system/sw/bin/dmesg -w";
+              options = [ "NOPASSWD" ];
+            }
+          ];
+        }
+      ];
+    };
   };
 
   console = {

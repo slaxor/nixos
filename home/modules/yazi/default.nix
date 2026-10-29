@@ -155,10 +155,10 @@
         image_filter = "lanczos3";
         image_quality = 90;
         tab_size = 1;
-        max_width = 600;
-        max_height = 900;
+        max_width = 1200;
+        max_height = 1400;
         cache_dir = "";
-        ueberzug_scale = 1;
+        ueberzug_scale = 2;
         ueberzug_offset = [
           0
           0
@@ -174,12 +174,12 @@
       };
     };
 
-    # flavors = { inherit (pkgs.yaziPlugins) nord; };
-    # theme.flavor = {
-    # light = "nord";
-    # dark = "nord";
-    # };
-
+    flavors = { inherit (pkgs.yaziPlugins) nord; };
+    theme.flavor = {
+      light = "nord";
+      dark = "nord";
+    };
+    #
     # initLua = /* lua */ ''
     # '';
 

@@ -410,7 +410,6 @@ in
           # muttrc
           nasm
           nix
-          nix
           objdump
           passwd
           pem
