@@ -130,6 +130,7 @@
         taz = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs; };
           modules = [
+            home-manager.nixosModules.home-manager
             {
               nixpkgs.overlays = [
                 inputs.nur.overlays.default
