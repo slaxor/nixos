@@ -55,6 +55,7 @@
                 ipAllowList:
                   sourceRange:
                     - "10.13.0.0/24"
+                    - "10.42.0.0/16" # pod network: hare host traffic arrives via cilium_host
     ''}"
   ];
 }
