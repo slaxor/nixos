@@ -13,7 +13,7 @@ in
       spec:
         repo: https://dl.gitea.com/charts/
         chart: gitea
-        version: "11.0.0"
+        version: "12.7.0"
         targetNamespace: gitea
         createNamespace: true
         valuesContent: |-
@@ -73,4 +73,25 @@ in
             size: 10Gi
     ''}"
   ];
+
+  services.gitea-actions-runner = {
+    package = pkgs.gitea-actions-runner;
+    instances.hare = {
+      enable = true;
+      name = "hare";
+      url = "https://git.int.m11s.de"; # ingress is wireguard-only: hare must reach it via wg
+      tokenFile = "/run/secrets/gitea-runner-token"; # TOKEN=<registration token>
+      labels = [ "nix:host" ];
+      hostPackages = with pkgs; [
+        bash
+        coreutils
+        git
+        nix
+        nodejs
+        openssh
+        lftp
+      ];
+    };
+  };
+
 }

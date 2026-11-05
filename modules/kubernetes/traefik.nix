@@ -10,7 +10,7 @@
       spec:
         repo: https://traefik.github.io/charts
         chart: traefik
-        version: "v39.1.0-ea.2"
+        version: "42.3.0"
         targetNamespace: traefik
         createNamespace: true
         valuesContent: |-

@@ -10,7 +10,7 @@
       spec:
         repo: https://charts.jetstack.io
         chart: cert-manager
-        version: "v1.20.0"
+        version: "v1.21.3"
         targetNamespace: cert-manager
         createNamespace: true
         valuesContent: |-
