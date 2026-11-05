@@ -87,6 +87,7 @@ in
       url = "https://${fqdn}";
       tokenFile = config.sops.secrets.gitea-runner-token.path;
       labels = [ "nix:host" ];
+      settings.runner.capacity = 10;
       hostPackages = with pkgs; [
         bash
         coreutils
