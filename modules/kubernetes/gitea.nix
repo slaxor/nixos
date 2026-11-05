@@ -74,6 +74,9 @@ in
     ''}"
   ];
 
+  # the ingress only admits 10.13.0.0/24, so the host runner must use the wg address
+  networking.hosts."10.13.0.1" = [ fqdn ];
+
   sops.secrets.gitea-runner-token.restartUnits = [ "gitea-runner-hare.service" ];
 
   services.gitea-actions-runner = {
