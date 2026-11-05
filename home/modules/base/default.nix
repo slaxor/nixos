@@ -89,7 +89,7 @@
       LESS_TERMCAP_ZO = "$(tput ssupm)";
       LESS_TERMCAP_ZW = "$(tput rsupm)";
       SSH_ASKPASS_REQUIRE = "prefer";
-      SSH_ASKPASS = "wayprompt-ssh-askpass";
+      SSH_ASKPASS = "${pkgs.wayprompt}/bin/wayprompt-ssh-askpass";
       SYSTEMD_PAGER = "cat";
     };
   };

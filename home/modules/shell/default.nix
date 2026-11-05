@@ -79,67 +79,67 @@ let
   };
 in
 {
-  home.packages = with pkgs; [
-    alsa-utils
-    asciinema
-    asciinema-scene
-    asciiquarium-transparent
-    aspell
-    aspellDicts.de
-    aspellDicts.en
-    bash-language-server
-    bash-language-server
-    bashdb
-    bat
-    bats
-    d2
-    direnv
-    direnv
-    eza
-    fastfetch
-    fblog
-    fzf
-    glow
-    gnutls
-    gojq
-    gurk-rs
-    htop
-    imagemagick
-    just
-    libqalculate
-    lnav
-    mermaid-cli
-    mkprj
-    moreutils
-    mosquitto
-    nh
-    nix-direnv
-    nix-your-shell
-    nixos-anywhere
-    nixos-generators
-    nss_latest
-    picocom
-    rclone
-    rich-cli
-    # ripdvd
-    screenkey
-    shellcheck
-    shfmt
-    signal-cli
-    timidity
-    tmux
-    trash-cli
-    typst
-    udiskie
-    unzip
-    usbutils
-    viewsqlite
-    vivid
-    which
-    zoxide
-  ];
-
   home = {
+    packages = with pkgs; [
+      alsa-utils
+      asciinema
+      asciinema-scene
+      asciiquarium-transparent
+      aspell
+      aspellDicts.de
+      aspellDicts.en
+      bash-language-server
+      bash-language-server
+      bashdb
+      bat
+      bats
+      d2
+      direnv
+      direnv
+      eza
+      fastfetch
+      fblog
+      fzf
+      glow
+      gnutls
+      gojq
+      gurk-rs
+      htop
+      imagemagick
+      just
+      libqalculate
+      lnav
+      mermaid-cli
+      mkprj
+      moreutils
+      mosquitto
+      nh
+      nix-direnv
+      nix-your-shell
+      nixos-anywhere
+      nixos-generators
+      nss_latest
+      picocom
+      rclone
+      rich-cli
+      # ripdvd
+      screenkey
+      shellcheck
+      shfmt
+      signal-cli
+      timidity
+      tmux
+      trash-cli
+      typst
+      udiskie
+      unzip
+      usbutils
+      viewsqlite
+      vivid
+      which
+      zoxide
+    ];
+
     shellAliases = {
       dmesg = "dmesg -HT";
       fixtty = "stty sane ; echo -e \"\\033c\" ; tput rs1";

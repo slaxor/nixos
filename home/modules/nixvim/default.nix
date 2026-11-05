@@ -206,15 +206,15 @@ in
           action.__raw = ''require("slaxor.keymaps").tab_jump_back'';
           options.desc = "snippet jump back or shift-tab";
         }
-        # {
-        #   mode = [
-        #     "n"
-        #     "x"
-        #   ];
-        #   key = "<leader>n";
-        #   action = "function() mc.matchAddCursor(1) end";
-        #   options.desc = "force delete buffer";
-        # }
+        {
+          mode = [
+            "n"
+            "x"
+          ];
+          key = "<leader>ma";
+          action = "function() mc.matchAddCursor(1) end";
+          options.desc = "force delete buffer";
+        }
       ];
 
     globals = {
@@ -226,11 +226,12 @@ in
       shiftwidth = 2;
       tabstop = 2;
       softtabstop = 2;
+      foldmethod = "expr";
+      foldexpr = "v:lua.vim.treesitter.foldexpr()";
+      foldlevelstart = 99;
+      termguicolors = true;
     };
-
     plugins = {
-      barbar.enable = true;
-      abolish.enable = true;
       bacon = {
         enable = true;
         settings = {
@@ -240,35 +241,14 @@ in
           };
         };
       };
+      # diagram.enable = true;
+      # multicursor-nvim.enable = true;
+      # origami.enable = true;
+      abolish.enable = true;
+      barbar.enable = true;
       blink-ripgrep.enable = true;
       bufdelete.enable = true;
       ccc.enable = true;
-      commentary.enable = true;
-      comment = {
-        enable = true;
-        settings.pre_hook = ''
-          require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook()
-        '';
-      };
-      dap.enable = true;
-      dap-disasm.enable = true;
-      dap-go.enable = true;
-      dap-lldb.enable = true;
-      dap-python.enable = true;
-      dap-rr.enable = true;
-      dap-ui.enable = true;
-      dap-view.enable = true;
-      debugprint.enable = true;
-      devdocs.enable = true;
-      # diagram.enable = true;
-      diffview.enable = true;
-      direnv.enable = true;
-      emmet.enable = true;
-      fzf-lua.enable = true;
-      glow.enable = true;
-      helm.enable = true;
-      hex.enable = true;
-      just.enable = true;
       cmp = {
         enable = true;
         settings = {
@@ -288,6 +268,24 @@ in
           ];
         };
       };
+      colorizer = {
+        enable = true;
+        settings = {
+          filetypes = [ "*" ];
+          user_default_options = {
+            css = true;
+            tailwind = "lsp";
+            mode = "background";
+          };
+        };
+      };
+      comment = {
+        enable = true;
+        settings.pre_hook = ''
+          require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook()
+        '';
+      };
+      commentary.enable = true;
       conform-nvim = {
         enable = true;
         settings = {
@@ -315,8 +313,26 @@ in
           ];
         };
       };
+      dap-disasm.enable = true;
+      dap-go.enable = true;
+      dap-lldb.enable = true;
+      dap-python.enable = true;
+      dap-rr.enable = true;
+      dap-ui.enable = true;
+      dap-view.enable = true;
       dap-virtual-text.enable = true;
+      dap.enable = true;
+      debugprint.enable = true;
+      devdocs.enable = true;
+      diffview.enable = true;
+      direnv.enable = true;
+      emmet.enable = true;
       fidget.enable = true;
+      fzf-lua.enable = true;
+      glow.enable = true;
+      helm.enable = true;
+      hex.enable = true;
+      just.enable = true;
       lf.enable = true;
       lsp = {
         enable = true;
@@ -359,9 +375,8 @@ in
         fromSnipmate = [ { paths = ./nvim/snippets; } ];
       };
       markdown-preview.enable = true;
-      # multicursor-nvim.enable = true;
       multiple-cursors-nvim.enable = true;
-      # origami.enable = true;
+      ollama-nvim = true;
       otter.enable = true;
       qmk-nvim.enable = true;
       toggleterm.enable = true;
@@ -440,8 +455,8 @@ in
         enable = true;
         settings.enable_autocmd = false;
       };
-      typst-vim.enable = true;
       typst-preview.enable = true;
+      typst-vim.enable = true;
       vim-css-color.enable = true;
       web-devicons.enable = true;
       yazi.enable = true;

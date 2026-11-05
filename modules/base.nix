@@ -72,27 +72,6 @@
       viAlias = true;
       vimAlias = true;
     };
-
-    nh = {
-      enable = true;
-      clean.enable = true;
-      clean.extraArgs = "--keep-since 14d --keep 8";
-      flake = "$HOME/git/github.com/slaxor/nixos#$HOSTNAME";
-    };
-
-    nix-ld.enable = true;
-  };
-
-  nix = {
-    settings = {
-      download-buffer-size = 524288000;
-    };
-
-    # gc = {
-    # automatic = true;
-    # dates = "weekly";
-    # options = "--delete-older-than 30d";
-    # };
   };
 
   services = {
@@ -103,18 +82,21 @@
       package = pkgs.plocate;
     };
     fwupd.enable = true;
-    # journald.settings.Journal = {
-    # SystemMaxUse = "1G";
-    # SystemMaxFileSize = "50M";
-    # MaxFileSec = "1month";
-    # MaxRetentionSec = "1month";
-    # };
+    journald.settings.Journal = {
+      # SystemMaxUse = "1G";
+      # SystemMaxFileSize = "50M";
+      MaxFileSec = "1month";
+      MaxRetentionSec = "1month";
+    };
   };
 
   boot.kernel.sysctl."kernel.dmesg_restrict" = 0;
 
   security = {
-    polkit.enable = true;
+    polkit = {
+      enable = true;
+      enablePkexecWrapper = true;
+    };
     sudo = {
       enable = true;
       extraConfig = ''

@@ -54,6 +54,8 @@ in
                 DEFAULT_PRIVATE: false
               packages:
                 DEFAULT_PRIVATE: false
+              actions:
+                ENABLED: true                     
           service:
             ssh:
               type: LoadBalancer

@@ -59,7 +59,6 @@
         ./home/modules/git
         ./home/modules/gpg.nix
         ./home/modules/lf.nix
-        # ./home/modules/neovim
         ./home/modules/nixvim
         ./home/modules/shell
         ./home/modules/ssh.nix

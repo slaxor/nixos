@@ -12,7 +12,7 @@
     nh = {
       enable = true;
       clean.enable = true;
-      clean.extraArgs = "--keep-since 14d --keep 8";
+      clean.extraArgs = "--keep-since 4w";
     };
   };
 
@@ -20,5 +20,11 @@
     settings = {
       download-buffer-size = 524288000;
     };
+    # Not used. I use nh, which manages gc differently.
+    # gc = {
+    # automatic = true;
+    # dates = "weekly";
+    # options = "--delete-older-than 30d";
+    # };
   };
 }

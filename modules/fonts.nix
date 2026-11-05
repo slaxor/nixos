@@ -15,7 +15,8 @@
       mplus-outline-fonts.githubRelease
       dina-font
       proggyfonts
+      nerd-font-patcher
+      texlivePackages.universalis
     ];
   };
 }
-

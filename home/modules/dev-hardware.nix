@@ -1,15 +1,35 @@
 { pkgs, ... }:
 {
-  home.packages = with pkgs; [
-    (lib.lowPrio nrf-command-line-tools.override { segger-jlink = segger-jlink-headless; })
-    nrfconnect
-    nrfconnect-bluetooth-low-energy
-    nrfutil
-    pulseview
-    sigrok-cli
-    smuview
-    tio
-  ];
+  home = {
+    packages = with pkgs; [
+      (lib.lowPrio nrf-command-line-tools.override { segger-jlink = segger-jlink-headless; })
+      nrfconnect
+      nrfconnect-bluetooth-low-energy
+      nrfutil
+      pulseview
+      sigrok-cli
+      smuview
+      tio
+    ];
+  };
+
+  programs = {
+    bash = {
+      initExtra = ''
+        # Send commands via usb to the oscilloscope
+        scpi() {
+          local cmd=$1
+          local dev="''${2:-/dev/usbtmc0}"
+          exec 3<>"$dev" || return
+          printf '%s\n' "$cmd" >&3
+          if [[ $cmd == *\? ]]; then
+              dd bs=4096 count=1 status=none <&3
+          fi
+          exec 3>&-
+        }
+      '';
+    };
+  };
 
   xdg.configFile = {
     "tio/config".text = ''

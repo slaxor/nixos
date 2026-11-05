@@ -29,7 +29,6 @@
     ntfs3g
     pciutils
     plocate
-    polkit
     shellcheck
     sops
     udftools
