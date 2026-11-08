@@ -184,4 +184,18 @@ in
       mouseWarping = false;
     };
   };
+
+  systemd.user.paths.espanso-replug = {
+    Unit.Description = "Watch input devices for espanso";
+    Path.PathChanged = "/dev/input/by-id";
+    Install.WantedBy = [ "default.target" ];
+  };
+
+  systemd.user.services.espanso-replug = {
+    Unit.Description = "Restart espanso after input device change";
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.systemd}/bin/systemctl --user restart espanso.service";
+    };
+  };
 }

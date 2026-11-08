@@ -34,8 +34,15 @@ in
     paths = [
       "/var/lib/rancher/k3s/storage"
       "/var/lib/rancher/k3s/server/db"
+      "/var/lib/rancher/k3s/server/token"
       "/etc/rancher/k3s"
       "/var/lib/borg-sqlite-dumps"
+      "/etc/ssh/ssh_host_ed25519_key"
+      "/etc/ssh/ssh_host_ed25519_key.pub"
+      "/etc/ssh/ssh_host_rsa_key"
+      "/etc/ssh/ssh_host_rsa_key.pub"
+      "/etc/wireguard/peers"
+      "/home"
     ];
 
     exclude = [

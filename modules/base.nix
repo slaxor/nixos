@@ -124,5 +124,7 @@
     keyMap = "us";
   };
 
+  # nixpkgs.config.problems.handlers."gtk+".broken = "warn";
+
   system.stateVersion = "26.05";
 }

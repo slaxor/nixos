@@ -44,14 +44,12 @@ in
     gucharmap
     gvfs
     halloy
-    kdePackages.okular
     inkscape
     libappindicator
     libnotify
     localsend
     mako
     meld
-    neovide
     networkmanagerapplet
     pango
     poppler-utils
@@ -380,7 +378,6 @@ in
     mimeApps = {
       enable = true;
       defaultApplications = {
-        "application/pdf" = "org.kde.okular.desktop";
         "inode/directory" = "thunar.desktop";
         "text/html" = "librewolf.desktop";
         "video/mp4" = "vlc.desktop";

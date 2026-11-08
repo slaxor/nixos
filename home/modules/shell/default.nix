@@ -66,17 +66,6 @@ let
   # ];
   # text = builtins.readFile ./bin/ripdvd.sh;
   # };
-
-  mkprj = pkgs.writeShellApplication {
-    name = "mkprj";
-    runtimeInputs = with pkgs; [
-      nix
-      git
-      direnv
-      jq
-    ];
-    text = builtins.readFile ./bin/mkprj.sh;
-  };
 in
 {
   home = {
@@ -110,7 +99,6 @@ in
       libqalculate
       lnav
       mermaid-cli
-      mkprj
       moreutils
       mosquitto
       nh

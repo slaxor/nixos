@@ -25,6 +25,12 @@
     };
     slaxor-editor.url = "git+https://github.com/slaxor/editor";
     slaxor-replace.url = "git+https://github.com/slaxor/replace";
+    slaxor-templates = {
+      url = "github:slaxor/templates";
+      flake = false;
+    };
+    pdfcraft.url = "github:slaxor/pdfcraft/nixie-tube";
+
     kai = {
       url = "github:slaxor/Kai/enable_nixos";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -37,6 +43,7 @@
       home-manager,
       slaxor-editor,
       slaxor-replace,
+      pdfcraft,
       kai,
       ...
     }@inputs:
@@ -60,6 +67,7 @@
         ./home/modules/gpg.nix
         ./home/modules/lf.nix
         ./home/modules/nixvim
+        pdfcraft.homeModules.default
         ./home/modules/shell
         ./home/modules/ssh.nix
         ./home/modules/tmux
@@ -86,6 +94,16 @@
           environment.systemPackages = [
             slaxor-editor.packages.${pkgs.stdenv.hostPlatform.system}.default
             slaxor-replace.packages.${pkgs.stdenv.hostPlatform.system}.default
+            (pkgs.writeShellApplication {
+              name = "mkprj";
+              runtimeInputs = with pkgs; [
+                nix
+                git
+                direnv
+                jq
+              ];
+              text = builtins.readFile "${inputs.slaxor-templates}/mkprj.sh";
+            })
           ];
         };
       nixIndex = {
@@ -93,6 +111,33 @@
         programs.command-not-found.enable = false;
         programs.nix-index-database.comma.enable = true;
       };
+
+      hareModules = [
+        home-manager.nixosModules.home-manager
+        {
+          nixpkgs.overlays = [
+            inputs.nur.overlays.default
+          ];
+        }
+        {
+          home-manager = hmShared // {
+            users.slash = mkHmUser {
+              role = "server";
+              host = "hare";
+            };
+          };
+        }
+        ./hosts/hare
+        ./users/ming.nix
+        ./users/slash.nix
+        ./users/eggert.nix
+        ./modules/common-server.nix
+        ./modules/podman
+        ./modules/kubernetes
+        inputs.sops-nix.nixosModules.sops
+        slaxorPkgs
+        nixIndex
+      ];
 
     in
     {
@@ -155,32 +200,12 @@
 
         hare = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs; };
-          modules = [
-            home-manager.nixosModules.home-manager
-            {
-              nixpkgs.overlays = [
-                inputs.nur.overlays.default
-              ];
-            }
-            {
-              home-manager = hmShared // {
-                users.slash = mkHmUser {
-                  role = "server";
-                  host = "hare";
-                };
-              };
-            }
-            ./hosts/hare
-            ./users/ming.nix
-            ./users/slash.nix
-            ./users/eggert.nix
-            ./modules/common-server.nix
-            ./modules/podman
-            ./modules/kubernetes
-            inputs.sops-nix.nixosModules.sops
-            slaxorPkgs
-            nixIndex
-          ];
+          modules = hareModules;
+        };
+
+        hare-bubble = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs; };
+          modules = hareModules ++ [ ./hosts/hare-bubble ];
         };
       };
     };
