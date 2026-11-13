@@ -49,25 +49,6 @@ in
       virtual_text = true;
       severity_sort = true;
     };
-    # vim.keymap.setr"n", ">;", "<Plug>Argumentative_MoveRight", {})
-    # vim.keymap.set("n", "[;", "<Plug>Argumentative_Prev", {})
-    # vim.keymap.set("n", "];", "<Plug>Argumentative_Next", {})
-    # vim.keymap.set("o", "a;", "<Plug>Argumentative_OpPendingOuterTextObject", {})
-    # vim.keymap.set("o", "i;", "<Plug>Argumentative_OpPendingInnerTextObject", {})
-    # vim.keymap.set("v", "<m-Down>", ":m'>+1<CR>gv", { silent = true })
-    # vim.keymap.set("v", "<m-Up>", ":m'<-2<CR>gv", { })
-    # vim.keymap.set("x", "[;", "<Plug>Argumentative_XPrev", {})
-    # vim.keymap.set("x", "];", "<Plug>Argumentative_XNext", {})
-    # vim.keymap.set("x", "a;", "<Plug>Argumentative_OuterTextObject", {})
-    # vim.keymap.set("x", "i;", "<Plug>Argumentative_InnerTextObject", {})
-    # vim.keymap.set("i", "<leader>p", InsertPassword, { noremap = true, silent = true })
-    # vim.keymap.set("n", "<leader>p", InsertPassword, { noremap = true, silent = true })
-    # vim.cmd("abbr 8< -----------8<-----------8<-----------8<-----------")
-    # vim.cmd("abbr >8 ----------->8----------->8----------->8-----------")
-    # vim.cmd("abbr \\...  …")
-    # vim.cmd("abbr retrun return")
-    # vim.cmd("abbr retunr return")
-
     keymaps =
       lib.mapAttrsToList (lhs: rhs: {
         mode = "ia";
@@ -288,6 +269,7 @@ in
       commentary.enable = true;
       conform-nvim = {
         enable = true;
+        notify_on_error = true;
         settings = {
           format_on_save = {
             timeout_ms = 1000;

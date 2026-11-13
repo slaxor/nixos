@@ -14,6 +14,14 @@ let
     ];
     text = builtins.readFile ./bin/wpvol;
   };
+  clipcat = pkgs.clipcat.overrideAttrs (old: {
+    nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ pkgs.pkg-config ];
+    buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.libgit2 ];
+    postPatch = (old.postPatch or "") + ''
+      find . -name Cargo.toml -exec sed -i -E \
+      '/^(no_mangle_generic_items|repr_transparent_non_zst_fields|elided_lifetimes_in_associated_constant)[[:space:]]*=/d' {} +
+    '';
+  });
 in
 {
   home.packages = with pkgs; [
@@ -273,6 +281,7 @@ in
 
     clipcat = {
       enable = true;
+      package = clipcat;
       menuSettings = {
         finder = "fuzzel";
       };
@@ -305,44 +314,16 @@ in
           }
         ];
         events = {
-          "before-sleep" = "(display \"off\") ; lock";
-          "after-resume" = "display \"on\"";
-          "lock" = "(display \"off\");  lock";
-          "unlock" = "display \"on\"";
+          "before-sleep" = "${display "off"}; ${lock}";
+          "after-resume" = display "on";
+          "lock" = "${display "off"}; ${lock}";
+          "unlock" = display "on";
         };
       };
   };
 
   xdg = {
     autostart.enable = true;
-    portal = {
-      enable = true;
-      extraPortals = [
-        pkgs.xdg-desktop-portal-wlr
-        pkgs.xdg-desktop-portal-gtk
-      ];
-      # config.common.default = "*";
-      config = {
-        common = {
-          default = [
-            "wlr"
-            "gtk"
-          ];
-          "org.freedesktop.impl.portal.ScreenCast" = "wlr";
-          "org.freedesktop.impl.portal.Screenshot" = "wlr";
-        };
-
-        sway = {
-          default = [
-            "wlr"
-            "gtk"
-          ];
-          "org.freedesktop.impl.portal.ScreenCast" = "wlr";
-          "org.freedesktop.impl.portal.Screenshot" = "wlr";
-        };
-      };
-    };
-
     configFile = {
       "waybar".source = ./waybar;
       # "gtk-3.0/settings.ini".text = ''

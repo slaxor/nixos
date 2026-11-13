@@ -66,6 +66,12 @@ let
   # ];
   # text = builtins.readFile ./bin/ripdvd.sh;
   # };
+  gurk-rs = pkgs.gurk-rs.overrideAttrs (old: {
+    buildInputs = (old.buildInputs or [ ]) ++ [
+      pkgs.sqlite
+      pkgs.sqlcipher
+    ];
+  });
 in
 {
   home = {

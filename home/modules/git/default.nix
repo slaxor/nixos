@@ -50,6 +50,7 @@ in
         type = "cat-file -t";
         dump = "cat-file -p";
         pullall = "!f(){ git pull \"$@\" && git submodule update --init --recursive; }; f";
+        bh = "bundle create $(git rev-parse --short HEAD).bundle HEAD";
       };
       push = {
         default = "current";

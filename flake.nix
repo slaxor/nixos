@@ -23,14 +23,15 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    fterm.url = "github:slaxor/fterm";
     slaxor-editor.url = "git+https://github.com/slaxor/editor";
     slaxor-replace.url = "git+https://github.com/slaxor/replace";
     slaxor-templates = {
       url = "github:slaxor/templates";
       flake = false;
     };
-    pdfcraft.url = "github:slaxor/pdfcraft/nixie-tube";
 
+    craft-nix.url = "github:slaxor/craft-nix";
     kai = {
       url = "github:slaxor/Kai/enable_nixos";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -43,7 +44,8 @@
       home-manager,
       slaxor-editor,
       slaxor-replace,
-      pdfcraft,
+      craft-nix,
+      fterm,
       kai,
       ...
     }@inputs:
@@ -67,8 +69,9 @@
         ./home/modules/gpg.nix
         ./home/modules/lf.nix
         ./home/modules/nixvim
-        pdfcraft.homeModules.default
         ./home/modules/shell
+        craft-nix.homeModules.default
+        fterm.homeModules.default
         ./home/modules/ssh.nix
         ./home/modules/tmux
         ./home/modules/yazi

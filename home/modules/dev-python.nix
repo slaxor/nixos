@@ -1,10 +1,18 @@
 { pkgs, ... }:
+let
+  thonny = pkgs.thonny.overrideAttrs {
+    postPatch = ''
+      sed -i 's/uv_build>=\([0-9.]*\),<[0-9.]*/uv_build>=\1/' pyproject.toml
+    '';
+  };
+in
 {
   home.packages =
     with pkgs;
     [
       pgcli
       python313
+      thonny
     ]
     ++ (with python313Packages; [
       mkdocs-macros
@@ -13,7 +21,6 @@
       mkdocs-mermaid2-plugin
       mkdocs
       uv
-      thonny
       mpremote
     ]);
 

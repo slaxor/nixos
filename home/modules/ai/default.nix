@@ -9,6 +9,9 @@ let
       pkgs.python3Packages.pandas
     ];
   });
+  aichat = pkgs.aichat.overrideAttrs (old: {
+    buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.oniguruma ];
+  });
 in
 {
   home.packages = with pkgs; [

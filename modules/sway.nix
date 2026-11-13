@@ -37,10 +37,6 @@
   };
   services.xserver = {
     enable = true;
-    # displayManager.sddm.enable = false;
-    # desktopManager.gnome.enable = false;
-    # desktopManager.sway.enable = true;
-    # displayManager.sessionCommands = "xhost +local:";
   };
 
   services.gvfs.enable = true;
