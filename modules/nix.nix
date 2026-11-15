@@ -20,6 +20,8 @@
   nix = {
     settings = {
       download-buffer-size = 524288000;
+      substituters = [ "https://slaxor.cachix.org" ];
+      trusted-public-keys = [ "slaxor.cachix.org-1:XRZumwBtZlRCjWbGgAWM2BK8DSONEGe81u14gLRz9x4=" ];
     };
     # Not used. I use nh, which manages gc differently.
     # gc = {

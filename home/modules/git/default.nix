@@ -15,6 +15,7 @@ in
     git
     gitui
     git-clonepath
+    gh
   ];
 
   programs.git = {
@@ -33,24 +34,24 @@ in
         signByDefault = true;
       };
       alias = {
-        st = "status";
-        di = "diff --ignore-space-change --ignore-cr-at-eol";
-        ci = "commit";
+        bh = "!git bundle create \"$(git rev-parse --short HEAD).bundle\" HEAD";
         br = "branch";
+        ci = "commit";
         co = "checkout";
-        sw = "switch";
-        swm = "switch master";
-        swc = "switch -c";
         df = "diff";
+        di = "diff --ignore-space-change --ignore-cr-at-eol";
+        dump = "cat-file -p";
+        hist = "log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short";
+        idid = "log --author='${config.me.identity.name} <${config.me.identity.email}>' --reverse --pretty=tformat:'%Cblue%h %Creset%ai %Cgreen%s%Creset'";
         lg = "log --graph --format='%cd %C(yellow)%h%C(red bold)%d%Creset%C(cyan) [%cn]%Creset %s' --date=short --abbrev=10";
         oneline = "log --pretty=oneline";
-        wh = "log -n 40 --pretty=tformat:'%Cblue%h %Creset%cr by %Cred%cn %Cgreen%s%Creset'";
-        idid = "log --author='${config.me.identity.name} <${config.me.identity.email}>' --reverse --pretty=tformat:'%Cblue%h %Creset%ai %Cgreen%s%Creset'";
-        hist = "log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short";
-        type = "cat-file -t";
-        dump = "cat-file -p";
         pullall = "!f(){ git pull \"$@\" && git submodule update --init --recursive; }; f";
-        bh = "bundle create $(git rev-parse --short HEAD).bundle HEAD";
+        st = "status";
+        sw = "switch";
+        swc = "switch -c";
+        swm = "switch master";
+        type = "cat-file -t";
+        wh = "log -n 40 --pretty=tformat:'%Cblue%h %Creset%cr by %Cred%cn %Cgreen%s%Creset'";
       };
       push = {
         default = "current";

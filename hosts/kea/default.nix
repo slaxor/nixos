@@ -90,7 +90,7 @@ in
     kernelParams = [
       "amd_pstate=active"
       (dcdebugmask [
-        # "DC_DISABLE_PSR"
+        "DC_DISABLE_PSR"
         "DC_DISABLE_REPLAY"
       ])
 
