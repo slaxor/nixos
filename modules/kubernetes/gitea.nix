@@ -55,7 +55,17 @@ in
               packages:
                 DEFAULT_PRIVATE: false
               actions:
-                ENABLED: true                     
+                ENABLED: true
+              mailer:
+                ENABLED: true
+                PROTOCOL: smtp+starttls
+                SMTP_ADDR: mail.your-server.de
+                SMTP_PORT: 587
+                USER: git@microprojects.de
+                FROM: Your Humble GIT Servant <git@microprojects.de>
+            additionalConfigSources:
+              - secret:
+                  secretName: gitea-mailer
           service:
             ssh:
               type: LoadBalancer
@@ -76,6 +86,21 @@ in
 
   # the ingress only admits 10.13.0.0/24, so the host runner must use the wg address
   networking.hosts."10.13.0.1" = [ fqdn ];
+
+  sops.secrets.gitea-smtp-pass = { };
+  sops.templates."gitea-mailer.yaml" = {
+    path = "/var/lib/rancher/k3s/server/manifests/gitea-mailer.yaml";
+    content = ''
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: gitea-mailer
+        namespace: gitea
+      stringData:
+        mailer: |
+          PASSWD = `${config.sops.placeholder.gitea-smtp-pass}`
+    '';
+  };
 
   sops.secrets.gitea-runner-token.restartUnits = [ "gitea-runner-hare.service" ];
 
