@@ -29,6 +29,14 @@
         }
       '';
     };
+
+    ppk2-tool = {
+      enable = true;
+      settings = {
+        fold = 100;
+        millivolts = 3300;
+      };
+    };
   };
 
   xdg.configFile = {

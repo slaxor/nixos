@@ -24,8 +24,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     fterm.url = "github:slaxor/fterm";
-    slaxor-editor.url = "git+https://github.com/slaxor/editor";
-    slaxor-replace.url = "git+https://github.com/slaxor/replace";
+    ppk2_tool.url = "github:slaxor/ppk2_tool";
+    slaxor-editor.url = "github:slaxor/editor";
+    slaxor-replace.url = "github:slaxor/replace";
     slaxor-templates = {
       url = "github:slaxor/templates";
       flake = false;
@@ -46,6 +47,7 @@
       slaxor-replace,
       craft-nix,
       fterm,
+      ppk2_tool,
       kai,
       ...
     }@inputs:
@@ -72,6 +74,7 @@
         ./home/modules/shell
         craft-nix.homeModules.default
         fterm.homeModules.default
+        ppk2_tool.homeManagerModules.default
         ./home/modules/ssh.nix
         ./home/modules/tmux
         ./home/modules/yazi
@@ -110,7 +113,11 @@
           ];
         };
       nixIndex = {
-        imports = [ inputs.nix-index-database.nixosModules.nix-index ];
+        imports = [
+          inputs.nix-index-database.nixosModules.nix-index
+          inputs.ppk2_tool.nixosModules.default
+
+        ];
         programs.command-not-found.enable = false;
         programs.nix-index-database.comma.enable = true;
       };

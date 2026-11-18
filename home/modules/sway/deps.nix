@@ -201,7 +201,7 @@ in
             "${pkgs.foot.themes}/share/foot/themes/starlight"
           ];
           dpi-aware = "yes";
-          font = "${fonts.term.name}:weight=${fonts.term.weight}:size=${fonts.term.size}";
+          font = "${fonts.term.name}:weight=${fonts.term.weight}:size=${fonts.term.size},Symbols Nerd Font Mono:size=${fonts.term.size}";
           line-height = 14;
         };
         scrollback = {

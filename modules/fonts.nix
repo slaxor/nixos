@@ -7,15 +7,16 @@
   fonts = {
     enableDefaultPackages = true;
     packages = with pkgs; [
-      nerd-fonts.fira-code
-      nerd-fonts.droid-sans-mono
-      nerd-fonts.iosevka
-      nerd-fonts.go-mono
+      dina-font
       liberation_ttf
       mplus-outline-fonts.githubRelease
-      dina-font
-      proggyfonts
       nerd-font-patcher
+      nerd-fonts.droid-sans-mono
+      nerd-fonts.fira-code
+      nerd-fonts.go-mono
+      nerd-fonts.iosevka
+      nerd-fonts.symbols-only
+      proggyfonts
       texlivePackages.universalis
     ];
   };

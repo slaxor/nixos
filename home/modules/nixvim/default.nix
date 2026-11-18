@@ -200,6 +200,7 @@ in
 
     globals = {
       mapleader = ",";
+      have_nerd_font = true;
     };
 
     opts = {
