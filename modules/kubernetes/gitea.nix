@@ -98,7 +98,7 @@ in
         namespace: gitea
       stringData:
         mailer: |
-          PASSWD = `${config.sops.placeholder.gitea-smtp-pass}`
+          PASSWD = ${config.sops.placeholder.gitea-smtp-pass}
     '';
   };
 
