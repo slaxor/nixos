@@ -2,9 +2,6 @@
   pkgs,
   ...
 }:
-let
-  nixpkgs-flannel.url = "github:NixOS/nixpkgs/b5aa0fbd538984f6e3d201be0005b4463d8b09f8";
-in
 {
   environment.systemPackages = with pkgs; [
     cilium-cli
@@ -65,25 +62,6 @@ in
     };
   };
 
-  virtualisation.containerd = {
-    enable = true;
-    settings =
-      let
-        fullCNIPlugins = pkgs.buildEnv {
-          name = "full-cni";
-          paths = with pkgs; [
-            cni-plugins
-            cni-plugin-flannel
-          ];
-        };
-      in
-      {
-        plugins."io.containerd.grpc.v1.cri".cni = {
-          bin_dir = "${fullCNIPlugins}/bin";
-          conf_dir = "/var/lib/rancher/k3s/agent/etc/cni/net.d/";
-        };
-      };
-  };
   systemd.services.cilium-interface-cleanup = {
     description = "Clean up lingering Cilium and Flannel interfaces";
     before = [ "k3s.service" ];

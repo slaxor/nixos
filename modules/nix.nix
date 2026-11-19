@@ -11,7 +11,7 @@
   programs = {
     nh = {
       enable = true;
-      # flake = "/home/sascha/git/github.com/slaxor/nixos"; # or ln to /etc/nixos
+      flake = "/etc/nixos";
       clean.enable = true;
       clean.extraArgs = "--keep-since 4w";
     };
