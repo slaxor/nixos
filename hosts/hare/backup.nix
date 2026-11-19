@@ -1,12 +1,14 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 let
   storage-box = "u591925";
+  k3s = "${config.services.k3s.package}/bin/k3s";
 in
 {
   sops.secrets.borg-passphrase = { };
 
   systemd.tmpfiles.rules = [
     "d /var/lib/borg-sqlite-dumps 0700 root root -"
+    "d /var/lib/borg-k3s-images 0700 root root -"
   ];
 
   systemd.services.borgbackup-job-storagebox.onFailure = [ "notify-failure@%n.service" ];
@@ -39,6 +41,7 @@ in
       "/var/lib/rancher/k3s/server/token"
       "/etc/rancher/k3s"
       "/var/lib/borg-sqlite-dumps"
+      "/var/lib/borg-k3s-images"
       "/etc/ssh/ssh_host_ed25519_key"
       "/etc/ssh/ssh_host_ed25519_key.pub"
       "/etc/ssh/ssh_host_rsa_key"
@@ -57,11 +60,20 @@ in
       "sh:/var/lib/rancher/k3s/storage/**/*.sqlite3-*"
     ];
 
-    readWritePaths = [ "/var/lib/borg-sqlite-dumps" ];
+    readWritePaths = [
+      "/var/lib/borg-sqlite-dumps"
+      "/var/lib/borg-k3s-images"
+    ];
     preHook = ''
       dump_sqlite() {
         ${pkgs.sqlite}/bin/sqlite3 -cmd ".timeout 10000" "$1" ".backup $2" \
           && echo "sqlite ok: $1"
+      }
+
+      export_images() {
+        refs=$(${k3s} ctr -n k8s.io images list -q | grep -v '^sha256:')
+        ${k3s} ctr -n k8s.io images export --platform linux/amd64 "$1" $refs \
+          && echo "images ok: $(echo "$refs" | wc -l) refs"
       }
 
       mkdir -p /var/lib/borg-sqlite-dumps
@@ -75,6 +87,7 @@ in
           done
 
       dump_sqlite /var/lib/rancher/k3s/server/db/state.db /var/lib/borg-sqlite-dumps/k3s-state.db
+      export_images /var/lib/borg-k3s-images/images.tar
     '';
 
     postHook = "";

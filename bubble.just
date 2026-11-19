@@ -80,6 +80,7 @@ bubble-restore: in-bubble
       | nix run nixpkgs#pv \
       | ssh {{ ssh_opts }} {{ bubble }} tar -C /mnt -xp --numeric-owner
     ssh {{ ssh_opts }} {{ bubble }} sh -s < hosts/hare-bubble/restore-sqlite.sh
+    ssh {{ ssh_opts }} {{ bubble }} 'mkdir -p /mnt/var/lib/rancher/k3s/agent/images && mv /mnt/var/lib/borg-k3s-images/images.tar /mnt/var/lib/rancher/k3s/agent/images/'
 
 bubble-install: in-bubble
     #!/bin/sh
