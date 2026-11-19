@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 let
   sealVm = pkgs.writeText "bubble-seal.nft" ''
     table inet bubble {
@@ -18,6 +18,10 @@ let
   '';
 in
 {
+  environment.systemPackages = [
+    (pkgs.callPackage ../pkgs/bubble { flake = inputs.self; })
+  ];
+
   networking.networkmanager.unmanaged = [
     "br-bubble"
     "bubble-lan"

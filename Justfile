@@ -1,8 +1,6 @@
 # Debug recipes for the NixOS flake. Import from the main justfile:
 #   import 'debug.just'
 
-import 'bubble.just'
-
 host := `hostname`
 cfg := ".#nixosConfigurations." + host
 

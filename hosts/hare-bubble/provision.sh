@@ -1,6 +1,7 @@
 #!/bin/sh
 # Recreates hare's disk layout with the UUIDs from hare-hardware-configuration.nix
 # and mounts it on /mnt. Runs inside the NixOS installer: provision.sh /dev/vda
+# Takes the LUKS passphrase from stdin, or asks twice when stdin is a terminal.
 set -eu
 
 disk=${1:?usage: provision.sh <disk>}
@@ -28,15 +29,19 @@ ask_secret() {
 }
 
 read_passphrase() {
-  ask_secret 'LUKS passphrase'
-  pass=${answer}
-  ask_secret 'repeat'
+  if [ -t 0 ]; then
+    ask_secret 'LUKS passphrase'
+    pass=${answer}
+    ask_secret 'repeat'
+    [ "${pass}" = "${answer}" ] || {
+      echo 'passphrases differ' >&2
+      exit 1
+    }
+  else
+    read -r pass || [ -n "${pass}" ]
+  fi
   [ -n "${pass}" ] || {
     echo 'empty passphrase' >&2
-    exit 1
-  }
-  [ "${pass}" = "${answer}" ] || {
-    echo 'passphrases differ' >&2
     exit 1
   }
 }
