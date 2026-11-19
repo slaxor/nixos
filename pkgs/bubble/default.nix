@@ -11,6 +11,7 @@
   libvirt,
   openssh,
   pv,
+  rsync,
   sops,
   util-linux,
   virt-manager,
@@ -18,6 +19,7 @@
 }:
 let
   hare = import ../../hosts/hare/address.nix;
+  storageBox = "u591925@u591925.your-storagebox.de";
   sshConfig = writeText "bubble-ssh-config" ''
     Host installer
       HostName ${hare.ipv4.address}
@@ -36,13 +38,16 @@ let
       libvirt
       openssh
       pv
+      rsync
       sops
       util-linux
       virt-manager
     ];
     runtimeEnv = {
       BUBBLE_HARE_IP = hare.ipv4.address;
-      BUBBLE_BORG_REPO = "ssh://u591925@u591925.your-storagebox.de:23/./borg/hare";
+      BUBBLE_BORG_REPO = "ssh://${storageBox}:23/./borg/hare";
+      BUBBLE_BORG_MIRROR_SOURCE = "${storageBox}:borg/hare/";
+      BUBBLE_BORG_SSH_PORT = "23";
       BUBBLE_FLAKE_DEFAULT = "${flake}";
       BUBBLE_SSH_CONFIG = "${sshConfig}";
       BUBBLE_NETWORK_XML = "${../../hosts/hare-bubble/network.xml}";
