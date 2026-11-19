@@ -8,6 +8,7 @@
     ./hare-hardware-configuration.nix
     ./networking.nix
     ./backup.nix
+    ./notify.nix
   ];
 
   home-manager = {

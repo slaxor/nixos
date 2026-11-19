@@ -9,6 +9,8 @@ in
     "d /var/lib/borg-sqlite-dumps 0700 root root -"
   ];
 
+  systemd.services.borgbackup-job-storagebox.onFailure = [ "notify-failure@%n.service" ];
+
   services.borgbackup.jobs.storagebox = {
     repo = "ssh://${storage-box}@${storage-box}.your-storagebox.de:23/./borg/hare";
 
