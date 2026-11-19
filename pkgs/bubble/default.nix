@@ -16,6 +16,7 @@
   util-linux,
   virt-manager,
   flake,
+  mirror ? "",
 }:
 let
   hare = import ../../hosts/hare/address.nix;
@@ -48,6 +49,7 @@ let
       BUBBLE_BORG_REPO = "ssh://${storageBox}:23/./borg/hare";
       BUBBLE_BORG_MIRROR_SOURCE = "${storageBox}:borg/hare/";
       BUBBLE_BORG_SSH_PORT = "23";
+      BUBBLE_MIRROR_DEFAULT = mirror;
       BUBBLE_FLAKE_DEFAULT = "${flake}";
       BUBBLE_SSH_CONFIG = "${sshConfig}";
       BUBBLE_NETWORK_XML = "${../../hosts/hare-bubble/network.xml}";

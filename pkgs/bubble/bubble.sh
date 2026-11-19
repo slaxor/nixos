@@ -14,8 +14,7 @@ readonly iso_link=${XDG_CACHE_HOME:-${HOME}/.cache}/bubble/installer-iso
 readonly remote_repo=${BUBBLE_BORG_REPO:?}
 readonly mirror_source=${BUBBLE_BORG_MIRROR_SOURCE:?}
 readonly mirror_ssh_port=${BUBBLE_BORG_SSH_PORT:?}
-readonly data_dir=${XDG_DATA_HOME:-${HOME}/.local/share}/bubble
-readonly mirror_repo=${data_dir}/borg-hare
+readonly mirror_repo=${BUBBLE_MIRROR:-${BUBBLE_MIRROR_DEFAULT:-}}
 export BORG_PASSCOMMAND="sops -d --extract '[\"borg-passphrase\"]' ${secrets}"
 export LIBVIRT_DEFAULT_URI=qemu:///system
 
@@ -33,15 +32,16 @@ bubble: restore drill for hare inside an isolated network namespace on kea
   bubble vm              create the VM booting the installer, or start it
   bubble wait            wait until the installer answers on ssh   (needs vm)
   bubble disk            partitions + LUKS on /mnt, gopass luks/hare (needs wait)
-  bubble restore         mirror, then newest successful archive into /mnt (needs disk)
-  bubble mirror          copy new backup data from the storage box to kea
+  bubble restore         newest successful archive into /mnt         (needs disk)
+  bubble mirror          copy new backup data to \$BUBBLE_MIRROR
   bubble system          build hare-bubble, nixos-install into /mnt (needs restore)
   bubble reboot          reboot the installer into the restored hare (needs system)
 
 Every command except delete switches into the namespace by itself (sudo).
 BUBBLE_FLAKE=path overrides the flake to build from (default: the one kea was built from).
 Once per machine: kea's ssh key on the storage box, sops access to hare's secrets, luks/hare in gopass.
-The mirror lives in ${mirror_repo} and needs about the repo's size on disk.
+Mirror: ${mirror_repo:-none, restore reads the storage box}
+BUBBLE_MIRROR=/path overrides it; the mirror needs about the repo's deduplicated size.
 EOF
 }
 
@@ -143,15 +143,27 @@ timed() {
   printf '== %s took %dm%02ds\n' "${1#cmd_}" "$((elapsed / 60))" "$((elapsed % 60))"
 }
 
-mirror_borg() {
+restore_borg() {
+  if [[ -z ${mirror_repo} ]]; then
+    BORG_REPO=${remote_repo} borg "$@"
+    return
+  fi
   BORG_REPO=${mirror_repo} \
-    BORG_CACHE_DIR=${data_dir}/borg-cache \
-    BORG_SECURITY_DIR=${data_dir}/borg-security \
+    BORG_CACHE_DIR=${mirror_repo}.cache \
+    BORG_SECURITY_DIR=${mirror_repo}.security \
     BORG_RELOCATED_REPO_ACCESS_IS_OK=yes \
     borg "$@"
 }
 
 cmd_mirror() {
+  if [[ -z ${mirror_repo} ]]; then
+    echo "BUBBLE_MIRROR is not set: point it at a directory with room for the repo" >&2
+    exit 1
+  fi
+  if [[ ! -d ${mirror_repo%/*} ]]; then
+    echo "${mirror_repo%/*} does not exist: is its disk mounted?" >&2
+    exit 1
+  fi
   mkdir -p "${mirror_repo}"
   echo "mirroring ${remote_repo} to ${mirror_repo}"
   borg --lock-wait 3600 with-lock "${remote_repo}" \
@@ -163,15 +175,17 @@ cmd_mirror() {
 cmd_restore() {
   local archives archive
   require_on_installer "/mnt is not mounted in the VM: run 'bubble disk' first" mountpoint -q /mnt
-  timed cmd_mirror
-  archives=$(mirror_borg list --format '{archive}{NL}')
+  if [[ -n ${mirror_repo} ]]; then
+    timed cmd_mirror
+  fi
+  archives=$(restore_borg list --format '{archive}{NL}')
   archive=$(grep -v '\.failed$' <<<"${archives}" | tail -n 1)
   if [[ -z ${archive} ]]; then
-    echo "no successful archive in ${mirror_repo}" >&2
+    echo "no successful archive found" >&2
     exit 1
   fi
   echo "restoring ${archive}"
-  mirror_borg export-tar "::${archive}" - | pv | on_installer tar -C /mnt -xp --numeric-owner
+  restore_borg export-tar "::${archive}" - | pv | on_installer tar -C /mnt -xp --numeric-owner
   on_installer sh -s <"${restore_sqlite}"
   restore_images "${archive}"
 }

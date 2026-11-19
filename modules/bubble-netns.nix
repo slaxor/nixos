@@ -20,7 +20,10 @@ let
 in
 {
   environment.systemPackages = [
-    (pkgs.callPackage ../pkgs/bubble { flake = inputs.self; })
+    (pkgs.callPackage ../pkgs/bubble {
+      flake = inputs.self;
+      mirror = "/data/backup/borg-hare";
+    })
   ];
 
   networking.networkmanager.unmanaged = [
