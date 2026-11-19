@@ -46,12 +46,22 @@ in
     ];
 
     exclude = [
-      "sh:/var/lib/rancher/k3s/storage/**/*.db-shm"
-      "sh:/var/lib/rancher/k3s/storage/**/*.db-wal"
+      "sh:/var/lib/rancher/k3s/server/db/state.db*"
+      "sh:/var/lib/rancher/k3s/storage/**/*.db"
+      "sh:/var/lib/rancher/k3s/storage/**/*.db-*"
+      "sh:/var/lib/rancher/k3s/storage/**/*.sqlite"
+      "sh:/var/lib/rancher/k3s/storage/**/*.sqlite-*"
+      "sh:/var/lib/rancher/k3s/storage/**/*.sqlite3"
+      "sh:/var/lib/rancher/k3s/storage/**/*.sqlite3-*"
     ];
 
     readWritePaths = [ "/var/lib/borg-sqlite-dumps" ];
     preHook = ''
+      dump_sqlite() {
+        ${pkgs.sqlite}/bin/sqlite3 -cmd ".timeout 10000" "$1" ".backup $2" \
+          && echo "sqlite ok: $1"
+      }
+
       mkdir -p /var/lib/borg-sqlite-dumps
       rm -f /var/lib/borg-sqlite-dumps/*
 
@@ -59,15 +69,10 @@ in
         \( -name '*.db' -o -name '*.sqlite' -o -name '*.sqlite3' \) \
         | while read -r db; do
             dest=$(echo "$db" | sed 's|/var/lib/rancher/k3s/storage/||;s|/|__|g')
-            ${pkgs.sqlite}/bin/sqlite3 "$db" ".backup /var/lib/borg-sqlite-dumps/$dest" \
-              && echo "sqlite ok: $db" \
-              || echo "sqlite warn: $db (locked, using live file)"
+            dump_sqlite "$db" "/var/lib/borg-sqlite-dumps/$dest" || exit 1
           done
 
-      ${pkgs.sqlite}/bin/sqlite3 \
-        /var/lib/rancher/k3s/server/db/state.db \
-        ".backup /var/lib/borg-sqlite-dumps/k3s-state.db" \
-        || echo "sqlite warn: k3s state.db locked"
+      dump_sqlite /var/lib/rancher/k3s/server/db/state.db /var/lib/borg-sqlite-dumps/k3s-state.db
     '';
 
     postHook = "";
