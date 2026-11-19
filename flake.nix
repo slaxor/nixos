@@ -217,6 +217,13 @@
           specialArgs = { inherit inputs; };
           modules = hareModules ++ [ ./hosts/hare-bubble ];
         };
+
+        bubble-installer = nixpkgs.lib.nixosSystem {
+          modules = [
+            "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+            ./hosts/hare-bubble/installer.nix
+          ];
+        };
       };
     };
 }

@@ -9,13 +9,13 @@ storage=/mnt/var/lib/rancher/k3s/storage
 target_of() {
   case $1 in
   k3s-state.db) echo /mnt/var/lib/rancher/k3s/server/db/state.db ;;
-  *) echo "$storage/$(printf %s "$1" | sed 's|__|/|g')" ;;
+  *) echo "${storage}/$(printf %s "$1" | sed 's|__|/|g')" ;;
   esac
 }
 
-for dump in "$dumps"/*; do
-  target=$(target_of "$(basename "$dump")")
-  mkdir -p "$(dirname "$target")"
-  cp -p "$dump" "$target"
-  echo "restored: $target"
+for dump in "${dumps}"/*; do
+  target=$(target_of "$(basename "${dump}")")
+  mkdir -p "$(dirname "${target}")"
+  cp -p "${dump}" "${target}"
+  echo "restored: ${target}"
 done
