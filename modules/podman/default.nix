@@ -3,7 +3,6 @@
   environment.systemPackages = with pkgs; [
     conmon
     fuse-overlayfs
-    podman
     podman-bootc
     podman-compose
     podman-tui

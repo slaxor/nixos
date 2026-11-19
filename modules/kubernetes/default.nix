@@ -8,12 +8,10 @@ in
 {
   environment.systemPackages = with pkgs; [
     cilium-cli
-    helm
     k9s
     krew
+    ktop
     kubecolor
-    kubectl
-    kubectl
     kubectx
     kubelogin
     kubernetes-helm

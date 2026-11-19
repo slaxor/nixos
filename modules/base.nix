@@ -26,8 +26,6 @@
     lsof
     lvm2
     mc
-    neovim
-    neovim-remote
     net-tools
     parted
     partclone

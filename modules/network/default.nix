@@ -27,7 +27,6 @@ in
     tcpcrypt
     nmap
     socat
-    netcat-gnu
     dbd
     snicat
     whois
