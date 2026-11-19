@@ -61,6 +61,7 @@ in
   imports = [
     ./hardware-configuration.nix
     ./network.nix
+    ../../modules/bubble-netns.nix
   ];
 
   home-manager = {

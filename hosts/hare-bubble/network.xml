@@ -1,10 +1,5 @@
 <network>
   <name>bubble</name>
-  <bridge name="virbr-bubble"/>
-  <ip address="144.76.195.129" netmask="255.255.255.224">
-    <dhcp>
-      <range start="144.76.195.150" end="144.76.195.158"/>
-      <host mac="52:54:00:00:01:42" ip="144.76.195.142"/>
-    </dhcp>
-  </ip>
+  <forward mode="bridge"/>
+  <bridge name="br-bubble"/>
 </network>

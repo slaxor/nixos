@@ -1,7 +1,11 @@
-# Restore drill: hare rebuilt from flake + borg inside an isolated libvirt
-# network on kea that impersonates hare's /27.
-#   just bubble       whole drill, asks only for the LUKS passphrase
-#   just bubble-down  throw the VM away (the network stays defined)
+# Restore drill: hare rebuilt from flake + borg on kea. The VM sits behind
+# br-bubble; the "bubble" network namespace (modules/bubble-netns.nix) plays
+# hare's /27 and has internet through kea. Only inside `just bubble-shell`
+# does 144.76.195.142 mean the bubble; everywhere else on kea it is the real hare.
+#   just bubble-shell  enter the bubble (all other recipes refuse to run outside)
+#   just bubble        fresh drill, asks only for the LUKS passphrase
+#   just bubble-unlock unlock an installed VM after boot
+#   just bubble-down   throw the VM away and remove the namespace
 
 bubble_ip := "144.76.195.142"
 bubble := "root@" + bubble_ip
@@ -9,8 +13,11 @@ ssh_opts := "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
 virsh := "virsh -c qemu:///system"
 borg_repo := "ssh://u591925@u591925.your-storagebox.de:23/./borg/hare"
 
+bubble-shell: bubble-net
+    sudo -E ip netns exec bubble setpriv --reuid="$(id -u)" --regid="$(id -g)" --init-groups bash --rcfile /etc/bubble/bashrc
+
 bubble: bubble-net bubble-vm bubble-wait bubble-disk bubble-restore bubble-install bubble-reboot
-    @echo "unlock with: ssh -p 2222 root@{{ bubble_ip }}"
+    @echo "then: just bubble-unlock"
 
 [private]
 in-bubble:
@@ -18,13 +25,14 @@ in-bubble:
     set -eu
     route=$(ip -4 route get {{ bubble_ip }})
     case $route in
-    *"dev virbr-bubble"*) ;;
-    *) echo "refusing: {{ bubble_ip }} routes outside the bubble: $route" >&2; exit 1 ;;
+    *"dev lan "*) ;;
+    *) echo "refusing: not inside just bubble-shell ({{ bubble_ip }} goes to the real hare: $route)" >&2; exit 1 ;;
     esac
 
 bubble-net:
     #!/bin/sh
     set -eu
+    sudo systemctl start bubble-dhcp
     has_net() { {{ virsh }} net-list "$@" --name | grep -qx bubble; }
     has_net --all || {{ virsh }} net-define hosts/hare-bubble/network.xml
     has_net || {{ virsh }} net-start bubble
@@ -83,9 +91,13 @@ bubble-install: in-bubble
 bubble-reboot: in-bubble
     ssh {{ ssh_opts }} {{ bubble }} reboot
 
+bubble-unlock: in-bubble
+    ssh -t -p 2222 {{ bubble }} systemd-tty-ask-password-agent
+
 bubble-down:
     #!/bin/sh
     set -u
     {{ virsh }} destroy hare-bubble
     {{ virsh }} undefine hare-bubble --remove-all-storage
     {{ virsh }} net-destroy bubble
+    sudo systemctl stop bubble-netns
