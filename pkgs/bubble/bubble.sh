@@ -200,9 +200,11 @@ cmd_delete() {
 
 list_commands() {
   local functions function_name
-  functions=$(compgen -A function cmd_)
-  while read -r function_name; do
-    printf '%s\n' "${function_name#cmd_}"
+  functions=$(declare -F)
+  while read -r _ _ function_name; do
+    if [[ ${function_name} == cmd_* ]]; then
+      printf '%s\n' "${function_name#cmd_}"
+    fi
   done <<<"${functions}"
   echo help
 }
