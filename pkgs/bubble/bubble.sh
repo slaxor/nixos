@@ -198,11 +198,24 @@ cmd_delete() {
   sudo systemctl stop bubble-netns
 }
 
+list_commands() {
+  local functions function_name
+  functions=$(compgen -A function cmd_)
+  while read -r function_name; do
+    printf '%s\n' "${function_name#cmd_}"
+  done <<<"${functions}"
+  echo help
+}
+
 main() {
   local command=${1:-help} where
   shift || true
   if [[ ${command} == help || ${command} == -h || ${command} == --help ]]; then
     usage
+    return
+  fi
+  if [[ ${command} == __commands ]]; then
+    list_commands
     return
   fi
   if ! declare -F "cmd_${command}" >/dev/null; then
