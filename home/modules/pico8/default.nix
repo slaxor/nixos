@@ -1,7 +1,7 @@
 { pkgs, lib, ... }:
 let
   # Architecture detection
-  system = pkgs.system;
+  system = pkgs.stdenv.hostPlatform.system;
   isAarch64 = system == "aarch64-linux";
 
   # PICO-8 binary URL and hash (update these when new versions are released)
