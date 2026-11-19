@@ -1,5 +1,6 @@
 { pkgs, config, ... }:
 let
+  hare = import ./address.nix;
   wgPeers = pkgs.writeShellApplication {
     name = "wg-peers";
     runtimeInputs = [
@@ -68,19 +69,9 @@ in
     networkmanager.enable = false;
     useDHCP = false;
     interfaces = {
-      "eno1" = {
-        ipv4.addresses = [
-          {
-            address = "144.76.195.142";
-            prefixLength = 27;
-          }
-        ];
-        ipv6.addresses = [
-          {
-            address = "2a01:4f8:200:7181::1";
-            prefixLength = 64;
-          }
-        ];
+      ${hare.interface} = {
+        ipv4.addresses = [ { inherit (hare.ipv4) address prefixLength; } ];
+        ipv6.addresses = [ { inherit (hare.ipv6) address prefixLength; } ];
       };
     };
 
@@ -98,13 +89,13 @@ in
     };
 
     defaultGateway = {
-      address = "144.76.195.129";
-      interface = "eno1";
+      address = hare.ipv4.gateway;
+      inherit (hare) interface;
     };
 
     defaultGateway6 = {
-      address = "fe80::1";
-      interface = "eno1";
+      address = hare.ipv6.gateway;
+      inherit (hare) interface;
     };
   };
 }

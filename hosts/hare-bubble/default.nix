@@ -1,4 +1,7 @@
 { lib, ... }:
+let
+  hare = import ../hare/address.nix;
+in
 {
   boot.loader.grub.devices = lib.mkForce [ "/dev/vda" ];
 
@@ -8,8 +11,8 @@
     "virtio_net"
   ];
 
-  systemd.network.links."10-eno1" = {
+  systemd.network.links."10-${hare.interface}" = {
     matchConfig.MACAddress = "52:54:00:00:01:42";
-    linkConfig.Name = "eno1";
+    linkConfig.Name = hare.interface;
   };
 }

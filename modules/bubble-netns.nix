@@ -1,5 +1,6 @@
 { inputs, pkgs, ... }:
 let
+  hare = import ../hosts/hare/address.nix;
   sealVm = pkgs.writeText "bubble-seal.nft" ''
     table inet bubble {
       chain forward {
@@ -57,7 +58,7 @@ in
 
       ip link add bubble-lan type veth peer name lan netns bubble
       ip link set bubble-lan master br-bubble up
-      ip -n bubble addr add 144.76.195.129/27 dev lan
+      ip -n bubble addr add ${hare.ipv4.gateway}/${toString hare.ipv4.prefixLength} dev lan
       ip -n bubble link set lan up
 
       ip link add bubble-kea type veth peer name kea netns bubble
@@ -96,8 +97,8 @@ in
         "--bind-interfaces"
         "--dhcp-authoritative"
         "--dhcp-ignore-clid"
-        "--dhcp-range=144.76.195.150,144.76.195.158,255.255.255.224"
-        "--dhcp-host=52:54:00:00:01:42,144.76.195.142"
+        "--dhcp-range=${hare.ipv4.address},static"
+        "--dhcp-host=52:54:00:00:01:42,${hare.ipv4.address}"
         "--dhcp-leasefile=/run/bubble-dhcp.leases"
       ];
     };

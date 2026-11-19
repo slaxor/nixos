@@ -3,7 +3,7 @@ let
   sender = "borg@hare.m11s.de";
   recipient = "sascha.teske@microprojects.de";
   recipientDomain = "microprojects.de";
-  sourceIp = "144.76.195.142";
+  sourceIp = (import ./address.nix).ipv4.address;
 in
 {
   systemd.services."notify-failure@" = {

@@ -1,4 +1,7 @@
 { pkgs, ... }:
+let
+  hare = import ./address.nix;
+in
 {
   nix.settings.experimental-features = [
     "nix-command"
@@ -88,11 +91,11 @@
       enable = true;
       listenAddresses = [
         {
-          addr = "144.76.195.142";
+          addr = hare.ipv4.address;
           port = 22;
         }
         {
-          addr = "2a01:4f8:200:7181::1";
+          addr = hare.ipv6.address;
           port = 22;
         }
       ];

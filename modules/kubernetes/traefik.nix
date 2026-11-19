@@ -1,4 +1,7 @@
 { pkgs, ... }:
+let
+  hare = import ../../hosts/hare/address.nix;
+in
 {
   systemd.tmpfiles.rules = [
     "L+ /var/lib/rancher/k3s/server/manifests/traefik-custom.yaml - - - - ${pkgs.writeText "traefik-helmchart.yaml" ''
@@ -21,9 +24,9 @@
             externalTrafficPolicy: Local
             spec:
               externalIPs:
-                - "144.76.195.142"
+                - "${hare.ipv4.address}"
                 - "10.13.0.1"
-                - "2a01:4f8:200:7181::1"
+                - "${hare.ipv6.address}"
           ports:
             web:
               http:

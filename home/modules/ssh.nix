@@ -1,4 +1,7 @@
 { lib, ... }:
+let
+  hare = import ../../hosts/hare/address.nix;
+in
 {
   # home.packages = with pkgs; [
   # ];
@@ -53,18 +56,18 @@
       };
 
       "hare" = {
-        hostname = "144.76.195.142";
+        hostname = hare.ipv4.address;
       };
 
       "hareboot" = {
         port = 2222;
         user = "root";
-        hostname = "144.76.195.142";
+        hostname = hare.ipv4.address;
       };
 
       # sometimes config files are just a knowledge-base ;)
       "jump-host" = {
-        hostname = "144.76.195.142";
+        hostname = hare.ipv4.address;
         user = "slash";
       };
 
