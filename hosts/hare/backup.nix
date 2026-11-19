@@ -71,9 +71,20 @@ in
       }
 
       export_images() {
+        local dir=$1 refs ref name exported=0 skipped=0
+        rm -f "$dir"/*.tar
         refs=$(${k3s} ctr -n k8s.io images list -q | grep -v '^sha256:')
-        ${k3s} ctr -n k8s.io images export --platform linux/amd64 "$1" $refs \
-          && echo "images ok: $(echo "$refs" | wc -l) refs"
+        for ref in $refs; do
+          name=$(printf %s "$ref" | tr '/:@' '___')
+          if ${k3s} ctr -n k8s.io images export --platform linux/amd64 "$dir/$name.tar" "$ref"; then
+            exported=$((exported + 1))
+          else
+            echo "image skipped: $ref"
+            rm -f "$dir/$name.tar"
+            skipped=$((skipped + 1))
+          fi
+        done
+        echo "images: $exported exported, $skipped skipped"
       }
 
       mkdir -p /var/lib/borg-sqlite-dumps
@@ -87,7 +98,7 @@ in
           done
 
       dump_sqlite /var/lib/rancher/k3s/server/db/state.db /var/lib/borg-sqlite-dumps/k3s-state.db
-      export_images /var/lib/borg-k3s-images/images.tar
+      export_images /var/lib/borg-k3s-images
     '';
 
     postHook = "";

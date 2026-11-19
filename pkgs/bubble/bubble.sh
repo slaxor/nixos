@@ -142,7 +142,16 @@ cmd_restore() {
   echo "restoring ${archive}"
   borg export-tar "::${archive}" - | pv | on_installer tar -C /mnt -xp --numeric-owner
   on_installer sh -s <"${restore_sqlite}"
-  on_installer 'mkdir -p /mnt/var/lib/rancher/k3s/agent/images && mv /mnt/var/lib/borg-k3s-images/images.tar /mnt/var/lib/rancher/k3s/agent/images/'
+  restore_images "${archive}"
+}
+
+restore_images() {
+  local exported=/mnt/var/lib/borg-k3s-images
+  if ! ssh -F "${ssh_config}" installer "set -- ${exported}/*.tar; test -e \"\$1\""; then
+    echo "warning: ${1} contains no container images, pods in the bubble will stay in ImagePullBackOff" >&2
+    return
+  fi
+  on_installer "mkdir -p /mnt/var/lib/rancher/k3s/agent/images && mv ${exported}/*.tar /mnt/var/lib/rancher/k3s/agent/images/"
 }
 
 cmd_system() {
