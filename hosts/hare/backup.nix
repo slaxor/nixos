@@ -15,6 +15,10 @@ in
 
   services.borgbackup.jobs.storagebox = {
     repo = "ssh://${storage-box}@${storage-box}.your-storagebox.de:23/./borg/hare";
+    extraArgs = [
+      "--lock-wait"
+      "3600"
+    ];
 
     encryption = {
       mode = "repokey-blake2";

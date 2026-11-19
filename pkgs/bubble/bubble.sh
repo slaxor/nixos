@@ -154,7 +154,7 @@ mirror_borg() {
 cmd_mirror() {
   mkdir -p "${mirror_repo}"
   echo "mirroring ${remote_repo} to ${mirror_repo}"
-  borg with-lock "${remote_repo}" \
+  borg --lock-wait 3600 with-lock "${remote_repo}" \
     rsync -a --delete --partial --info=progress2 \
     --exclude lock.exclusive --exclude lock.roster \
     -e "ssh -p ${mirror_ssh_port}" "${mirror_source}" "${mirror_repo}/"
