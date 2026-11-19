@@ -16,39 +16,44 @@ dbg-errors:
 
 # Full builder log of a failed derivation (path from dbg-errors)
 dbg-log drv:
-    nix log {{drv}}
+    nix log {{ drv }}
 
 # Build a single package with live log; failed build dir is kept in /tmp
 dbg-pkg pkg:
-    nix build --no-link -L --keep-failed '{{cfg}}.pkgs.{{pkg}}'
+    nix build --no-link -L --keep-failed '{{ cfg }}.pkgs.{{ pkg }}'
 
 # Store path of a package's unpacked source
 dbg-src pkg:
-    nix build --no-link --print-out-paths '{{cfg}}.pkgs.{{pkg}}.src'
+    nix build --no-link --print-out-paths '{{ cfg }}.pkgs.{{ pkg }}.src'
 
 # Files that define an option, e.g. boot.initrd.systemd.enable
 dbg-who opt:
-    nix eval '{{cfg}}.options.{{opt}}.files' --json | jq -r '.[]'
+    nix eval '{{ cfg }}.options.{{ opt }}.files' --json | jq -r '.[]'
 
 # Evaluated value of an option, e.g. nix.package.name
 dbg-val opt:
-    nix eval '{{cfg}}.config.{{opt}}' --json | jq .
+    nix eval '{{ cfg }}.config.{{ opt }}' --json | jq .
 
 # ripgrep through the locked nixpkgs tree (removed options, package files)
 dbg-nixpkgs pattern:
-    rg -n '{{pattern}}' "$(nix eval --raw '{{cfg}}.pkgs.path')"
+    rg -n '{{ pattern }}' "$(nix eval --raw '{{ cfg }}.pkgs.path')"
 
 # Names of all system packages
 dbg-pkgs:
-    nix eval '{{cfg}}.config.environment.systemPackages' --apply 'map (p: p.name)' --json | jq -r '.[]' | sort
+    nix eval '{{ cfg }}.config.environment.systemPackages' --apply 'map (p: p.name)' --json | jq -r '.[]' | sort
 
 # Names of all home-manager packages
 dbg-hmpkgs user="slash":
-    nix eval '{{cfg}}.config.home-manager.users.{{user}}.home.packages' --apply 'map (p: p.name)' --json | jq -r '.[]' | sort
+    nix eval '{{ cfg }}.config.home-manager.users.{{ user }}.home.packages' --apply 'map (p: p.name)' --json | jq -r '.[]' | sort
 
 # Dependency chain from the running system to a package
-dbg-why pkg:
-    nix why-depends /run/current-system '{{cfg}}.pkgs.{{pkg}}'
+dbg-why pkg *args:
+    #!/usr/bin/env sh
+    set -eu
+    closure=$(nix path-info -r /run/current-system)
+    path=$(printf '%s\n' "$closure" | grep -E -e '-{{ pkg }}(-[0-9]|$)' | head -n 1)
+    [ -n "$path" ] || { echo "{{ pkg }} not in runtime closure of /run/current-system" >&2; exit 1; }
+    nix why-depends {{ args }} /run/current-system "$path"
 
 # Failed system and user units
 dbg-failed:
@@ -57,4 +62,4 @@ dbg-failed:
 
 # Journal of one unit for the current boot
 dbg-unit unit:
-    journalctl -b -u {{unit}} --no-pager -n 50
+    journalctl -b -u {{ unit }} --no-pager -n 50
