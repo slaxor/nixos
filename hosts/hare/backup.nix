@@ -65,6 +65,8 @@ in
     readWritePaths = [
       "/var/lib/borg-sqlite-dumps"
       "/var/lib/borg-k3s-images"
+      "/var/lib/rancher/k3s/server/db"
+      "/var/lib/rancher/k3s/storage"
     ];
     preHook = ''
       dump_sqlite() {
