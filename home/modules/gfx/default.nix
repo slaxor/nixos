@@ -20,6 +20,8 @@
     ];
   };
 
+  programs.solidcraft.enable = true;
+  programs.fieldcraft.enable = true;
   programs.photocraft.enable = true;
   programs.lightcraft.enable = true;
   programs.soundcraft.enable = true;

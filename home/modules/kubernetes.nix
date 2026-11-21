@@ -4,7 +4,6 @@
     cloud-provider-kind
     cilium-cli
     gnutls
-    k9s
     kubernetes-helm
     kind
     krew
@@ -40,12 +39,20 @@
     ''; # k get (really)all
   };
 
-  programs.bash.initExtra = ''
-    source <(kubectl completion bash)
-    complete -F __start_kubectl k
-    # export KREW_ROOT="$HOME/.krew"
-    export PATH="${"$"}{KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-  '';
+  programs = {
+    bash = {
+      initExtra = ''
+        source <(kubectl completion bash)
+        complete -F __start_kubectl k
+        # export KREW_ROOT="$HOME/.krew"
+        export PATH="${"$"}{KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+      '';
+    };
+    k9s = {
+      enable = true;
+      settings.k9s.ui.logoless = true;
+    };
+  };
 
   # systemd.user = {
   # services."kcp" = {

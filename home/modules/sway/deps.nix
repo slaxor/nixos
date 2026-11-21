@@ -36,6 +36,8 @@ in
     clipcat
     deskflow
     dex
+    element-desktop
+    element-call
     evince
     fastfetch
     feh
