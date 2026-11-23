@@ -50,7 +50,6 @@
         "steam-unwrapped"
         "steam-original"
         "steam-run"
-        "tampermonkey"
         "unrar"
       ];
     segger-jlink.acceptLicense = true;

@@ -86,7 +86,7 @@ let
     gopass-bridge
     nuke-anything-enhanced
     tab-stash
-    tampermonkey
+    violentmonkey
     ublock-origin
     # umatrix
     web-developer

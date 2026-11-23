@@ -109,7 +109,7 @@ cmd_vm() {
     return
   fi
   mkdir -p "${iso_link%/*}"
-  nix build --out-link "${iso_link}" "${flake}#nixosConfigurations.bubble-installer.config.system.build.isoImage"
+  nix build --out-link "${iso_link}" "${flake}#installer-iso"
   iso_dir=$(readlink -f "${iso_link}")
   isos=("${iso_dir}"/iso/*.iso)
   virt-install --name "${vm}" \

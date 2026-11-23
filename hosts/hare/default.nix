@@ -37,10 +37,7 @@ in
       ssh = {
         enable = true;
         port = 2222;
-        authorizedKeys = [
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOtjkbH0TGABWHHuV5Rrzt0UIKJBkPIo8tHXHoyC9kBT slash@kea"
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMofo4uP8iGMw2R1LFzBQu7TuiSqwS28ILf1L1Mx/xGx slash@taz"
-        ];
+        authorizedKeys = import ../../users/slash-keys.nix;
         hostKeys = [ "/etc/ssh/ssh_host_ed25519_key" ];
       };
     };

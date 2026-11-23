@@ -83,6 +83,7 @@ in
 
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
+    binfmt.emulatedSystems = [ "aarch64-linux" ];
 
     blacklistedKernelModules = [
       "dvb_usb_rtl28xxu"

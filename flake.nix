@@ -6,6 +6,10 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixvim = {
       url = "github:nix-community/nixvim";
@@ -149,8 +153,21 @@
         nixIndex
       ];
 
+      mkInstaller =
+        { platform, image }:
+        nixpkgs.lib.nixosSystem {
+          modules = [
+            "${nixpkgs}/nixos/modules/installer/${image}"
+            ./modules/installer.nix
+            { nixpkgs.hostPlatform = platform; }
+          ];
+        };
+
     in
     {
+      packages.x86_64-linux.installer-iso = self.nixosConfigurations.installer.config.system.build.isoImage;
+      packages.aarch64-linux.installer-sd = self.nixosConfigurations.installer-sd.config.system.build.sdImage;
+
       nixosConfigurations = {
         kea = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs; };
@@ -208,6 +225,35 @@
           ];
         };
 
+        raven = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs; };
+          modules = [
+            home-manager.nixosModules.home-manager
+            inputs.disko.nixosModules.disko
+            { nixpkgs.hostPlatform.system = system; }
+            {
+              nixpkgs.overlays = [
+                inputs.nur.overlays.default
+              ];
+            }
+            {
+              home-manager = hmShared // {
+                users.slash = mkHmUser {
+                  role = "plasma";
+                  host = "raven";
+                };
+              };
+            }
+            ./modules/common-plasma.nix
+            ./modules/laptop.nix
+            ./hosts/raven
+            ./users/slash.nix
+            ./users/rita.nix
+            slaxorPkgs
+            nixIndex
+          ];
+        };
+
         hare = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs; };
           modules = hareModules;
@@ -218,11 +264,14 @@
           modules = hareModules ++ [ ./hosts/hare-bubble ];
         };
 
-        bubble-installer = nixpkgs.lib.nixosSystem {
-          modules = [
-            "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
-            ./hosts/hare-bubble/installer.nix
-          ];
+        installer = mkInstaller {
+          platform = "x86_64-linux";
+          image = "cd-dvd/installation-cd-minimal.nix";
+        };
+
+        installer-sd = mkInstaller {
+          platform = "aarch64-linux";
+          image = "sd-card/sd-image-aarch64-installer.nix";
         };
       };
     };
