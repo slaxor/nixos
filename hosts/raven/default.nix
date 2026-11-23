@@ -1,4 +1,7 @@
-{ ... }:
+{ inputs, lib, pkgs, ... }:
+let
+  craft = inputs.craft-nix.packages.${pkgs.stdenv.hostPlatform.system};
+in
 {
   imports = [
     ./disko.nix
@@ -16,6 +19,16 @@
   i18n.defaultLocale = "de_DE.UTF-8";
   programs.firefox.languagePacks = [ "de" ];
   programs.thunderbird.languagePacks = [ "de" ];
+
+  environment.etc."xdg/kscreenlockerrc".text = lib.generators.toINI { } {
+    Daemon.Timeout = 10;
+  };
+
+  environment.systemPackages = with craft; [
+    gridcraft
+    photocraft
+    wordcraft
+  ];
 
   services.openssh = {
     enable = true;
