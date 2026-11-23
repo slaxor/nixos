@@ -60,6 +60,7 @@ in
   ];
   imports = [
     ./hardware-configuration.nix
+    ./charge-limit.nix
     ./network.nix
     ../../modules/bubble-netns.nix
   ];
@@ -75,6 +76,7 @@ in
   time.timeZone = "Europe/Berlin";
 
   environment.systemPackages = with pkgs; [
+    framework-tool
     linuxPackages_latest.framework-laptop-kmod
     powertop
   ];
