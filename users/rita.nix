@@ -7,6 +7,7 @@
       "audio"
       "lp"
       "networkmanager"
+      "scanner"
       "video"
     ];
   };

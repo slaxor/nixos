@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   imports = [
     ./storage.nix
@@ -47,7 +47,7 @@
   };
 
   i18n = {
-    defaultLocale = "C.UTF-8";
+    defaultLocale = lib.mkDefault "C.UTF-8";
     extraLocaleSettings = {
       LC_ADDRESS = "de_DE.UTF-8";
       LC_IDENTIFICATION = "de_DE.UTF-8";

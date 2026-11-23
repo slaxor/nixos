@@ -3,10 +3,21 @@
   imports = [
     ./disko.nix
     ./hardware-configuration.nix
+    ./wireguard.nix
   ];
 
   networking.hostName = "raven";
   time.timeZone = "Europe/Berlin";
+  i18n.defaultLocale = "de_DE.UTF-8";
+
+  services.openssh = {
+    enable = true;
+    settings = {
+      PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
+    };
+  };
+  networking.firewall.interfaces.wghare.allowedTCPPorts = [ 3389 ];
 
   boot.loader = {
     systemd-boot.enable = true;

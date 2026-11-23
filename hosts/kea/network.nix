@@ -1,4 +1,7 @@
 { config, pkgs, ... }:
+let
+  hub = import ../hare/wg-hub.nix;
+in
 {
   environment.systemPackages = with pkgs; [
     iw
@@ -105,12 +108,11 @@
       privateKeyFile = config.sops.secrets."wghare/key".path;
       peers = [
         {
-          publicKey = "3GPB7wIX/lWLV5C54teL0D0/FvhOgJXazx8Fsv+ZbH0=";
+          inherit (hub) publicKey endpoint;
           presharedKeyFile = config.sops.secrets."wghare/psk".path;
-          endpoint = "wg.m11s.de:51820";
           persistentKeepalive = 25;
           allowedIPs = [
-            "10.13.0.0/24"
+            hub.network
             "192.168.117.0/24"
             "192.168.178.0/24"
             "192.168.181.0/24"
