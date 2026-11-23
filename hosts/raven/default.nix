@@ -9,6 +9,8 @@
   networking.hostName = "raven";
   time.timeZone = "Europe/Berlin";
   i18n.defaultLocale = "de_DE.UTF-8";
+  programs.firefox.languagePacks = [ "de" ];
+  programs.thunderbird.languagePacks = [ "de" ];
 
   services.openssh = {
     enable = true;

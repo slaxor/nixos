@@ -5,14 +5,14 @@ keys:
   - &keaadmin age1n6fpv7v3xxhfhrul4lzeuvet5ugxufmx56rnsw48gcevppcu24ys8vvqzd
   - &kea age1dkrjq3fvka5ae4amdz7lhhjdn6pkudjejncruu74746d8maelp8qg24dzc
   - &tazadmin age1jzsqepnmqgsx7qhdcdvtk56s02slnjv846hjz83gsgceypmxn35q8j3fxv
-  # - &raven age1…
+  - &raven age1dacrwl4cmly4yr58gldgrjza0cjxmgj0kaw0a9jjecy6cjl20vusy9xhxe
   #
 creation_rules:
   - path_regex: hosts/raven/secrets\.yaml$
     key_groups:
       - age:
           - *keaadmin
-          # - *raven
+          - *raven
   - path_regex: hosts/kea/secrets\.yaml$
     key_groups:
       - age:
