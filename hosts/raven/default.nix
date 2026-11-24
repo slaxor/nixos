@@ -15,9 +15,16 @@ in
   programs.firefox.languagePacks = [ "de" ];
   programs.thunderbird.languagePacks = [ "de" ];
 
-  environment.etc."xdg/kscreenlockerrc".text = lib.generators.toINI { } {
-    Daemon.Timeout = 10;
+  environment.etc = {
+    "xdg/kscreenlockerrc".text = lib.generators.toINI { } {
+      Daemon.Timeout = 10;
+    };
+    "xdg/baloofilerc".text = lib.generators.toINI { } {
+      "Basic Settings".Indexing-Enabled = false;
+    };
   };
+
+  zramSwap.enable = true;
 
   environment.systemPackages = with craft; [
     gridcraft
