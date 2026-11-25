@@ -102,7 +102,7 @@ in
     };
 
     wireguard.interfaces.wghare = {
-      ips = [ "10.13.0.17/32" ];
+      ips = [ "${hub.kea}/32" ];
       allowedIPsAsRoutes = false;
       listenPort = 51820;
       privateKeyFile = config.sops.secrets."wghare/key".path;
@@ -152,7 +152,7 @@ in
         networkConfig.DHCP = "no";
         addresses = [
           {
-            Address = "10.13.0.17/32";
+            Address = "${hub.kea}/32";
             AddPrefixRoute = false;
           }
         ];

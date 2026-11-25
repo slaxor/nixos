@@ -1,4 +1,9 @@
-{ inputs, lib, pkgs, ... }:
+{
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
 let
   craft = inputs.craft-nix.packages.${pkgs.stdenv.hostPlatform.system};
 in
@@ -30,6 +35,12 @@ in
   };
 
   zramSwap.enable = true;
+
+  environment.systemPackages = with craft; [
+    gridcraft
+    photocraft
+    wordcraft
+  ];
 
   environment.systemPackages = with craft; [
     gridcraft

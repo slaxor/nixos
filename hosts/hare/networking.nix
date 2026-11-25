@@ -1,6 +1,9 @@
 { pkgs, config, ... }:
 let
   hare = import ./address.nix;
+  hub = import ./wg-hub.nix;
+  installSubnet = hub.install.subnet;
+  installAdmins = builtins.concatStringsSep ", " hub.install.admins;
   wgPeers = pkgs.writeShellApplication {
     name = "wg-peers";
     runtimeInputs = [
@@ -36,6 +39,7 @@ in
             type filter hook input priority 0; policy drop;
             ct state established,related accept
             iifname "lo" accept
+            ip saddr ${installSubnet} drop
             iifname "wg0" accept
             iifname "cilium_*" accept
             ip6 nexthdr icmpv6 accept
@@ -53,6 +57,10 @@ in
 
           chain forward {
             type filter hook forward priority 0;
+            ip saddr ${installSubnet} ct state established,related accept
+            ip saddr { ${installAdmins} } ip daddr ${installSubnet} accept
+            ip saddr ${installSubnet} drop
+            ip daddr ${installSubnet} drop
             iifname "wg0" oifname "wg0" accept
           }
 

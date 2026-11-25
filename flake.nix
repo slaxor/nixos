@@ -154,18 +154,26 @@
       ];
 
       mkInstaller =
-        { platform, image }:
+        {
+          platform,
+          image,
+          extraModules ? [ ],
+        }:
         nixpkgs.lib.nixosSystem {
           modules = [
             "${nixpkgs}/nixos/modules/installer/${image}"
             ./modules/installer.nix
             { nixpkgs.hostPlatform = platform; }
-          ];
+          ]
+          ++ extraModules;
         };
 
     in
     {
-      packages.x86_64-linux.installer-iso = self.nixosConfigurations.installer.config.system.build.isoImage;
+      packages.x86_64-linux = {
+        installer-iso = self.nixosConfigurations.installer.config.system.build.isoImage;
+        mk-installer-efi = self.nixosConfigurations.installer-wg.config.system.build.mkInstallerEfi;
+      };
       packages.aarch64-linux.installer-sd = self.nixosConfigurations.installer-sd.config.system.build.sdImage;
 
       nixosConfigurations = {
@@ -268,6 +276,12 @@
         installer = mkInstaller {
           platform = "x86_64-linux";
           image = "cd-dvd/installation-cd-minimal.nix";
+        };
+
+        installer-wg = mkInstaller {
+          platform = "x86_64-linux";
+          image = "netboot/netboot-minimal.nix";
+          extraModules = [ ./modules/installer-wg.nix ];
         };
 
         installer-sd = mkInstaller {
