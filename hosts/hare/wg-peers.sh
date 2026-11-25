@@ -328,7 +328,6 @@ cmd_setup() {
 }
 
 main() {
-  set -xeuo pipefail
   [ "$(id -u)" -eq 0 ] || exec sudo "$0" "$@"
 
   case "${1:-}" in
@@ -349,5 +348,6 @@ main() {
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  set -e
   main "$@"
 fi
