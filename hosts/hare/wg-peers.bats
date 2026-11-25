@@ -8,7 +8,7 @@ setup() {
   mkdir -p "${peers_dir}"
 
   # shellcheck source=wg-peers.sh
-  source "$(dirname ${0}%/wg-peers.sh"
+  source "$(dirname "${BATS_TEST_FILENAME}")/wg-peers.sh"
 
   # override globals after sourcing
   peers_dir="${tmpdir}/peers"
@@ -226,4 +226,41 @@ teardown() {
 @test "check_network_collisions: subnet contained in user peer subnet" {
   run check_network_collisions "10.13.0.20/32"
   [ "${status}" -eq 1 ]
+}
+
+@test "check_network_collisions: malformed users line" {
+  printf " 10.13.0.240/28\n" >> "${users_db}"
+  run check_network_collisions "10.13.0.224/28"
+  [ "${status}" -eq 1 ]
+  [[ "${output}" == *"malformed line"* ]]
+}
+
+# --- cmd_useradd ---
+
+@test "cmd_useradd: writes user and subnet" {
+  run cmd_useradd install 10.13.0.240/28
+  [ "${status}" -eq 0 ]
+  [ "${output}" = "added user install → 10.13.0.240/28" ]
+  grep -qx "install 10.13.0.240/28" "${users_db}"
+  [ -d "${peers_dir}/install" ]
+}
+
+@test "cmd_useradd: rejects overlapping subnet" {
+  run cmd_useradd other 10.13.0.16/28
+  [ "${status}" -eq 1 ]
+  ! grep -q "^other " "${users_db}"
+}
+
+# --- cmd_list ---
+
+@test "cmd_list: all users" {
+  run cmd_list
+  [ "${status}" -eq 0 ]
+  [[ "${output}" == *"kea"* ]]
+  [[ "${output}" == *"fritzbox"* ]]
+}
+
+@test "cmd_list: unknown user" {
+  run cmd_list nobody
+  [ "${output}" = "no peers found" ]
 }

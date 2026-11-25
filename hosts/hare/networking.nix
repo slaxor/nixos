@@ -10,6 +10,7 @@ let
       pkgs.wireguard-tools
       pkgs.iproute2
       pkgs.gawk
+      pkgs.gnused
       pkgs.qrencode
     ];
     text = builtins.readFile ./wg-peers.sh;

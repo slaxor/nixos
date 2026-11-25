@@ -70,9 +70,7 @@ in
   # environment.etc."update-motd.d/10-custom".text = ''
   # '';
   programs.bash.loginShellInit = ''
-    #!/usr/bin/env bash
-    fastfetch
-    # kubefetch
+    if [[ $- == *i* ]]; then fastfetch; fi
   '';
   # security.pam.services.sshd.text = ''
   # session optional pam_motd.so motd=/etc/motd
